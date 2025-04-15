@@ -1,0 +1,65 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-03-24 17:47:34.507443",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "account",
+  "current_value",
+  "provisional_value",
+  "actual_value",
+  "provisional_vs_actual"
+ ],
+ "fields": [
+  {
+   "fieldname": "account",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Account",
+   "options": "Account",
+   "read_only": 1
+  },
+  {
+   "fieldname": "current_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Current Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "provisional_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Provisional Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "actual_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Actual Value"
+  },
+  {
+   "fieldname": "provisional_vs_actual",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Provisional Vs Actual",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-03-24 17:47:34.507443",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "Provisional Budgeting Comparison Child Expense",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

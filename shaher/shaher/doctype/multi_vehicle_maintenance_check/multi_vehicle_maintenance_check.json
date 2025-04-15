@@ -1,0 +1,202 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "MVMC-.#####",
+ "creation": "2025-01-22 11:31:36.315097",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicle_details",
+  "vehicle",
+  "employee_details",
+  "employee",
+  "section_break_10",
+  "complaint",
+  "supplier",
+  "garage_name",
+  "supplier_type",
+  "registered",
+  "one_time",
+  "column_break_23",
+  "vehicle_service",
+  "actual_expense",
+  "time_to_finish_work",
+  "work_finished_date",
+  "vehicle_handover_date",
+  "approximate_exp",
+  "for_office_use",
+  "hr_manager_id",
+  "hr_manager",
+  "aditional_info_section",
+  "purchase_order",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "vehicle_details",
+   "fieldtype": "Section Break",
+   "label": "Vehicle Details"
+  },
+  {
+   "fieldname": "employee_details",
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
+  },
+  {
+   "fieldname": "section_break_10",
+   "fieldtype": "Section Break",
+   "label": "Required details"
+  },
+  {
+   "fieldname": "complaint",
+   "fieldtype": "Small Text",
+   "label": "Complaint"
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier"
+  },
+  {
+   "fieldname": "garage_name",
+   "fieldtype": "Link",
+   "label": "Garage Name",
+   "options": "Garage",
+   "read_only": 1
+  },
+  {
+   "fieldname": "supplier_type",
+   "fieldtype": "Select",
+   "label": "Supplier Type",
+   "options": "Registered\nOne Time"
+  },
+  {
+   "depends_on": "eval:doc.supplier_type == \"Registered\"",
+   "fieldname": "registered",
+   "fieldtype": "Link",
+   "label": "Registered",
+   "options": "Supplier"
+  },
+  {
+   "depends_on": "eval:doc.supplier_type == \"One Time\"",
+   "fieldname": "one_time",
+   "fieldtype": "Data",
+   "label": "One Time"
+  },
+  {
+   "fieldname": "column_break_23",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vehicle_service",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Vehicle Service",
+   "options": "Vehicle Service Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "actual_expense",
+   "fieldtype": "Currency",
+   "label": "Actual Expense"
+  },
+  {
+   "fieldname": "time_to_finish_work",
+   "fieldtype": "Int",
+   "label": "Time to Finish work(Days)"
+  },
+  {
+   "fieldname": "work_finished_date",
+   "fieldtype": "Date",
+   "label": "Work Finished Date"
+  },
+  {
+   "fieldname": "vehicle_handover_date",
+   "fieldtype": "Date",
+   "label": "Vehicle Handover Date"
+  },
+  {
+   "fieldname": "approximate_exp",
+   "fieldtype": "Data",
+   "label": "Approximate Expense"
+  },
+  {
+   "fieldname": "for_office_use",
+   "fieldtype": "Section Break",
+   "label": "For Office Use"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "hr_manager_id",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "HR Manager ID",
+   "options": "User"
+  },
+  {
+   "description": "Comments",
+   "fieldname": "hr_manager",
+   "fieldtype": "Small Text",
+   "label": "HR Manager"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "aditional_info_section",
+   "fieldtype": "Section Break",
+   "label": "Aditional Info"
+  },
+  {
+   "fieldname": "purchase_order",
+   "fieldtype": "Link",
+   "label": "Purchase Order",
+   "options": "Purchase Order"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Multi Vehicle Maintenance Check",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Table",
+   "label": "Vehicle",
+   "options": "Multi Vehicle Maintenance Vehicle"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Table",
+   "label": "Employee",
+   "options": "Multi Vehicle Maintenance Employee"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [
+  {
+   "link_doctype": "Purchase Order",
+   "link_fieldname": "custom_vehicle_maintenance_check"
+  },
+  {
+   "link_doctype": "Vehicle Maintenance Check List",
+   "link_fieldname": "multi_vehicle_maintenance_check_list"
+  }
+ ],
+ "modified": "2025-01-22 14:47:09.552307",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "Multi Vehicle Maintenance Check",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

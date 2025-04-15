@@ -1,0 +1,149 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "LSR.#####",
+ "creation": "2025-01-24 12:06:40.970396",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_hra7",
+  "amended_from",
+  "type_of_request",
+  "leave_application",
+  "employee",
+  "employee_name",
+  "department",
+  "designation",
+  "column_break_haeq",
+  "company",
+  "start",
+  "end",
+  "leave_days",
+  "rejoining_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_hra7",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Leave Salary Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "Annual Leave",
+   "fieldname": "type_of_request",
+   "fieldtype": "Data",
+   "label": "Type of Request",
+   "read_only": 1
+  },
+  {
+   "fieldname": "leave_application",
+   "fieldtype": "Link",
+   "label": "Leave Application",
+   "options": "Leave Application",
+   "read_only": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fetch_if_empty": 1,
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.department",
+   "fetch_if_empty": 1,
+   "fieldname": "department",
+   "fieldtype": "Data",
+   "label": "Department",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.designation",
+   "fetch_if_empty": 1,
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "label": "Designation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_haeq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.company",
+   "fetch_if_empty": 1,
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "leave_application.from_date",
+   "fieldname": "start",
+   "fieldtype": "Date",
+   "label": "Leave Start Date"
+  },
+  {
+   "fetch_from": "leave_application.to_date",
+   "fieldname": "end",
+   "fieldtype": "Date",
+   "label": "Leave End Date"
+  },
+  {
+   "fetch_from": "leave_application.total_leave_days",
+   "fieldname": "leave_days",
+   "fieldtype": "Int",
+   "label": "Leave Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rejoining_date",
+   "fieldtype": "Date",
+   "label": "Rejoining Date"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-24 13:03:29.981900",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "Leave Salary Request",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,432 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "LS.####",
+ "creation": "2025-01-24 10:26:07.017225",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "employee_details_section",
+  "leave_salary_request",
+  "employee_number",
+  "employee_name",
+  "grade",
+  "column_break_swxr",
+  "department",
+  "designation",
+  "company",
+  "joining_date",
+  "section_break_rulw",
+  "type",
+  "posting_date",
+  "section_break_bhwj",
+  "last_leave_salary_taken_day",
+  "joining_or_last_rejoining_date",
+  "leave_salary_days",
+  "leave_salary_days_salary",
+  "column_break_bunt",
+  "date_of_service",
+  "total_leave",
+  "total_absent_days",
+  "column_break_odzw",
+  "service",
+  "leave_service",
+  "earnings_section",
+  "basic",
+  "hra",
+  "not_hour",
+  "salary_payable_days",
+  "other_benefits",
+  "not_amount",
+  "hot_hour",
+  "hot_amount",
+  "column_break_ymbz",
+  "gratuity",
+  "ticket_allowance",
+  "allowance",
+  "gross",
+  "section_break_sbjs",
+  "salary",
+  "total_earnings",
+  "column_break_zkyt",
+  "leave_salary",
+  "net_pay",
+  "deductions_section",
+  "loan",
+  "advance",
+  "visa",
+  "total_deduction",
+  "column_break_cxfw",
+  "immigration_cost",
+  "air_ticket_expense",
+  "mess_expense",
+  "others",
+  "assets_allocated_section",
+  "assets_allocated",
+  "total_asset_recovery_cost"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee_details_section",
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
+  },
+  {
+   "fieldname": "leave_salary_request",
+   "fieldtype": "Link",
+   "label": "Leave Salary Request",
+   "options": "Leave Salary  and Final Exit Request"
+  },
+  {
+   "fieldname": "employee_number",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "employee_number.employee_name",
+   "fetch_if_empty": 1,
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee_number.grade",
+   "fetch_if_empty": 1,
+   "fieldname": "grade",
+   "fieldtype": "Data",
+   "label": "Grade",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee_number.date_of_joining",
+   "fetch_if_empty": 1,
+   "fieldname": "joining_date",
+   "fieldtype": "Date",
+   "label": "Date of Joining",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_swxr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee_number.department",
+   "fetch_if_empty": 1,
+   "fieldname": "department",
+   "fieldtype": "Data",
+   "label": "Department",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee_number.designation",
+   "fetch_if_empty": 1,
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "label": "Designation",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee_number.company",
+   "fetch_if_empty": 1,
+   "fieldname": "company",
+   "fieldtype": "Data",
+   "label": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_rulw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "\nAnnual Vacation\nLeave Salary Encashment\nIndemnity"
+  },
+  {
+   "fieldname": "section_break_bhwj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "last_leave_salary_taken_day",
+   "fieldtype": "Date",
+   "label": "Last Leave Salary Taken Day"
+  },
+  {
+   "fieldname": "joining_or_last_rejoining_date",
+   "fieldtype": "Date",
+   "label": "Service Start Date"
+  },
+  {
+   "depends_on": "eval:doc.type==\"Indemnity\"",
+   "fieldname": "leave_salary_days",
+   "fieldtype": "Data",
+   "label": "Gratuity Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_bunt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date_of_service",
+   "fieldtype": "Date",
+   "label": "Service End Date",
+   "mandatory_depends_on": "eval:doc.type=='Indemnity'"
+  },
+  {
+   "fieldname": "total_leave",
+   "fieldtype": "Data",
+   "label": "Total Leave Taken for Previous Cycle",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.type!=\"Indemnity\"",
+   "fieldname": "leave_salary_days_salary",
+   "fieldtype": "Int",
+   "label": "Leave Salary Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_odzw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "service",
+   "fieldtype": "Data",
+   "label": "Total Period of Service",
+   "read_only": 1
+  },
+  {
+   "fieldname": "leave_service",
+   "fieldtype": "Data",
+   "label": "Total Leave Taken for During Service",
+   "read_only": 1
+  },
+  {
+   "fieldname": "earnings_section",
+   "fieldtype": "Section Break",
+   "label": "Earnings"
+  },
+  {
+   "fieldname": "basic",
+   "fieldtype": "Currency",
+   "label": "Basic ",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ticket_allowance",
+   "fieldtype": "Currency",
+   "label": "Ticket Allowance",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.type==\"Indemnity\"",
+   "fieldname": "not_hour",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "NOT Hour"
+  },
+  {
+   "depends_on": "eval:doc.type==\"Indemnity\"",
+   "fieldname": "not_amount",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "NOT Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "hot_hour",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "HOT Hour"
+  },
+  {
+   "fieldname": "hot_amount",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "HOT Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ymbz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.type==\"Indemnity\"",
+   "fieldname": "gratuity",
+   "fieldtype": "Currency",
+   "label": "Gratuity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "salary_payable_days",
+   "fieldtype": "Int",
+   "label": "Salary Payable Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "hra",
+   "fieldtype": "Currency",
+   "label": "HRA",
+   "read_only": 1
+  },
+  {
+   "fieldname": "allowance",
+   "fieldtype": "Currency",
+   "label": "Allowance",
+   "read_only": 1
+  },
+  {
+   "fieldname": "other_benefits",
+   "fieldtype": "Currency",
+   "label": "Other Benefits"
+  },
+  {
+   "fetch_from": "employee_number.custom_gross",
+   "fetch_if_empty": 1,
+   "fieldname": "gross",
+   "fieldtype": "Currency",
+   "label": "Gross",
+   "read_only": 1
+  },
+  {
+   "fieldname": "deductions_section",
+   "fieldtype": "Section Break",
+   "label": "Deductions"
+  },
+  {
+   "fieldname": "loan",
+   "fieldtype": "Currency",
+   "label": "Loan"
+  },
+  {
+   "fieldname": "advance",
+   "fieldtype": "Currency",
+   "label": "Advance"
+  },
+  {
+   "fieldname": "visa",
+   "fieldtype": "Currency",
+   "label": "Visa"
+  },
+  {
+   "fieldname": "total_deduction",
+   "fieldtype": "Currency",
+   "label": "Total Deduction",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_cxfw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "immigration_cost",
+   "fieldtype": "Currency",
+   "label": "Immigration Cost"
+  },
+  {
+   "fieldname": "air_ticket_expense",
+   "fieldtype": "Currency",
+   "label": "Air Ticket Expense"
+  },
+  {
+   "fieldname": "mess_expense",
+   "fieldtype": "Currency",
+   "label": "Mess Expense"
+  },
+  {
+   "fieldname": "others",
+   "fieldtype": "Currency",
+   "label": "Others"
+  },
+  {
+   "fieldname": "section_break_sbjs",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "salary",
+   "fieldtype": "Currency",
+   "label": "Salary",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_earnings",
+   "fieldtype": "Currency",
+   "label": "Total Earnings",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_zkyt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "leave_salary",
+   "fieldtype": "Currency",
+   "label": "Leave Salary",
+   "read_only": 1
+  },
+  {
+   "fieldname": "net_pay",
+   "fieldtype": "Currency",
+   "label": "Net Pay",
+   "read_only": 1
+  },
+  {
+   "description": "Automatically fetches all assets allocated to the employee, if any",
+   "fieldname": "assets_allocated_section",
+   "fieldtype": "Section Break",
+   "label": "Assets Allocated"
+  },
+  {
+   "fieldname": "assets_allocated",
+   "fieldtype": "Table",
+   "options": "Full and Final Asset"
+  },
+  {
+   "fieldname": "total_asset_recovery_cost",
+   "fieldtype": "Currency",
+   "label": "Total Asset Recovery Cost",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_absent_days",
+   "fieldtype": "Data",
+   "label": "Total Absent Days",
+   "read_only": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-02 14:39:45.987817",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "Leave Salary",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

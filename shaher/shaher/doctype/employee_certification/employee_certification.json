@@ -1,0 +1,217 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "EC-.#####",
+ "creation": "2025-03-10 10:29:24.149272",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "employee_certificate_section",
+  "employee_details_column",
+  "employee",
+  "employee_name",
+  "designation",
+  "department",
+  "company",
+  "column_break_rpio",
+  "certification",
+  "initialize_date",
+  "possibility_status",
+  "last_renewal_date",
+  "expiry_date",
+  "attach_file",
+  "alert_details_section",
+  "alert_details_column",
+  "alert_mail",
+  "frequency_of_renewal_days",
+  "days_left",
+  "purchase_order",
+  "column_break_lkqd",
+  "supplier",
+  "status",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee_certificate_section",
+   "fieldtype": "Section Break",
+   "label": "Employee & Certificate"
+  },
+  {
+   "fieldname": "employee_details_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Read Only",
+   "label": "Employee Name"
+  },
+  {
+   "fetch_from": "employee.designation",
+   "fieldname": "designation",
+   "fieldtype": "Read Only",
+   "label": "Designation"
+  },
+  {
+   "fetch_from": "employee.department",
+   "fieldname": "department",
+   "fieldtype": "Read Only",
+   "label": "Department"
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Read Only",
+   "label": "Company"
+  },
+  {
+   "fieldname": "column_break_rpio",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "certification",
+   "fieldtype": "Link",
+   "label": "Certification",
+   "options": "Employee Certificate",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Renewable",
+   "fieldname": "possibility_status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Renewability Status",
+   "options": "Renewable"
+  },
+  {
+   "depends_on": "eval:doc.possibility_status == \"Renewable\"",
+   "fieldname": "expiry_date",
+   "fieldtype": "Date",
+   "label": "Expiry Date",
+   "mandatory_depends_on": "eval:doc.possibility_status == \"Renewable\""
+  },
+  {
+   "fieldname": "attach_file",
+   "fieldtype": "Attach",
+   "label": "Attach File"
+  },
+  {
+   "fieldname": "alert_details_section",
+   "fieldtype": "Section Break",
+   "label": "Alert & Status"
+  },
+  {
+   "fieldname": "alert_details_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.possibility_status == \"Renewable\"",
+   "fieldname": "frequency_of_renewal_days",
+   "fieldtype": "Int",
+   "label": "Renewal Frequency(Days)",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.possibility_status == \"Renewable\"",
+   "fieldname": "days_left",
+   "fieldtype": "Int",
+   "label": "Days Left",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_lkqd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Renewal Status",
+   "options": "\nActive\nExpired\nExpiring Soon\nNot Renewable\nUnlimited\nVacated",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Employee Certification",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "now",
+   "depends_on": "eval:doc.possibility_status == \"Renewable\"",
+   "fieldname": "last_renewal_date",
+   "fieldtype": "Date",
+   "label": "Last Renewal Date"
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier"
+  },
+  {
+   "default": "now",
+   "fieldname": "initialize_date",
+   "fieldtype": "Date",
+   "label": "Initialize Date"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "purchase_order",
+   "fieldtype": "Data",
+   "label": "Purchase Order",
+   "options": "Purchase Order",
+   "read_only": 1
+  },
+  {
+   "fieldname": "alert_mail",
+   "fieldtype": "Table MultiSelect",
+   "label": "Alert Mail",
+   "options": "Alert Mail"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Purchase Order",
+   "link_fieldname": "custom_employee_certification"
+  }
+ ],
+ "modified": "2025-03-28 14:15:54.179252",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "Employee Certification",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

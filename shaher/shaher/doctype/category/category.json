@@ -1,0 +1,105 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "C.####",
+ "creation": "2025-01-27 09:44:35.257004",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "category",
+  "over_time",
+  "overtime_rate",
+  "earned_leave",
+  "annual_el_count",
+  "max_leaves_allowed",
+  "max_encashment_allowed",
+  "column_break_kdjv",
+  "shift_allowance",
+  "shift_rate"
+ ],
+ "fields": [
+  {
+   "fieldname": "category",
+   "fieldtype": "Data",
+   "label": "Category"
+  },
+  {
+   "default": "0",
+   "fieldname": "over_time",
+   "fieldtype": "Check",
+   "label": "Over Time"
+  },
+  {
+   "depends_on": "eval:doc.over_time=='1'",
+   "fieldname": "overtime_rate",
+   "fieldtype": "Currency",
+   "label": "Overtime Rate"
+  },
+  {
+   "default": "0",
+   "fieldname": "earned_leave",
+   "fieldtype": "Check",
+   "label": "Earned Leave"
+  },
+  {
+   "depends_on": "eval:doc.earned_leave=='1'",
+   "fieldname": "annual_el_count",
+   "fieldtype": "Data",
+   "label": "Annual EL Count"
+  },
+  {
+   "depends_on": "eval:doc.earned_leave=='1'",
+   "fieldname": "max_leaves_allowed",
+   "fieldtype": "Data",
+   "label": "Max Leaves Allowed"
+  },
+  {
+   "depends_on": "eval:doc.earned_leave=='1'",
+   "fieldname": "max_encashment_allowed",
+   "fieldtype": "Data",
+   "label": "Max Encashment Allowed"
+  },
+  {
+   "fieldname": "column_break_kdjv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "shift_allowance",
+   "fieldtype": "Check",
+   "label": "Shift Allowance"
+  },
+  {
+   "depends_on": "eval:doc.shift_allowance=='1'",
+   "fieldname": "shift_rate",
+   "fieldtype": "Currency",
+   "label": "Shift Rate"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-01-27 10:56:18.745796",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "Category",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

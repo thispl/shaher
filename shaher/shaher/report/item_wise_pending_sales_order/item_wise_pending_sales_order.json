@@ -1,0 +1,41 @@
+{
+ "add_total_row": 1,
+ "columns": [],
+ "creation": "2025-02-10 19:18:02.684789",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "json": "{}",
+ "letter_head": "Shaher",
+ "letterhead": null,
+ "modified": "2025-02-10 19:20:22.698842",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "Item Wise Pending Sales Order",
+ "owner": "siva.m@groupteampro.com",
+ "prepared_report": 0,
+ "ref_doctype": "Sales Order",
+ "report_name": "Item Wise Pending Sales Order",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Sales User"
+  },
+  {
+   "role": "Sales Manager"
+  },
+  {
+   "role": "Maintenance User"
+  },
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "Stock User"
+  }
+ ],
+ "timeout": 0
+}

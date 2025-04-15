@@ -1,0 +1,62 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-03-13 10:21:30.357095",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "column_break_fvaq",
+  "html",
+  "perm"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "label": "Item Code",
+   "options": "Item"
+  },
+  {
+   "fieldname": "column_break_fvaq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:!frappe.user.has_role(\"Purchase User\")",
+   "fieldname": "html",
+   "fieldtype": "HTML",
+   "label": "HTML"
+  },
+  {
+   "depends_on": "eval:frappe.user.has_role(\"Purchase User\") || frappe.user.has_role(\"Cost Estimator\")",
+   "fieldname": "perm",
+   "fieldtype": "HTML",
+   "label": "html1"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-03-13 10:27:54.133166",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "Product Search",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

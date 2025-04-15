@@ -1,0 +1,231 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "FA-.#####",
+ "creation": "2025-01-27 20:08:41.660802",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "previous_entry",
+  "section_break_m6q7",
+  "date",
+  "column_break_9mvu",
+  "time",
+  "section_break_ow2z",
+  "employee",
+  "employee_name",
+  "department",
+  "date_of_birth",
+  "image",
+  "column_break_zrlz",
+  "employment_type",
+  "emergency_contact_person",
+  "relationship",
+  "emergency_phone",
+  "blood_group",
+  "section_break_18zp",
+  "for_blood_relation",
+  "name1",
+  "column_break_8txy",
+  "relation",
+  "section_break_uunp",
+  "symptoms",
+  "total_cost",
+  "column_break_srie",
+  "prescription",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "previous_entry",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "section_break_m6q7",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_9mvu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "time",
+   "fieldtype": "Time",
+   "label": "Time"
+  },
+  {
+   "fieldname": "section_break_ow2z",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.department",
+   "fieldname": "department",
+   "fieldtype": "Data",
+   "label": "Department",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.date_of_birth",
+   "fieldname": "date_of_birth",
+   "fieldtype": "Data",
+   "label": "Date of Birth",
+   "read_only": 1
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Attach",
+   "label": "Image"
+  },
+  {
+   "fieldname": "column_break_zrlz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.employment_type",
+   "fieldname": "employment_type",
+   "fieldtype": "Data",
+   "label": "Employment Type",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.person_to_be_contacted",
+   "fieldname": "emergency_contact_person",
+   "fieldtype": "Data",
+   "label": "Emergency Contact Person",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.relation",
+   "fieldname": "relationship",
+   "fieldtype": "Data",
+   "label": "RelationShip",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.emergency_phone_number",
+   "fieldname": "emergency_phone",
+   "fieldtype": "Data",
+   "label": "Emergency Phone",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.blood_group",
+   "fieldname": "blood_group",
+   "fieldtype": "Data",
+   "label": "Blood Group",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_18zp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "for_blood_relation",
+   "fieldname": "name1",
+   "fieldtype": "Data",
+   "label": "Name",
+   "mandatory_depends_on": "for_blood_relation"
+  },
+  {
+   "fieldname": "column_break_8txy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "for_blood_relation",
+   "fieldname": "relation",
+   "fieldtype": "Data",
+   "label": "Relation",
+   "mandatory_depends_on": "for_blood_relation"
+  },
+  {
+   "default": "0",
+   "fieldname": "for_blood_relation",
+   "fieldtype": "Check",
+   "label": "For Blood Relation?"
+  },
+  {
+   "fieldname": "section_break_uunp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "symptoms",
+   "fieldtype": "Small Text",
+   "label": "Symptoms"
+  },
+  {
+   "fieldname": "column_break_srie",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "prescription",
+   "fieldtype": "Small Text",
+   "label": "Prescription"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "First Aid",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "total_cost",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Cost"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-27 20:38:40.583880",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "First Aid",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

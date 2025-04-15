@@ -1,0 +1,134 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "JR-.#####",
+ "creation": "2024-12-23 18:16:43.164381",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_raoq",
+  "name1",
+  "code_no",
+  "leave_from",
+  "extension_from_with_approval",
+  "joining_date",
+  "signature_of_employee",
+  "column_break_byzd",
+  "designation",
+  "site",
+  "to",
+  "to1",
+  "time",
+  "authorized_signature",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_raoq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "name1",
+   "fieldtype": "Data",
+   "label": "Name",
+   "unique": 1
+  },
+  {
+   "fieldname": "code_no",
+   "fieldtype": "Data",
+   "label": "Code No"
+  },
+  {
+   "fieldname": "leave_from",
+   "fieldtype": "Date",
+   "label": "Leave From"
+  },
+  {
+   "fieldname": "extension_from_with_approval",
+   "fieldtype": "Date",
+   "label": "Extension From With Approval"
+  },
+  {
+   "fieldname": "joining_date",
+   "fieldtype": "Date",
+   "label": "Joining Date"
+  },
+  {
+   "fieldname": "signature_of_employee",
+   "fieldtype": "Signature",
+   "label": "Signature of Employee"
+  },
+  {
+   "fieldname": "column_break_byzd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "site",
+   "fieldtype": "Data",
+   "label": "Site"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Date",
+   "label": "To"
+  },
+  {
+   "fieldname": "to1",
+   "fieldtype": "Date",
+   "label": "To"
+  },
+  {
+   "fieldname": "time",
+   "fieldtype": "Time",
+   "label": "Time"
+  },
+  {
+   "fieldname": "authorized_signature",
+   "fieldtype": "Signature",
+   "label": "Authorized Signature"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Joining Report",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-12-24 17:51:40.246814",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "Joining Report",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

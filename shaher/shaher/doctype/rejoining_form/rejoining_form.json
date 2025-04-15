@@ -1,0 +1,286 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "Re-Joining Form-.#####",
+ "creation": "2025-01-24 13:22:38.300954",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_bzws",
+  "amended_from",
+  "leave_application",
+  "column_break_cymz",
+  "status",
+  "employee_details_section",
+  "employee_id",
+  "employee_name",
+  "designation",
+  "department",
+  "code_no",
+  "hod",
+  "column_break_lqop",
+  "resident_id_number",
+  "date_of_joining",
+  "company",
+  "grade",
+  "site",
+  "request_details_section",
+  "start",
+  "end",
+  "re_join",
+  "column_break_kdae",
+  "total_leave_in_days",
+  "nature_of_leave",
+  "rejoining_time",
+  "section_break_rkbl",
+  "re_joining_date",
+  "late_joining_in_days",
+  "extension_from_date",
+  "custom_reason",
+  "column_break_mnxg",
+  "reporting_date",
+  "extension_to_date",
+  "passport_at"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_bzws",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Rejoining Form",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "leave_application",
+   "fieldtype": "Link",
+   "label": "Leave Application",
+   "options": "Leave Application",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_cymz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nRequested\nInitiated\nCompleted\nHold"
+  },
+  {
+   "fieldname": "employee_details_section",
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
+  },
+  {
+   "fetch_from": "leave_application.employee",
+   "fetch_if_empty": 1,
+   "fieldname": "employee_id",
+   "fieldtype": "Link",
+   "label": "Employee ID",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "employee_id.employee_name",
+   "fetch_if_empty": 1,
+   "fieldname": "employee_name",
+   "fieldtype": "Read Only",
+   "label": "Employee Name"
+  },
+  {
+   "fetch_from": "employee_id.designation",
+   "fetch_if_empty": 1,
+   "fieldname": "designation",
+   "fieldtype": "Read Only",
+   "label": "Designation"
+  },
+  {
+   "fetch_from": "employee_id.department",
+   "fetch_if_empty": 1,
+   "fieldname": "department",
+   "fieldtype": "Read Only",
+   "label": "Department"
+  },
+  {
+   "default": "0",
+   "fieldname": "hod",
+   "fieldtype": "Check",
+   "label": "HOD",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_lqop",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee_id.custom_resident_id_numberqid_number",
+   "fetch_if_empty": 1,
+   "fieldname": "resident_id_number",
+   "fieldtype": "Read Only",
+   "label": "Resident ID Number"
+  },
+  {
+   "fetch_from": "employee_id.date_of_joining",
+   "fetch_if_empty": 1,
+   "fieldname": "date_of_joining",
+   "fieldtype": "Read Only",
+   "label": "Date of Joining"
+  },
+  {
+   "fetch_from": "employee_id.company",
+   "fetch_if_empty": 1,
+   "fieldname": "company",
+   "fieldtype": "Read Only",
+   "label": "Company / Division"
+  },
+  {
+   "fetch_from": "employee_id.grade",
+   "fetch_if_empty": 1,
+   "fieldname": "grade",
+   "fieldtype": "Data",
+   "label": "Grade",
+   "read_only": 1
+  },
+  {
+   "fieldname": "request_details_section",
+   "fieldtype": "Section Break",
+   "label": "Request Details"
+  },
+  {
+   "fieldname": "start",
+   "fieldtype": "Date",
+   "label": "Start of Leave Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "end",
+   "fieldtype": "Date",
+   "label": "End of Leave Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_kdae",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_leave_in_days",
+   "fieldtype": "Read Only",
+   "label": "Total Leave in Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "nature_of_leave",
+   "fieldtype": "Link",
+   "label": "Nature of Leave",
+   "options": "Leave Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "re_join",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Re Joining Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_rkbl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "re_joining_date",
+   "fieldtype": "Date",
+   "hidden": 1,
+   "label": "Re Joining Date"
+  },
+  {
+   "fieldname": "late_joining_in_days",
+   "fieldtype": "Data",
+   "label": "Late Joining in Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_mnxg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reporting_date",
+   "fieldtype": "Date",
+   "label": "Reporting Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "custom_reason",
+   "fieldtype": "Small Text",
+   "label": "Reason"
+  },
+  {
+   "fieldname": "passport_at",
+   "fieldtype": "Select",
+   "label": "Passport Custodian",
+   "options": "\nEmployee\nHead Office",
+   "reqd": 1
+  },
+  {
+   "fieldname": "extension_from_date",
+   "fieldtype": "Date",
+   "label": "Extension From Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "extension_to_date",
+   "fieldtype": "Date",
+   "label": "Extension To Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rejoining_time",
+   "fieldtype": "Time",
+   "label": "Rejoining Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "code_no",
+   "fieldtype": "Data",
+   "label": "Code No"
+  },
+  {
+   "fieldname": "site",
+   "fieldtype": "Data",
+   "label": "Site"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-02-26 16:54:03.450191",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "Rejoining Form",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,46 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-01-25 15:26:40.279026",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "hr_policy",
+  "view"
+ ],
+ "fields": [
+  {
+   "fieldname": "hr_policy",
+   "fieldtype": "Attach",
+   "label": "HR Policy"
+  },
+  {
+   "fieldname": "view",
+   "fieldtype": "HTML"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-01-25 15:42:26.946630",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "HR Policy",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

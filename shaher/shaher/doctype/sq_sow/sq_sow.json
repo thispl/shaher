@@ -1,0 +1,155 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SQ SOW -.#####",
+ "creation": "2025-01-07 16:50:24.252941",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "supplier_quotation",
+  "company",
+  "uom",
+  "total_supplier_quotation_amount",
+  "column_break_v037",
+  "sow_id",
+  "sow_name",
+  "qty",
+  "total_sq_sow_amount",
+  "applicable_sections_section",
+  "materials",
+  "column_break_nesv",
+  "manpower",
+  "materials_tab_tab",
+  "materials_table",
+  "manpower_tab_tab",
+  "manpower_table"
+ ],
+ "fields": [
+  {
+   "fieldname": "supplier_quotation",
+   "fieldtype": "Link",
+   "label": "Supplier Quotation",
+   "options": "Supplier Quotation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_v037",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sow_id",
+   "fieldtype": "Data",
+   "label": "SOW ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sow_name",
+   "fieldtype": "Data",
+   "label": "SOW Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "applicable_sections_section",
+   "fieldtype": "Section Break",
+   "label": "Applicable Sections"
+  },
+  {
+   "default": "0",
+   "fieldname": "materials",
+   "fieldtype": "Check",
+   "label": "Materials"
+  },
+  {
+   "fieldname": "column_break_nesv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "manpower",
+   "fieldtype": "Check",
+   "label": "Manpower"
+  },
+  {
+   "depends_on": "materials",
+   "fieldname": "materials_tab_tab",
+   "fieldtype": "Tab Break",
+   "label": "Materials"
+  },
+  {
+   "fieldname": "materials_table",
+   "fieldtype": "Table",
+   "label": "Materials",
+   "options": "Materials"
+  },
+  {
+   "depends_on": "manpower",
+   "fieldname": "manpower_tab_tab",
+   "fieldtype": "Tab Break",
+   "label": "Manpower Tab"
+  },
+  {
+   "fieldname": "manpower_table",
+   "fieldtype": "Table",
+   "label": "Manpower",
+   "options": "Manpower"
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Data",
+   "label": "Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_supplier_quotation_amount",
+   "fieldtype": "Currency",
+   "label": "Total Supplier Quotation Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_sq_sow_amount",
+   "fieldtype": "Currency",
+   "label": "Total SQ SOW Amount",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-01-13 14:50:55.829302",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "SQ SOW",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

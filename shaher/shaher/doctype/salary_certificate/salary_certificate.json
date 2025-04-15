@@ -1,0 +1,231 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SC-.#####",
+ "creation": "2024-12-25 10:57:33.976360",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_ga0p",
+  "reference_details_column",
+  "reference",
+  "emp_salutation",
+  "deapartment",
+  "id_card_holder",
+  "passport_no",
+  "date",
+  "reports_to",
+  "company",
+  "signature_authority",
+  "sign_name",
+  "sign_designation",
+  "column_break_hhvy",
+  "name1",
+  "designation",
+  "date_of_joining",
+  "salary_currency",
+  "cost_of_company",
+  "reason",
+  "rejection_remark",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_ga0p",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reference",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "reference.custom_resident_id_numberqid_number",
+   "fetch_if_empty": 1,
+   "fieldname": "id_card_holder",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "ID Card Holder",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "reference.passport_number",
+   "fetch_if_empty": 1,
+   "fieldname": "passport_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Passport No.",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_hhvy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "reference.employee_name",
+   "fetch_if_empty": 1,
+   "fieldname": "name1",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "reference.designation",
+   "fetch_if_empty": 1,
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "reference.date_of_joining",
+   "fetch_if_empty": 1,
+   "fieldname": "date_of_joining",
+   "fieldtype": "Date",
+   "label": "Date of Joining",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "company.default_currency",
+   "fetch_if_empty": 1,
+   "fieldname": "salary_currency",
+   "fieldtype": "Data",
+   "label": "Salary Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reference_details_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "reference.salutation",
+   "fetch_if_empty": 1,
+   "fieldname": "emp_salutation",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Salutation",
+   "options": "Salutation"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Salary Certificate",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fetch_from": "reference.ctc",
+   "fetch_if_empty": 1,
+   "fieldname": "cost_of_company",
+   "fieldtype": "Currency",
+   "label": "Cost of Company(CTC)",
+   "precision": "3",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "reference.department",
+   "fetch_if_empty": 1,
+   "fieldname": "deapartment",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason"
+  },
+  {
+   "fetch_from": "reference.company",
+   "fetch_if_empty": 1,
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.workflow_state!=\"Draft\"",
+   "fetch_from": "signature_authority.designation",
+   "fieldname": "sign_designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "reference.reports_to",
+   "fetch_if_empty": 1,
+   "fieldname": "reports_to",
+   "fieldtype": "Link",
+   "label": "Reports to",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.workflow_state != \"Draft\"",
+   "fieldname": "signature_authority",
+   "fieldtype": "Link",
+   "label": "Signature Authority",
+   "mandatory_depends_on": "eval:doc.workflow_state != \"Draft\"",
+   "options": "Employee"
+  },
+  {
+   "depends_on": "eval:doc.workflow_state!=\"Draft\"",
+   "fetch_from": "signature_authority.employee_name",
+   "fieldname": "sign_name",
+   "fieldtype": "Data",
+   "label": "Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rejection_remark",
+   "fieldtype": "Small Text",
+   "label": "Rejection Remark",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-04-03 16:46:15.370519",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "Salary Certificate",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

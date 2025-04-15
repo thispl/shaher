@@ -1,0 +1,273 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SHA/HRA/01/.####",
+ "creation": "2025-01-24 10:28:37.355698",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_9rxh",
+  "amended_from",
+  "type_of_request",
+  "column_break_lxbf",
+  "leave_application",
+  "rejoining_date",
+  "employee_details_section",
+  "employee_number",
+  "employee_name",
+  "grade",
+  "joining_date",
+  "designation",
+  "column_break_toxm",
+  "request_date",
+  "department",
+  "company",
+  "resident_id_numberqid_number",
+  "hod",
+  "ticket_required",
+  "other_details_section",
+  "leave_start_date",
+  "column_break_kyca",
+  "leave_end_date",
+  "leave_details_section",
+  "last_rejoin_date",
+  "column_break_eqos",
+  "last_leave_salary_received_date",
+  "column_break_lxov",
+  "last_date_of_service",
+  "column_break_rrah",
+  "total_leave_taken",
+  "remarks_section_section",
+  "hod_remarks",
+  "hr_manager_remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_9rxh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Leave Salary  and Final Exit Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "type_of_request",
+   "fieldtype": "Select",
+   "label": "Type of Request",
+   "options": "\nAnnual Vacation\nLeave Salary Encashment\nIndemnity"
+  },
+  {
+   "fieldname": "column_break_lxbf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "leave_application",
+   "fieldtype": "Link",
+   "label": "Leave Application",
+   "options": "Leave Application"
+  },
+  {
+   "depends_on": "eval:doc.type_of_request == \"Annual Vacation\"",
+   "fieldname": "rejoining_date",
+   "fieldtype": "Date",
+   "label": "Rejoining Date "
+  },
+  {
+   "fieldname": "employee_details_section",
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
+  },
+  {
+   "fieldname": "employee_number",
+   "fieldtype": "Link",
+   "label": "Employee Number",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "employee_number.employee_name",
+   "fetch_if_empty": 1,
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee_number.grade",
+   "fetch_if_empty": 1,
+   "fieldname": "grade",
+   "fieldtype": "Data",
+   "label": "Grade",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee_number.date_of_joining",
+   "fetch_if_empty": 1,
+   "fieldname": "joining_date",
+   "fieldtype": "Date",
+   "label": "Joining Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee_number.designation",
+   "fetch_if_empty": 1,
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "label": "Designation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_toxm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "request_date",
+   "fieldtype": "Date",
+   "label": "Request Date"
+  },
+  {
+   "fetch_from": "employee_number.department",
+   "fetch_if_empty": 1,
+   "fieldname": "department",
+   "fieldtype": "Data",
+   "label": "Department",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee_number.company",
+   "fetch_if_empty": 1,
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee_number.custom_resident_id_numberqid_number",
+   "fetch_if_empty": 1,
+   "fieldname": "resident_id_numberqid_number",
+   "fieldtype": "Data",
+   "label": "Resident ID Number(QID Number)"
+  },
+  {
+   "default": "0",
+   "fieldname": "hod",
+   "fieldtype": "Check",
+   "label": "HOD",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.type_of_request == \"Annual Vacation\"",
+   "fieldname": "ticket_required",
+   "fieldtype": "Select",
+   "label": "Ticket Required",
+   "options": "\nCompany Provided\nSelf Provided"
+  },
+  {
+   "fieldname": "other_details_section",
+   "fieldtype": "Section Break",
+   "label": "Other Details"
+  },
+  {
+   "fieldname": "leave_start_date",
+   "fieldtype": "Date",
+   "label": "Leave Start Date "
+  },
+  {
+   "fieldname": "column_break_kyca",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "leave_end_date",
+   "fieldtype": "Date",
+   "label": "Leave End Date"
+  },
+  {
+   "fieldname": "leave_details_section",
+   "fieldtype": "Section Break",
+   "label": "Leave Details"
+  },
+  {
+   "fieldname": "last_rejoin_date",
+   "fieldtype": "Date",
+   "label": "Last Rejoin Date"
+  },
+  {
+   "fieldname": "column_break_eqos",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "last_leave_salary_received_date",
+   "fieldtype": "Date",
+   "label": "Last Leave Salary Received Date"
+  },
+  {
+   "fieldname": "column_break_lxov",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "last_date_of_service",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Last Date of Service"
+  },
+  {
+   "fieldname": "column_break_rrah",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_leave_taken",
+   "fieldtype": "Data",
+   "label": "Total Leave taken",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remarks_section_section",
+   "fieldtype": "Section Break",
+   "label": "Remarks Section"
+  },
+  {
+   "fieldname": "hod_remarks",
+   "fieldtype": "Small Text",
+   "label": "HOD Remarks"
+  },
+  {
+   "fieldname": "hr_manager_remarks",
+   "fieldtype": "Small Text",
+   "label": "HR Manager Remarks"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-03-10 11:00:36.769796",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "Leave Salary  and Final Exit Request",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

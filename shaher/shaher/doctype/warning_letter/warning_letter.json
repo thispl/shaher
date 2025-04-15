@@ -1,0 +1,195 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "WL-.####",
+ "creation": "2024-12-21 11:52:29.620578",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_srba",
+  "employee",
+  "employee_name",
+  "date_of_joining",
+  "user_id",
+  "total_waring_count",
+  "issue_type",
+  "column_break_byrj",
+  "posting_date",
+  "designation",
+  "department",
+  "salutation",
+  "total_issue_count",
+  "company",
+  "letter_head",
+  "mail_content_section",
+  "subject",
+  "mail_content",
+  "amended_from",
+  "issuing_person"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_srba",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.designation",
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "label": "Designation",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.department",
+   "fieldname": "department",
+   "fieldtype": "Data",
+   "label": "Department",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.date_of_joining",
+   "fieldname": "date_of_joining",
+   "fieldtype": "Date",
+   "label": "Date of Joining",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_byrj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_waring_count",
+   "fieldtype": "Int",
+   "label": "Total Warning Count",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.salutation",
+   "fieldname": "salutation",
+   "fieldtype": "Link",
+   "label": "Salutation",
+   "options": "Salutation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.user_id",
+   "fieldname": "user_id",
+   "fieldtype": "Data",
+   "label": "User Id",
+   "read_only": 1
+  },
+  {
+   "fieldname": "issue_type",
+   "fieldtype": "Link",
+   "label": "Issue Type",
+   "options": "Issue Type",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_issue_count",
+   "fieldtype": "Int",
+   "label": "Total Issue Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mail_content_section",
+   "fieldtype": "Section Break",
+   "label": "Mail Content"
+  },
+  {
+   "fetch_from": "issue_type.description",
+   "fetch_if_empty": 1,
+   "fieldname": "mail_content",
+   "fieldtype": "Text Editor",
+   "label": "Mail Content",
+   "reqd": 1
+  },
+  {
+   "fieldname": "subject",
+   "fieldtype": "Data",
+   "label": "Subject",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "letter_head",
+   "fieldtype": "Link",
+   "label": "Letter Head",
+   "options": "Letter Head",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Warning Letter",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "HR Manager",
+   "fieldname": "issuing_person",
+   "fieldtype": "Link",
+   "label": "Issuing Person",
+   "options": "Role"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-03-11 19:41:03.550200",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "Warning Letter",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

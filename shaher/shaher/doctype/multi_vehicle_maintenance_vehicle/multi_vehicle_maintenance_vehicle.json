@@ -1,0 +1,125 @@
+{
+ "actions": [],
+ "creation": "2025-01-22 11:26:20.803393",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicle_details",
+  "register_no",
+  "make",
+  "vehicle_name",
+  "model",
+  "type_of_vehicle",
+  "column_break_6",
+  "expiry_date",
+  "driver",
+  "last_kilometer",
+  "last_service_date",
+  "present_kilometer"
+ ],
+ "fields": [
+  {
+   "fieldname": "vehicle_details",
+   "fieldtype": "Section Break",
+   "label": "Vehicle Details"
+  },
+  {
+   "fieldname": "register_no",
+   "fieldtype": "Link",
+   "ignore_user_permissions": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Register No",
+   "options": "Vehicle",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "register_no.make",
+   "fieldname": "make",
+   "fieldtype": "Read Only",
+   "label": "Make"
+  },
+  {
+   "fetch_from": "register_no.custom_name_of_vehicle",
+   "fieldname": "vehicle_name",
+   "fieldtype": "Read Only",
+   "in_list_view": 1,
+   "label": "Vehicle Name"
+  },
+  {
+   "fetch_from": "register_no.model",
+   "fieldname": "model",
+   "fieldtype": "Read Only",
+   "label": "Model"
+  },
+  {
+   "fetch_from": "register_no.custom_vehicle_type",
+   "fieldname": "type_of_vehicle",
+   "fieldtype": "Read Only",
+   "label": "Type of vehicle"
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "register_no.custom_expiry_of_istimara",
+   "fieldname": "expiry_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Istimara Expiry",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "register_no.employee",
+   "fieldname": "driver",
+   "fieldtype": "Read Only",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee"
+  },
+  {
+   "fetch_from": ".last_odometer",
+   "fieldname": "last_kilometer",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Last Kilometer"
+  },
+  {
+   "fieldname": "last_service_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Last Service Date"
+  },
+  {
+   "fieldname": "present_kilometer",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Present kilometer",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [
+  {
+   "link_doctype": "Purchase Order",
+   "link_fieldname": "custom_vehicle_maintenance_check"
+  }
+ ],
+ "modified": "2025-01-22 11:40:32.614863",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "Multi Vehicle Maintenance Vehicle",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

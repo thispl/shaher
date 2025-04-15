@@ -25,11 +25,11 @@ app_license = "mit"
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/shaher/css/shaher.css"
+app_include_css = "/assets/shaher/css/shaher.css"
 # app_include_js = "/assets/shaher/js/shaher.js"
 
 # include js, css files in header of web template
-# web_include_css = "/assets/shaher/css/shaher.css"
+web_include_css = "/assets/shaher/css/shaher.css"
 # web_include_js = "/assets/shaher/js/shaher.js"
 
 # include custom scss in every website theme (without file extension ".scss")
@@ -129,32 +129,79 @@ app_license = "mit"
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	# "ToDo": "custom_app.overrides.CustomToDo"
+    "Payroll Entry":"shaher.shaher.overrides.CustomPayrollEntry",
+    "Salary Slip":"shaher.shaher.overrides.CustomSalarySlip",
+    
+}
 
 # Document Events
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Supplier Quotation": {
+		"on_submit": ["shaher.custom.mail_for_supplier_quotation","shaher.custom.update_po_status"]
+	},
+    "Purchase Invoice":{
+        "on_submit":"shaher.custom.update_approval_date_pi"
+	},
+	"Purchase Order":{
+		"after_insert": "shaher.custom.update_employee_certification",
+		"on_submit":["shaher.custom.update_supplier_status",
+               "shaher.custom.trigger_mail_for_purchase_user",
+               "shaher.custom.create_vehicle_maintenance_check",
+			   "shaher.custom.update_approval_date_po"
+               ],
+		"before_cancel": ["shaher.custom.remove_vmc_linked"],
+		"on_cancel":["shaher.custom.update_supplier_status_on_cancel", "shaher.custom.validate_remarks", "shaher.custom.cancel_vehicle_maintenance_check"],
+	},
+	"Purchase Receipt": {
+		"after_insert": "shaher.custom.get_po_qty",
+		"on_submit":"shaher.custom.update_approval_date_pr"
+	},
+	"Material Request": {
+		"validate": ["shaher.custom.child_set_value", "shaher.custom.validate_kilometer",],
+        "on_submit":"shaher.custom.update_approval_date_mr"
+	},
+	"Supplier":{
+		"after_insert":"shaher.custom.create_user_permission_on_validate"
+	},
+	"Leave Application":{
+		'validate':"shaher.custom.validate_next_due_date"
+	},
+    # "Attendance":{
+		# 'on_update':"shaher.custom.ot_calculation",
+    #     'after_insert':"shaher.custom.ot_calculation",
+	# },
+    "Sales Invoice":{
+		'validate':[ "shaher.custom.udpate_date_of_supply","shaher.custom.pdo_validation",],
+	},
+    "Delivery Note": {
+		'validate': "shaher.custom.update_coc_fields"
+	}
+}
 
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
 # 	"all": [
 # 		"shaher.tasks.all"
 # 	],
-# 	"daily": [
+	"cron": {
+		"0 2 * * * *": [
+			"shaher.shaher.doctype.employee_certification.employee_certification.monthly_expiry_doc"
+		],
+	},
+	"daily": [
+		"shaher.alerts.update_employee_certification_status"
+		"shaher.shaher.doctype.employee_certification.employee_certification.update_days_left"
 # 		"shaher.tasks.daily"
-# 	],
+		"shaher.custom.create_scheduled_job",
+        "shaher.custom.update_days_left_daily",
+	],
 # 	"hourly": [
 # 		"shaher.tasks.hourly"
 # 	],
@@ -164,7 +211,7 @@ app_license = "mit"
 # 	"monthly": [
 # 		"shaher.tasks.monthly"
 # 	],
-# }
+}
 
 # Testing
 # -------
