@@ -153,13 +153,8 @@ def update_po_remarks(name, remark):
 def update_signature(user, docname, field):
 	if frappe.db.exists("Employee", {"user_id": user}):
 		signature = frappe.db.get_value("Employee", {"user_id": user}, ["custom_digital_signature"])
-		frappe.log_error("askdkj",signature)
 		if signature:
 			frappe.db.set_value("Purchase Order", docname, field, signature)
-		else:
-			frappe.throw("Signature not found")
-	else:
-		frappe.throw("Employee not found")
 		
 @frappe.whitelist()
 def trigger_mail_for_purchase_user(doc, method):
@@ -204,11 +199,11 @@ def trigger_mail_for_purchase_user(doc, method):
 @frappe.whitelist()
 def trigger_mail_for_supplier(name):
 	doc = frappe.get_doc("Purchase Order", name)
-	if frappe.db.exists("Supplier Quotation", {"supplier": doc.supplier}):
-		supplier_quotation = frappe.db.get_value("Supplier Quotation", {"supplier": doc.supplier}, "quotation_number")
-	else:
-		supplier_quotation = ""
-	supplier = frappe.db.get_value("Supplier", doc.supplier, "email_id")
+	# if frappe.db.exists("Supplier Quotation", {"supplier": doc.supplier}):
+	# 	supplier_quotation = frappe.db.get_value("Supplier Quotation", {"supplier": doc.supplier}, "quotation_number")
+	# else:
+	# 	supplier_quotation = ""
+	supplier = frappe.db.get_value("Supplier", doc.supplier, "custom_supplier_login_id")
 	frappe.log_error
 	message = f"""
 			<div style="font-family: Arial, sans-serif;
@@ -222,7 +217,7 @@ def trigger_mail_for_supplier(name):
 						
 						<b>Dear {doc.supplier}</b>
 						<p>Greetings from <b>{doc.company}</b> !</p>
-						<p>Please find the attached Purchase Order for your quotation <b>{doc.supplier_quotation}</b></p>
+						<p>Please find the attached Purchase Order</p>
 			"""
 	if supplier:
 		subject = "Purchase Order - Reg"
