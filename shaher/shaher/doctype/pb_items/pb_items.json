@@ -1,0 +1,155 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-18 10:13:49.860692",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "sow",
+  "spo_li",
+  "item_code",
+  "item_name",
+  "surface_area",
+  "item_group",
+  "description",
+  "unit",
+  "qty",
+  "cost",
+  "amount",
+  "docname",
+  "work_title",
+  "delivered_qty",
+  "billed_qty",
+  "pb_doctype"
+ ],
+ "fields": [
+  {
+   "columns": 1,
+   "fieldname": "sow",
+   "fieldtype": "Link",
+   "label": "SOW",
+   "options": "Item"
+  },
+  {
+   "columns": 1,
+   "fieldname": "spo_li",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "SPO LI",
+   "precision": "2"
+  },
+  {
+   "columns": 1,
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fetch_from": "item_code.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Read Only",
+   "in_list_view": 1,
+   "label": "Item Name"
+  },
+  {
+   "fieldname": "surface_area",
+   "fieldtype": "Float",
+   "label": "Surface Area"
+  },
+  {
+   "fetch_from": "item_code.item_group",
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "label": "Item Group",
+   "options": "Item Group",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "columns": 2,
+   "fetch_from": "item_code.description",
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "columns": 1,
+   "fetch_from": "item_code.stock_uom",
+   "fetch_if_empty": 1,
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Unit",
+   "options": "UOM",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Qty"
+  },
+  {
+   "columns": 2,
+   "fieldname": "cost",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Cost",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "docname",
+   "fieldtype": "Read Only",
+   "label": "Docname"
+  },
+  {
+   "fieldname": "work_title",
+   "fieldtype": "Read Only",
+   "label": "Work Title"
+  },
+  {
+   "fieldname": "delivered_qty",
+   "fieldtype": "Float",
+   "label": "Delivered Qty"
+  },
+  {
+   "fieldname": "billed_qty",
+   "fieldtype": "Float",
+   "label": "Billed Qty"
+  },
+  {
+   "fieldname": "pb_doctype",
+   "fieldtype": "Data",
+   "label": "PB Doctype"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-04-29 08:29:00.974943",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "PB Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

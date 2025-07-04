@@ -10,6 +10,23 @@ from frappe.utils import cint, flt, formatdate, get_link_to_form, getdate, now,t
 from frappe.utils import getdate, get_datetime
 import calendar
 from frappe.model.mapper import get_mapped_doc
+from frappe.utils.csvutils import UnicodeWriter,read_csv_content
+from frappe.utils.file_manager import get_file
+from frappe.utils import nowdate, get_abbr  
+from datetime import datetime
+
+import io
+from frappe.utils.pdf import get_pdf
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+import PyPDF2
+from PyPDF2 import PdfReader, PdfWriter
+from reportlab.lib import colors
+import os
+import re
+from frappe.model.workflow import apply_workflow
+
+
 
 #Show the below details while open the quotation document if there in profit percentage
 @frappe.whitelist()
@@ -234,13 +251,15 @@ def trigger_mail_for_supplier(name):
 
 @frappe.whitelist()
 def get_po_qty(doc, method):
-	po = frappe.get_doc("Purchase Order", doc.custom_purchase_order, "items")
-	for po_item in po.items:
-		for pi_item in doc.items:
-			if po_item.item_code == pi_item.item_code:
-				pi_item.custom_ordered_quantity = po_item.qty
-				pi_item.custom_balance_quantity = po_item.qty - pi_item.qty
-	po.save(ignore_permissions=True)
+	if doc.custom_purchase_order:
+		po = frappe.get_doc("Purchase Order", doc.custom_purchase_order, "items")
+		if po:
+			for po_item in po.items:
+				for pi_item in doc.items:
+					if po_item.item_code == pi_item.item_code:
+						if doc.is_new():
+							pi_item.custom_ordered_quantity = po_item.qty
+						pi_item.custom_balance_quantity = po_item.qty - pi_item.qty
 	
 	
 #Get the below values and set it to onload of the Vehicle document
@@ -552,27 +571,29 @@ def calculate_rejoining_date(to_date):
 
 @frappe.whitelist()
 def validate_next_due_date(doc,method):
-	# doc = frappe.get_doc("Leave Application",'HR-LAP-2025-00001')
 	if doc.leave_type=='Annual Leave' and doc.custom_is_extension == 0:
 		days,doj = frappe.db.get_value("Employee",{'name':doc.employee},['custom_annual_leave_applicable_after','date_of_joining'])
 		if days:
 			if frappe.db.exists("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2)}):
-				leave_app = frappe.get_doc("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2)},order_by='creation DESC')
-				if frappe.db.exists("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2),'custom_is_extension':1,'from_date':('>',(add_days(leave_app.to_date,1)))}):
-					leave_app_extn = frappe.get_doc("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2),'custom_is_extension':1,'from_date':('>',(add_days(leave_app.to_date,1)))},order_by='creation DESC')
-					end_date = leave_app_extn.to_date
+				count =frappe.db.count("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2),'name':['!=',doc.name]})
+				if count > 0:
+					leave_app = frappe.get_doc("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2)},order_by='creation DESC')
+					if frappe.db.exists("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2),'custom_is_extension':1,'from_date':('>',(add_days(leave_app.to_date,1)))}):
+						leave_app_extn = frappe.get_doc("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2),'custom_is_extension':1,'from_date':('>',(add_days(leave_app.to_date,1)))},order_by='creation DESC')
+						end_date = leave_app_extn.to_date
+					else:
+						end_date = leave_app.to_date
+					next_due_date = add_days(end_date,int(days))
+					current_due_date = date_diff(doc.from_date,end_date) + 1
+					formatted_next_due_date = frappe.utils.formatdate(next_due_date, 'dd-mm-yyyy')
+					if int(days) > current_due_date:
+						frappe.throw(f"You can apply Annual Leave only after Next Due Date: {formatted_next_due_date}")
 				else:
-					end_date = leave_app.to_date
-				next_due_date = add_days(end_date,int(days))
-				current_due_date = date_diff(doc.from_date,end_date) + 1
-				print(current_due_date)
-				if int(days) > current_due_date:
-					frappe.throw(f"You can apply Annual Leave only after Next Due Date: {next_due_date}")
-			else:
-				next_due_date = add_days(doj,int(days))
-				current_due_date = date_diff(today(),doj) + 1
-				if int(days) > current_due_date:
-					frappe.throw(f"You can apply Annual Leave after the Due Date: {next_due_date}")
+					next_due_date = add_days(doj,int(days))
+					current_due_date = date_diff(today(),doj) + 1
+					formatted_next_due_date = frappe.utils.formatdate(next_due_date, 'dd-mm-yyyy')
+					if int(days) > current_due_date:
+						frappe.throw(f"You can apply Annual Leave after the Due Date: {formatted_next_due_date}")
 		else:
 			frappe.throw("Annual Leave Applicable after Days is not updated in Employee MIS.Kindly update that and check")
 
@@ -784,6 +805,7 @@ def create_vehicle_maintenance_check(doc, methods):
 			vmc.present_kilometer = row.custom_present_kilometer
 			vmc.purchase_order = doc.name
 			vmc.save(ignore_permissions=True)
+			vmc.submit()
 			row.custom_vehicle_maintenance_check = vmc.name
 		frappe.msgprint("Vehicle Maintenance Check List created successfully.")
 		
@@ -834,10 +856,13 @@ def pdo_validation(doc, methods):
 def validate_grand_total(so,date,total):
 	grand_total=frappe.db.get_value("Sales Order",so,'base_grand_total')
 	qtn=frappe.db.get_value("Sales Order",so,'quotation')
-	profit_per=frappe.db.get_value("Quotation",qtn,'custom_prof_percentage')
+	profit_per=frappe.db.get_value("Quotation",qtn,'custom_prof_percentage') or 0
 	purchase_orders=frappe.get_all("Purchase Order",{'custom_sales_order':so,'docstatus':1,'transaction_date':('<=',date)},['base_grand_total'])
 	total_base_grand_total = sum(po['base_grand_total'] for po in purchase_orders) + float(total)
+	# if profit_per:
 	percentage_difference = ((total_base_grand_total - (grand_total*((100-profit_per)/100))) / (grand_total*((100-profit_per)/100))) * 100
+	# else:
+	# 	percentage_difference = 0
 	if total_base_grand_total > (grand_total*((100-profit_per)/100)):
 		return "above",round(percentage_difference,2)
 	if total_base_grand_total < (grand_total*((100-profit_per)/100)):
@@ -905,33 +930,33 @@ def update_approval_date_pr(doc,method):
 
 @frappe.whitelist()
 def make_quotation(source_name, target_doc=None):
-    def postprocess(source, target):
-        # Map 'Provisional Budgeting Child Expense' manually since get_mapped_doc doesn't support multiple child tables
-        for expense in source.get("expenses"):
-            target.append("expenses", {
-                "account": expense.account,
-                "current_value": expense.current_value,
-                "provisional_value": expense.provisional_value
-            })
+	def postprocess(source, target):
+		# Map 'Provisional Budgeting Child Expense' manually since get_mapped_doc doesn't support multiple child tables
+		for expense in source.get("expenses"):
+			target.append("expenses", {
+				"account": expense.account,
+				"current_value": expense.current_value,
+				"provisional_value": expense.provisional_value
+			})
 
-    doclist = get_mapped_doc("Provisional Budgeting", source_name, {
-        "Provisional Budgeting": {
-            "doctype": "Provisional Budgeting Comparison",
-            "field_map": {
-                "name": "provisional_budgeting",
-            }
-        },
-        "Provisional Budgeting Child": {
-            "doctype": "Provisional Budgeting Comparison Child",
-            "field_map": {
-                "account": "account",
-                "current_value": "current_value",
-                "provisional_value": "provisional_value",
-            }
-        }
-    }, target_doc, postprocess)
+	doclist = get_mapped_doc("Provisional Budgeting", source_name, {
+		"Provisional Budgeting": {
+			"doctype": "Provisional Budgeting Comparison",
+			"field_map": {
+				"name": "provisional_budgeting",
+			}
+		},
+		"Provisional Budgeting Child": {
+			"doctype": "Provisional Budgeting Comparison Child",
+			"field_map": {
+				"account": "account",
+				"current_value": "current_value",
+				"provisional_value": "provisional_value",
+			}
+		}
+	}, target_doc, postprocess)
 
-    return doclist
+	return doclist
 
 @frappe.whitelist()
 def check_inactive_employee(employee):
@@ -942,3 +967,380 @@ def check_inactive_employee(employee):
 		return "Active"
 	else:
 		return "Inactive"
+
+#Enable the hod checkbox in Leave application , Leave salary and final exit request,Rejoining form , additional vacation,HR Request form based on below condition
+@frappe.whitelist()
+def get_role(employee):
+	user_id = frappe.get_value('Employee',{'employee':employee},['user_id'])
+	hod = frappe.get_value('User',{'email':user_id},['name'])
+	role = "HOD"
+	hod = frappe.get_value('Has Role',{'role':role,'parent':hod})
+	if hod:
+		return  "yes"
+	else:
+		return "no"
+	
+@frappe.whitelist()
+def get_next_account_number(parent_account):
+	if not parent_account:
+		return ""
+
+	# Get the highest child account number under this parent
+	series = frappe.db.sql(
+		"""
+		SELECT account_number FROM `tabAccount`
+		WHERE parent_account=%s AND disabled=0
+		ORDER BY account_number DESC
+		LIMIT 1
+		""",
+		(parent_account,),
+		as_dict=False
+	)
+	series_par = frappe.db.get_value("Account",{'name':parent_account,'disabled':0},['account_number'])
+	if series:
+		account_number = str(int(series[0][0]) + 1)
+		
+	elif series_par:
+		account_number = series_par
+	# series = frappe.db.sql("""
+	# 	SELECT account_number FROM `tabAccount`
+	# 	WHERE parent_account=%s AND disabled=0 AND account_number IS NOT NULL
+	# 	ORDER BY CAST(account_number AS UNSIGNED) DESC
+	# 	LIMIT 1
+	# """, (parent_account,), as_dict=False)
+
+	# parent_number = frappe.db.get_value("Account", parent_account, "account_number")
+
+	# if series and series[0][0] and series[0][0].isdigit():
+	# 	return str(int(series[0][0]) + 1)
+	# elif parent_number and parent_number.isdigit():
+	# 	return parent_number + "01"
+
+	return account_number
+@frappe.whitelist()
+def get_leave_periods(date_of_joining, relieving_date, employee):
+	emp = frappe.get_doc("Employee", employee)
+	basic = emp.custom_basic
+
+	periods = []
+	current = date_of_joining
+	year = 1
+	total_amount=0
+	current=getdate(current)
+	relieving_date=getdate(relieving_date)
+	while current < relieving_date:
+		try:
+			next_year = current.replace(year=current.year + 1)
+		except ValueError:
+			next_year = current + timedelta(days=365)
+
+		to_date = min(next_year, relieving_date)
+		diff = (to_date - current).days
+
+		if year <= 3:
+			amount = (diff / 2) * (basic / 365)
+		else:
+			amount = (diff) * (basic / 365)
+		total_amount+=amount
+		periods.append({
+			"year_number": year,
+			"from_date": current,
+			"to_date": to_date,
+			"diff_days": diff,
+			"amount": round(amount, 3)
+		})
+
+		current = to_date
+		year += 1
+
+	return {
+		"periods": periods,
+		"total_amount": round(total_amount, 3)
+	}
+
+@frappe.whitelist()
+def get_tot_leave_amount(name):
+	doc=frappe.get_doc("Full and Final Settlement",name)
+	tot=0
+	for i in doc.leave_salary:
+		tot+=i.amount
+	return tot
+		
+@frappe.whitelist()
+def generate_leave_summary(date_of_joining, relieving_date, employee):
+	leave_data = get_leave_periods(date_of_joining, relieving_date, employee)
+	periods = leave_data.get("periods", [])
+	total_amount = leave_data.get("total_amount", 0)
+	html = """
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>From Date</th>
+				<th>To Date</th>
+				<th>Diff (Days)</th>
+				<th>Year</th>
+				<th>Amount</th>
+			</tr>
+		</thead>
+		<tbody>
+	"""
+	for row in periods:
+		html += f"""
+			<tr>
+				<td>{row['from_date']}</td>
+				<td>{row['to_date']}</td>
+				<td>{row['diff_days']}</td>
+				<td>{row['year_number']}</td>
+				<td>{row['amount']}</td>
+			</tr>
+		"""
+
+	html += f"""
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="4"><strong>Total Amount</strong></td>
+				<td><strong>{total_amount}</strong></td>
+			</tr>
+		</tfoot>
+	</table>
+	"""
+
+	return html
+
+@frappe.whitelist()
+def validate_project_budget(doc, method):
+	if not doc.custom_project_budget and doc.order_type == "Project":
+		frappe.throw(
+			"Create Project Budget before submitting the Sales Order",
+			title = "Not Allowed"
+		)
+
+
+@frappe.whitelist()
+def get_template():
+	args = frappe.local.form_dict
+	w = UnicodeWriter()
+	w = add_header(w,args)
+
+	frappe.response['result'] = cstr(w.getvalue())
+	frappe.response['type'] = 'csv'
+	frappe.response['doctype'] = "Bank Statement"
+
+def add_header(w,args):
+	args.company = frappe.db.get_value("Bank Statement Import",args.name,'company')
+	frappe.log_error(args.company,args.bank_account)
+	if args.company =='AMAL PETROLEUM SERVICES CO.' and 'Bank Dhofar' in args.bank_account:
+		
+		w.writerow(['Transaction Date','Value Date','Transaction Category','Cheque No.','Description','Debit (-)','Credit (+)','Balance','Book Date'])
+	elif args.company =='AMAL PETROLEUM SERVICES CO.' and 'Bank Muscat' in args.bank_account:
+		w.writerow(['Transaction Date','Value Date','Transaction Remarks','Dr Amount','Cr Amount','Running Balance','Book Date'])
+	elif args.company =='SHAHER UNITED TRADING & CONTRACTING CO' and 'Bank Muscat' in args.bank_account:
+		w.writerow(['Transaction Date','Value Date','Transaction Remarks','Debit','Credit'])
+	elif args.company =='SHAHER UNITED TRADING & CONTRACTING CO' and 'Alizz' in args.bank_account:
+		w.writerow(['Transaction Date','Description','Book Date','Value Date','Debit (-)','Credit (+)','Balance'])	
+	return w
+
+@frappe.whitelist()
+def create_bank_transaction(file,company,bank_account):
+	filepath = get_file(file)
+	pps = read_csv_content(filepath[1])
+	count = 0
+	for pp in pps:
+		if pp[0] != 'Transaction Date':
+			
+			
+			doc = frappe.new_doc('Bank Transaction')
+			doc.company = company
+			doc.bank_account = bank_account
+			
+			if company =='AMAL PETROLEUM SERVICES CO.' and 'Bank Dhofar' in bank_account:
+				date_obj = datetime.strptime(pp[0], "%d/%m/%Y")  # or "%d/%m/%Y" depending on input
+				formatted_date = date_obj.strftime("%Y-%m-%d")	
+				doc.date = formatted_date
+				doc.reference_number = pp[3]
+				doc.description = pp[4]
+				doc.deposit = pp[5]
+				doc.withdrawal = pp[6]
+			elif company =='AMAL PETROLEUM SERVICES CO.' and 'Bank Muscat' in bank_account:
+				date_obj = datetime.strptime(pp[0], "%d/%m/%Y")  # or "%d/%m/%Y" depending on input
+				formatted_date = date_obj.strftime("%Y-%m-%d")
+				doc.date = formatted_date
+				doc.description = pp[2]
+				doc.deposit = pp[3]
+				doc.withdrawal = pp[4]
+			elif company =='SHAHER UNITED TRADING & CONTRACTING CO' and 'Bank Muscat' in bank_account:
+				date_obj = datetime.strptime(pp[0], "%d/%m/%Y")  # or "%d/%m/%Y" depending on input
+				formatted_date = date_obj.strftime("%Y-%m-%d")
+				doc.date = formatted_date
+				doc.description = pp[2]
+				doc.deposit = pp[3]
+				doc.withdrawal = pp[4]
+			elif company =='SHAHER UNITED TRADING & CONTRACTING CO' and 'Alizz' in bank_account:
+				date_obj = datetime.strptime(pp[0], '%d-%b-%y')
+				formatted_date = date_obj.strftime('%Y-%m-%d')
+				doc.date = formatted_date
+				doc.description = pp[1]
+				doc.deposit = pp[4]
+				doc.withdrawal = pp[5]
+			doc.save(ignore_permissions=True)
+			doc.submit()
+			frappe.db.commit()
+			count+=1
+	return count
+
+@frappe.whitelist()
+def update_dn_status(doc, method):
+	if doc.workflow_state == "Pending for SE":
+		if doc.service_entry_number:
+			apply_workflow(doc, "To Bill")
+	
+	if doc.workflow_state == "To Bill":
+		if not doc.service_entry_number:
+			apply_workflow(doc, "Revert")
+
+
+@frappe.whitelist()
+def update_workflow_on_cancel(doc, method):
+	doc.workflow_state == "Cancelled"
+
+@frappe.whitelist()
+def update_dn_workflow(doc, method):
+	delivery_note = frappe.db.get_value("Sales Invoice Item", {"parent": doc.name}, "delivery_note")
+	if frappe.db.exists("Delivery Note", {"name": delivery_note, "status": "Completed"}):
+		frappe.db.set_value("Delivery Note", {"name": delivery_note, "status": "Completed"}, "workflow_state", "Completed")
+
+@frappe.whitelist()
+def update_workflow_on_cancelling_si(doc, method):
+	delivery_note = frappe.db.get_value("Sales Invoice Item", {"parent": doc.name}, "delivery_note")
+	if frappe.db.exists("Delivery Note", {"name": delivery_note, "workflow_state": "Completed"}):
+		frappe.db.set_value("Delivery Note", {"name": delivery_note, "workflow_state": "Completed"}, "workflow_state", "To Bill")
+		
+
+
+@frappe.whitelist()
+def custom_sutc_job_no_validation(doc, method):
+	if doc.is_new():
+		posting_date =  nowdate()
+		if isinstance(posting_date, str):
+			posting_date = datetime.strptime(posting_date, "%Y-%m-%d")
+
+		month = posting_date.strftime('%m')
+		year = posting_date.strftime('%y')
+
+		
+		
+		loc_abbr = get_abbr(doc.custom_site) if doc.custom_site else ""
+
+		count = frappe.db.count("Delivery Note", {"posting_date": posting_date})
+		count_str = str(count + 1).zfill(2)
+
+		if loc_abbr:
+			job_no = f"{count_str}-{month}-{loc_abbr}-{year}"
+		else:
+			job_no = f"{count_str}-{month}-{year}"
+
+		doc.custom_sutc_job_no = job_no
+
+
+@frappe.whitelist()
+def read_service_entry_pdf(file_url):
+	# Step 1: Get full path of the uploaded PDF file
+	relative_path = file_url.lstrip("/").replace("files/", "", 1)
+	pdf_path = frappe.get_site_path("public", "files", relative_path)
+
+	# Step 2: Prepare .txt file path (store PDF as .txt)
+	base_filename = os.path.splitext(os.path.basename(pdf_path))[0]
+	text_filename = base_filename + ".txt"
+	text_path = frappe.get_site_path("public", "files", text_filename)
+
+	# Step 3: Copy raw binary PDF content into .txt file
+	with open(pdf_path, "rb") as pdf_file:
+		pdf_data = pdf_file.read()
+
+	with open(text_path, "wb") as text_file:
+		text_file.write(pdf_data)
+
+	# Step 4: Read binary and decode it (safely)
+	with open(text_path, "rb") as f:
+		binary_content = f.read()
+
+	try:
+		content = binary_content.decode("latin1")
+	except UnicodeDecodeError:
+		return None
+
+	# Step 5: Extract form field values using regex
+	fields = {}
+	
+	match_entry = re.search(r"/T\(service_entry\).*?/V\((.*?)\)", content, re.DOTALL)
+	if match_entry:
+		fields["service_entry"] = match_entry.group(1).strip()
+
+	match_date = re.search(r"/T\(service_entry_date\).*?/V\((.*?)\)", content, re.DOTALL)
+	if match_date:
+		fields["service_entry_date"] = match_date.group(1).strip()
+
+	if fields:
+		return fields
+	else:
+		return None
+
+
+@frappe.whitelist()
+def editable_coc_print(docname):
+	html = frappe.get_print('Delivery Note', docname, print_format='Certificate of Completion')
+	base_pdf = get_pdf(html)
+
+	packet = io.BytesIO()
+	can = canvas.Canvas(packet, pagesize=A4)
+
+	form = can.acroForm
+	form.textfield(
+		name='service_entry',
+		tooltip='Enter Service Entry Sheet No',
+		x=192, y=68,
+		width=122, height=20,
+		borderColor=colors.black,
+		fillColor=colors.white,
+		textColor=colors.black,
+		fontName="Helvetica",
+		fontSize=10,
+		forceBorder=True
+	)
+
+	form.textfield(
+		name='service_entry_date',
+		tooltip='Enter Date',
+		x=423, y=53,
+		width=100, height=17,
+		borderColor=colors.black,
+		fillColor=colors.white,
+		textColor=colors.black,
+		fontName="Helvetica",
+		fontSize=10,
+		forceBorder=True,
+		value="dd-mm-yyyy"
+	)
+
+	can.showPage()
+	can.save()
+	packet.seek(0)
+
+	base_pdf_reader = PdfReader(io.BytesIO(base_pdf))
+	overlay_reader = PdfReader(packet)
+	writer = PdfWriter()
+
+	page = base_pdf_reader.pages[0]
+	page.merge_page(overlay_reader.pages[0])
+	writer.add_page(page)
+
+	output_filename = f"{docname}-editable.pdf"
+	output_path = frappe.get_site_path("public", "files", output_filename)
+
+	with open(output_path, "wb") as f:
+		writer.write(f)
+
+	return "/files/" + output_filename
+
+

@@ -1,0 +1,779 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "PBSOW.####",
+ "creation": "2025-04-18 11:13:32.029140",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "sales_order",
+  "project_budget",
+  "company",
+  "column_break_skvb",
+  "po_li",
+  "sow",
+  "qty",
+  "uom",
+  "applicable_sections",
+  "a_design",
+  "j_raw",
+  "b_materials",
+  "c_finishing_work",
+  "i_finished_goods",
+  "column_break_bkgd",
+  "d_accessories",
+  "e_installation",
+  "g_tools__equipment__transport",
+  "h_others",
+  "total_budget_tab",
+  "lpo_amount",
+  "bidding_amount_difference",
+  "column_break_cqsk",
+  "bidding_amount",
+  "column_break_csdo",
+  "discount",
+  "revision",
+  "column_break_ifcm",
+  "lpo_unit_rate",
+  "section_break_wwff",
+  "business_promotion_amount",
+  "business_promotion_percent",
+  "column_break_hnjw",
+  "overhead_amount",
+  "overhead_percent",
+  "column_break_fvzq",
+  "contigency_amount",
+  "contigency_percent",
+  "column_break_fktg",
+  "gross_profit_amount",
+  "gross_profit_percent",
+  "section_break_etwi",
+  "total_cost",
+  "total_overheads",
+  "column_break_emjz",
+  "design_tab",
+  "design",
+  "design_html",
+  "design_cost",
+  "design_amount",
+  "design_amount_with_overheads",
+  "design_profit",
+  "materials_tab",
+  "materials",
+  "materials_html",
+  "materials_cost",
+  "materials_amount",
+  "materials_amount_with_overheads",
+  "materials_profit",
+  "raw_materials_tab",
+  "raw_materials",
+  "raw_materials_html",
+  "raw_materials_cost",
+  "raw_materials_amount",
+  "raw_materials_amount_with_overheads",
+  "raw_materials_profit",
+  "finishing_work_tab",
+  "finishing_work",
+  "finishing_work_html",
+  "finishing_work_cost",
+  "finishing_work_amount",
+  "finishing_work_amount_with_overheads",
+  "finishing_work_profit",
+  "accessories_tab",
+  "accessories",
+  "accessories_html",
+  "accessories_cost",
+  "accessories_amount",
+  "accessories_amount_with_overheads",
+  "accessories_profit",
+  "installation_tab",
+  "installation",
+  "installation_html",
+  "installation_cost",
+  "installation_amount",
+  "installation_amount_with_overheads",
+  "installation_profit",
+  "heavy_equipments_tab",
+  "heavy_equipments",
+  "heavy_equipments_html",
+  "heavy_equipments_cost",
+  "heavy_equipments_amount",
+  "heavy_equipments_amount_with_overheads",
+  "heavy_equipments_profit",
+  "subcontract_tab",
+  "subcontract",
+  "subcontract_html",
+  "subcontract_cost",
+  "subcontract_amount",
+  "subcontract_amount_with_overheads",
+  "subcontract_profit",
+  "finished_goods_tab",
+  "finished_goods",
+  "finished_goods_html",
+  "finished_goods_cost",
+  "finished_goods_amount",
+  "finished_goods_amount_with_overheads",
+  "finished_goods_profit",
+  "total_budget_2_tab",
+  "bidding_unit_rate",
+  "adjustable_amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Sales Order",
+   "options": "Sales Order"
+  },
+  {
+   "fieldname": "project_budget",
+   "fieldtype": "Link",
+   "label": "Project Budget",
+   "options": "Project Budget"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "column_break_skvb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "label": "Qty"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "default": "0",
+   "fieldname": "a_design",
+   "fieldtype": "Check",
+   "label": "DESIGN"
+  },
+  {
+   "default": "0",
+   "fieldname": "j_raw",
+   "fieldtype": "Check",
+   "label": "RAW MATERIALS"
+  },
+  {
+   "default": "0",
+   "fieldname": "b_materials",
+   "fieldtype": "Check",
+   "label": "MATERIALS"
+  },
+  {
+   "default": "0",
+   "fieldname": "c_finishing_work",
+   "fieldtype": "Check",
+   "label": "FINISHING WORK"
+  },
+  {
+   "fieldname": "column_break_bkgd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "d_accessories",
+   "fieldtype": "Check",
+   "label": "ACCESSORIES"
+  },
+  {
+   "default": "0",
+   "fieldname": "e_installation",
+   "fieldtype": "Check",
+   "label": "INSTALLATION"
+  },
+  {
+   "default": "0",
+   "fieldname": "g_tools__equipment__transport",
+   "fieldtype": "Check",
+   "label": "TOOLS / EQUIPMENT / TRANSPORT / OTHERS"
+  },
+  {
+   "default": "0",
+   "fieldname": "h_others",
+   "fieldtype": "Check",
+   "label": "SUBCONTRACT"
+  },
+  {
+   "fieldname": "total_budget_tab",
+   "fieldtype": "Tab Break",
+   "label": "Total Budget"
+  },
+  {
+   "fieldname": "lpo_amount",
+   "fieldtype": "Currency",
+   "label": "Sales Order (LPO) Amount"
+  },
+  {
+   "fieldname": "bidding_amount_difference",
+   "fieldtype": "Currency",
+   "label": "Bidding Amount Difference",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_cqsk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bidding_amount",
+   "fieldtype": "Currency",
+   "label": "Bidding Amount"
+  },
+  {
+   "fieldname": "column_break_csdo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "discount",
+   "fieldtype": "Currency",
+   "label": "Discount"
+  },
+  {
+   "fieldname": "revision",
+   "fieldtype": "Select",
+   "label": "Revision",
+   "options": "\nPB - Revision\nSO - Revision",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ifcm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lpo_unit_rate",
+   "fieldtype": "Currency",
+   "label": "LPO Unit Rate"
+  },
+  {
+   "fieldname": "section_break_etwi",
+   "fieldtype": "Section Break",
+   "label": "Total Cost"
+  },
+  {
+   "fieldname": "total_cost",
+   "fieldtype": "Currency",
+   "label": "Total Cost"
+  },
+  {
+   "fieldname": "total_overheads",
+   "fieldtype": "Currency",
+   "label": "Total Overheads"
+  },
+  {
+   "fieldname": "column_break_emjz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "gross_profit_percent",
+   "fieldtype": "Percent",
+   "label": "Gross Profit Percent"
+  },
+  {
+   "fieldname": "gross_profit_amount",
+   "fieldtype": "Currency",
+   "label": "Gross Profit Amount"
+  },
+  {
+   "fieldname": "business_promotion_amount",
+   "fieldtype": "Currency",
+   "label": "Business Promotion Amount"
+  },
+  {
+   "fieldname": "business_promotion_percent",
+   "fieldtype": "Percent",
+   "label": "Business Promotion Percent"
+  },
+  {
+   "fieldname": "column_break_hnjw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "overhead_amount",
+   "fieldtype": "Currency",
+   "label": "Overhead Amount"
+  },
+  {
+   "fieldname": "overhead_percent",
+   "fieldtype": "Percent",
+   "label": "Overhead Percent"
+  },
+  {
+   "fieldname": "column_break_fvzq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "contigency_amount",
+   "fieldtype": "Currency",
+   "label": "Contigency Amount"
+  },
+  {
+   "fieldname": "contigency_percent",
+   "fieldtype": "Percent",
+   "label": "Contigency Percent"
+  },
+  {
+   "depends_on": "eval:doc.a_design",
+   "fieldname": "design_tab",
+   "fieldtype": "Tab Break",
+   "label": "Design"
+  },
+  {
+   "allow_bulk_edit": 1,
+   "fieldname": "design",
+   "fieldtype": "Table",
+   "label": "DESIGN",
+   "options": "PB Items"
+  },
+  {
+   "fieldname": "design_html",
+   "fieldtype": "HTML",
+   "label": "Design HTML"
+  },
+  {
+   "fieldname": "design_cost",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Design Cost"
+  },
+  {
+   "fieldname": "design_amount",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Design Amount"
+  },
+  {
+   "fieldname": "design_amount_with_overheads",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Design Amount with Overheads"
+  },
+  {
+   "fieldname": "design_profit",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Design Profit"
+  },
+  {
+   "depends_on": "eval:doc.b_materials",
+   "fieldname": "materials_tab",
+   "fieldtype": "Tab Break",
+   "label": "Supply Materials"
+  },
+  {
+   "allow_bulk_edit": 1,
+   "fieldname": "materials",
+   "fieldtype": "Table",
+   "label": "Materials",
+   "options": "PB Items"
+  },
+  {
+   "fieldname": "materials_html",
+   "fieldtype": "HTML",
+   "label": "Materials HTML"
+  },
+  {
+   "fieldname": "materials_cost",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Materials Cost"
+  },
+  {
+   "fieldname": "materials_amount",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Materials Amount"
+  },
+  {
+   "fieldname": "materials_amount_with_overheads",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Materials Amount with Overheads"
+  },
+  {
+   "fieldname": "materials_profit",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Materials Profit"
+  },
+  {
+   "depends_on": "eval:doc.j_raw",
+   "fieldname": "raw_materials_tab",
+   "fieldtype": "Tab Break",
+   "label": "Raw Materials"
+  },
+  {
+   "fieldname": "raw_materials",
+   "fieldtype": "Table",
+   "label": "RAW MATERIALS",
+   "options": "PB Items"
+  },
+  {
+   "fieldname": "raw_materials_html",
+   "fieldtype": "HTML",
+   "label": "Raw Materials HTML"
+  },
+  {
+   "fieldname": "raw_materials_cost",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Raw Materials Cost"
+  },
+  {
+   "fieldname": "raw_materials_amount",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Raw Materials Amount"
+  },
+  {
+   "fieldname": "raw_materials_amount_with_overheads",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Raw Materials Amount with Overheads"
+  },
+  {
+   "fieldname": "raw_materials_profit",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Raw Materials Profit"
+  },
+  {
+   "depends_on": "eval:doc.c_finishing_work",
+   "fieldname": "finishing_work_tab",
+   "fieldtype": "Tab Break",
+   "label": "Finishing Work"
+  },
+  {
+   "fieldname": "finishing_work",
+   "fieldtype": "Table",
+   "label": "FINISHING WORK",
+   "options": "PB Items"
+  },
+  {
+   "fieldname": "finishing_work_html",
+   "fieldtype": "HTML",
+   "label": "Finishing Work HTML"
+  },
+  {
+   "fieldname": "finishing_work_cost",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Finishing Work Cost"
+  },
+  {
+   "fieldname": "finishing_work_amount",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Finishing Work Amount"
+  },
+  {
+   "fieldname": "finishing_work_amount_with_overheads",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Finishing Work Amount with Overheads"
+  },
+  {
+   "fieldname": "finishing_work_profit",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Finishing Work Profit "
+  },
+  {
+   "depends_on": "eval:doc.d_accessories",
+   "fieldname": "accessories_tab",
+   "fieldtype": "Tab Break",
+   "label": "Accessories"
+  },
+  {
+   "fieldname": "accessories",
+   "fieldtype": "Table",
+   "label": "ACCESSORIES",
+   "options": "PB Items"
+  },
+  {
+   "fieldname": "accessories_html",
+   "fieldtype": "HTML",
+   "label": "Accessories HTML"
+  },
+  {
+   "fieldname": "accessories_cost",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Accessories Cost"
+  },
+  {
+   "fieldname": "accessories_amount",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Accessories Amount"
+  },
+  {
+   "fieldname": "accessories_amount_with_overheads",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Accessories Amount with Overheads"
+  },
+  {
+   "fieldname": "accessories_profit",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Accessories Profit"
+  },
+  {
+   "depends_on": "eval:doc.e_installation",
+   "fieldname": "installation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Installation"
+  },
+  {
+   "fieldname": "installation",
+   "fieldtype": "Table",
+   "label": "INSTALLATION",
+   "options": "PB Items"
+  },
+  {
+   "fieldname": "installation_html",
+   "fieldtype": "HTML",
+   "label": "Installation HTML"
+  },
+  {
+   "fieldname": "installation_cost",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Installation Cost"
+  },
+  {
+   "fieldname": "installation_amount",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Installation Amount"
+  },
+  {
+   "fieldname": "installation_amount_with_overheads",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Installation Amount with Overheads"
+  },
+  {
+   "fieldname": "installation_profit",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Installation Profit"
+  },
+  {
+   "depends_on": "eval:doc.g_tools__equipment__transport",
+   "fieldname": "heavy_equipments_tab",
+   "fieldtype": "Tab Break",
+   "label": "Heavy Equipments"
+  },
+  {
+   "fieldname": "heavy_equipments",
+   "fieldtype": "Table",
+   "label": "HEAVY EQUIPMENTS",
+   "options": "PB Items"
+  },
+  {
+   "fieldname": "heavy_equipments_html",
+   "fieldtype": "HTML",
+   "label": "Heavy Equipments HTML"
+  },
+  {
+   "fieldname": "heavy_equipments_cost",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Heavy Equipments Cost"
+  },
+  {
+   "fieldname": "heavy_equipments_amount",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Heavy Equipments Amount"
+  },
+  {
+   "fieldname": "heavy_equipments_amount_with_overheads",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Heavy Equipments Amount with Overheads"
+  },
+  {
+   "fieldname": "heavy_equipments_profit",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Heavy Equipments Profit"
+  },
+  {
+   "depends_on": "eval:doc.h_others",
+   "fieldname": "subcontract_tab",
+   "fieldtype": "Tab Break",
+   "label": "Subcontract"
+  },
+  {
+   "fieldname": "subcontract",
+   "fieldtype": "Table",
+   "label": "SUBCONTRACT",
+   "options": "PB Items"
+  },
+  {
+   "fieldname": "subcontract_html",
+   "fieldtype": "HTML",
+   "hidden": 1,
+   "label": "Subcontract HTML"
+  },
+  {
+   "fieldname": "subcontract_cost",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Subcontract Cost"
+  },
+  {
+   "fieldname": "subcontract_amount",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Subcontract Amount"
+  },
+  {
+   "fieldname": "subcontract_amount_with_overheads",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Subcontract Amount with Overheads"
+  },
+  {
+   "fieldname": "subcontract_profit",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Subcontract Profit"
+  },
+  {
+   "depends_on": "eval:doc.i_finished_goods",
+   "fieldname": "finished_goods_tab",
+   "fieldtype": "Tab Break",
+   "label": "Finished Goods"
+  },
+  {
+   "fieldname": "finished_goods",
+   "fieldtype": "Table",
+   "label": "FINISHED GOODS",
+   "options": "PB FG Items"
+  },
+  {
+   "fieldname": "finished_goods_html",
+   "fieldtype": "HTML",
+   "label": "Finished Goods HTML"
+  },
+  {
+   "fieldname": "finished_goods_cost",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Finished Goods Cost"
+  },
+  {
+   "fieldname": "finished_goods_amount",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Finished Goods Amount"
+  },
+  {
+   "fieldname": "finished_goods_amount_with_overheads",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Finished Goods Amount with Overheads"
+  },
+  {
+   "fieldname": "finished_goods_profit",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Finished Goods Profit"
+  },
+  {
+   "fieldname": "total_budget_2_tab",
+   "fieldtype": "Tab Break",
+   "hidden": 1,
+   "label": "Total Budget"
+  },
+  {
+   "fieldname": "bidding_unit_rate",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Bidding Unit Rate"
+  },
+  {
+   "fieldname": "adjustable_amount",
+   "fieldtype": "Currency",
+   "label": "Adjustable Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "applicable_sections",
+   "fieldtype": "Section Break",
+   "label": "Applicable"
+  },
+  {
+   "fieldname": "sow",
+   "fieldtype": "Link",
+   "label": "SOW",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "i_finished_goods",
+   "fieldtype": "Check",
+   "label": "FINISHED GOODS"
+  },
+  {
+   "fieldname": "section_break_wwff",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_fktg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "po_li",
+   "fieldtype": "Float",
+   "label": "PO LI",
+   "precision": "1"
+  }
+ ],
+ "grid_page_length": 50,
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-05-06 17:25:27.825294",
+ "modified_by": "gifty.p@groupteampro.com",
+ "module": "Shaher",
+ "name": "PB SOW",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "track_seen": 1,
+ "track_views": 1
+}

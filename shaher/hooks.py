@@ -74,10 +74,10 @@ web_include_css = "/assets/shaher/css/shaher.css"
 # ----------
 
 # add methods and filters to jinja environment
-# jinja = {
-# 	"methods": "shaher.utils.jinja_methods",
-# 	"filters": "shaher.utils.jinja_filters"
-# }
+jinja = {
+	"methods": ["shaher.custom.get_leave_periods","shaher.custom.get_tot_leave_amount"],
+	# "filters": "shaher.utils.jinja_filters"
+}
 
 # Installation
 # ------------
@@ -158,16 +158,16 @@ doc_events = {
 		"on_cancel":["shaher.custom.update_supplier_status_on_cancel", "shaher.custom.validate_remarks", "shaher.custom.cancel_vehicle_maintenance_check"],
 	},
 	"Purchase Receipt": {
-		"after_insert": "shaher.custom.get_po_qty",
+		"validate": "shaher.custom.get_po_qty",
 		"on_submit":"shaher.custom.update_approval_date_pr"
 	},
 	"Material Request": {
 		"validate": ["shaher.custom.child_set_value", "shaher.custom.validate_kilometer",],
         "on_submit":"shaher.custom.update_approval_date_mr"
 	},
-	"Supplier":{
-		"after_insert":"shaher.custom.create_user_permission_on_validate"
-	},
+	# "Supplier":{
+	# 	"after_insert":"shaher.custom.create_user_permission_on_validate"
+	# },
 	"Leave Application":{
 		'validate':"shaher.custom.validate_next_due_date"
 	},
@@ -177,10 +177,23 @@ doc_events = {
 	# },
     "Sales Invoice":{
 		'validate':[ "shaher.custom.udpate_date_of_supply","shaher.custom.pdo_validation",],
+		'on_submit': "shaher.custom.update_dn_workflow",
+        'on_cancel': "shaher.custom.update_workflow_on_cancelling_si",
 	},
     "Delivery Note": {
-		'validate': "shaher.custom.update_coc_fields"
-	}
+		'validate':[ "shaher.custom.update_coc_fields",
+                    "shaher.custom.custom_sutc_job_no_validation",
+                   ],
+        'on_update_after_submit': "shaher.custom.update_dn_status",
+        'on_cancel': "shaher.custom.update_workflow_on_cancel"
+	},
+    "Sales Order": {
+        'on_submit': ["shaher.custom.validate_project_budget"]
+	},
+    "Salary Slip": {
+        'after_insert': ["shaher.shaher.doctype.employee_loan.employee_loan.update_slip_id"],
+        'on_trash': ["shaher.shaher.doctype.employee_loan.employee_loan.clear_slip_id"],
+	},
 }
 
 # Scheduled Tasks
@@ -199,7 +212,7 @@ scheduler_events = {
 		"shaher.alerts.update_employee_certification_status"
 		"shaher.shaher.doctype.employee_certification.employee_certification.update_days_left"
 # 		"shaher.tasks.daily"
-		"shaher.custom.create_scheduled_job",
+		"shaher.custom.create_scheduled",
         "shaher.custom.update_days_left_daily",
 	],
 # 	"hourly": [

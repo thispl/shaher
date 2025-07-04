@@ -1,0 +1,316 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:employee",
+ "creation": "2025-04-25 15:24:22.874689",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "amended_from",
+  "employee",
+  "employee_name",
+  "department",
+  "column_break_zjes",
+  "designation",
+  "company",
+  "last_leave_availed_on",
+  "resumed_duty_on",
+  "date_of_joining",
+  "rdate",
+  "assets_allocated_section",
+  "assets_allocated_table",
+  "section_break_rd8o",
+  "years",
+  "unapproved_leaves",
+  "unapproved_leaves_1",
+  "earnings_section",
+  "basic",
+  "hra",
+  "desert_allowance",
+  "column_break_qyzy",
+  "special_allowance",
+  "cola",
+  "transport_allowance",
+  "technician_allowance",
+  "deduction_section",
+  "visa_cost",
+  "air_ticket",
+  "column_break_kpky",
+  "other_deduction",
+  "course_deduction",
+  "gratuity_details_section",
+  "html",
+  "tab_break_snvn",
+  "leave_salary",
+  "tab_break_k4nh",
+  "from_date",
+  "to_date",
+  "balance_amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Full and Final Settlement",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.department",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.department",
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.date_of_joining",
+   "fieldname": "date_of_joining",
+   "fieldtype": "Date",
+   "label": "Date of Joining",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_zjes",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "assets_allocated_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "assets_allocated_table",
+   "fieldtype": "Table",
+   "hidden": 1,
+   "options": "Full and Final Asset"
+  },
+  {
+   "fieldname": "leave_salary",
+   "fieldtype": "Table",
+   "label": "Leave Salary",
+   "options": "Leave Salary Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "unapproved_leaves",
+   "fieldtype": "Float",
+   "label": "Unapproved Leaves (First 3 Years) "
+  },
+  {
+   "fieldname": "last_leave_availed_on",
+   "fieldtype": "Date",
+   "label": "Last leave availed on"
+  },
+  {
+   "fieldname": "resumed_duty_on",
+   "fieldtype": "Date",
+   "label": "Resumed Duty on"
+  },
+  {
+   "fieldname": "section_break_rd8o",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "years",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Years"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.years > 3",
+   "fieldname": "unapproved_leaves_1",
+   "fieldtype": "Float",
+   "label": "Unapproved Leaves (After3 Years) "
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date"
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date"
+  },
+  {
+   "default": "0",
+   "fieldname": "balance_amount",
+   "fieldtype": "Currency",
+   "label": "Balance Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "earnings_section",
+   "fieldtype": "Section Break",
+   "label": "Earnings"
+  },
+  {
+   "fetch_from": "employee.custom_basic",
+   "fieldname": "basic",
+   "fieldtype": "Currency",
+   "label": "Basic"
+  },
+  {
+   "fetch_from": "employee.custom_hra",
+   "fieldname": "hra",
+   "fieldtype": "Currency",
+   "label": "HRA"
+  },
+  {
+   "fetch_from": "employee.custom_desert_allowance",
+   "fieldname": "desert_allowance",
+   "fieldtype": "Currency",
+   "label": "Desert Allowance"
+  },
+  {
+   "fieldname": "column_break_qyzy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.custom_special_allowance",
+   "fieldname": "special_allowance",
+   "fieldtype": "Currency",
+   "label": "Special Allowance"
+  },
+  {
+   "fetch_from": "employee.custom_cola_allowance",
+   "fieldname": "cola",
+   "fieldtype": "Currency",
+   "label": "COLA"
+  },
+  {
+   "fetch_from": "employee.custom_transport_allowance",
+   "fieldname": "transport_allowance",
+   "fieldtype": "Currency",
+   "label": "Transport Allowance"
+  },
+  {
+   "fetch_from": "employee.custom_technician_allowance",
+   "fieldname": "technician_allowance",
+   "fieldtype": "Currency",
+   "label": "Technician Allowance"
+  },
+  {
+   "fieldname": "deduction_section",
+   "fieldtype": "Section Break",
+   "label": "Deduction"
+  },
+  {
+   "fieldname": "visa_cost",
+   "fieldtype": "Currency",
+   "label": "Visa Cost"
+  },
+  {
+   "fieldname": "air_ticket",
+   "fieldtype": "Currency",
+   "label": "Air Ticket"
+  },
+  {
+   "fieldname": "column_break_kpky",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "other_deduction",
+   "fieldtype": "Currency",
+   "label": "Other Deduction"
+  },
+  {
+   "fieldname": "course_deduction",
+   "fieldtype": "Currency",
+   "label": "Course deduction"
+  },
+  {
+   "fieldname": "tab_break_snvn",
+   "fieldtype": "Tab Break",
+   "label": "Leave Salary"
+  },
+  {
+   "fieldname": "tab_break_k4nh",
+   "fieldtype": "Tab Break",
+   "label": "Balance Salary"
+  },
+  {
+   "fetch_from": "employee.relieving_date",
+   "fieldname": "rdate",
+   "fieldtype": "Date",
+   "hidden": 1,
+   "label": "Rdate"
+  },
+  {
+   "fieldname": "gratuity_details_section",
+   "fieldtype": "Section Break",
+   "label": "Gratuity Details"
+  },
+  {
+   "fieldname": "html",
+   "fieldtype": "HTML",
+   "label": "html"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-04-28 17:19:58.756499",
+ "modified_by": "pavithra.s@groupteampro.com",
+ "module": "Shaher",
+ "name": "Full and Final Settlement",
+ "naming_rule": "By fieldname",
+ "owner": "pavithra.s@groupteampro.com",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,235 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "FMD-.#####",
+ "creation": "2025-04-24 09:05:20.071878",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "document_type",
+  "cheque_type",
+  "reference_number",
+  "column_break_2gab",
+  "posting_date",
+  "status",
+  "refer_date",
+  "party_details_section",
+  "party_type",
+  "party",
+  "column_break_p85o",
+  "issued_by",
+  "issued_to",
+  "purpose",
+  "financial_details_section",
+  "amount",
+  "currency",
+  "column_break_vxgo",
+  "bank_name",
+  "bank_account",
+  "date_info_section",
+  "document_date",
+  "cheque_clearance_date",
+  "column_break_jmmv",
+  "valid_from",
+  "valid_upto",
+  "notes_attachments_tab",
+  "notes",
+  "attachment"
+ ],
+ "fields": [
+  {
+   "fieldname": "document_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Document Type",
+   "options": "Document Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reference_number",
+   "fieldtype": "Data",
+   "label": "Reference Number"
+  },
+  {
+   "fieldname": "column_break_2gab",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "read_only": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nDraft\nIssued\nReceived\nCleared\nExpired\nCancelled"
+  },
+  {
+   "fieldname": "party_details_section",
+   "fieldtype": "Section Break",
+   "label": "Party Details"
+  },
+  {
+   "fieldname": "party_type",
+   "fieldtype": "Link",
+   "label": "Party Type",
+   "mandatory_depends_on": "eval:doc.document_type=='Bank Guarantee'",
+   "options": "DocType"
+  },
+  {
+   "depends_on": "eval:doc.party_type",
+   "fieldname": "party",
+   "fieldtype": "Dynamic Link",
+   "label": "Party",
+   "mandatory_depends_on": "eval:doc.document_type=='Bank Guarantee'",
+   "options": "party_type"
+  },
+  {
+   "fieldname": "issued_to",
+   "fieldtype": "Data",
+   "label": "Issued To"
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Data",
+   "label": "Purpose"
+  },
+  {
+   "fieldname": "financial_details_section",
+   "fieldtype": "Section Break",
+   "label": "Financial Details"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount",
+   "mandatory_depends_on": "eval:doc.document_type=='Bank Guarantee'"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "bank_name",
+   "fieldtype": "Link",
+   "label": "Bank Name",
+   "mandatory_depends_on": "eval:doc.document_type=='Cheque'|| doc.document_type=='Bank Guarantee'",
+   "options": "Bank"
+  },
+  {
+   "depends_on": "eval:doc.bank_name",
+   "fieldname": "bank_account",
+   "fieldtype": "Link",
+   "label": "Bank Account",
+   "mandatory_depends_on": "eval:doc.document_type=='Cheque'",
+   "options": "Bank Account"
+  },
+  {
+   "depends_on": "eval:doc.document_type=='Cheque'",
+   "fieldname": "cheque_type",
+   "fieldtype": "Select",
+   "label": "Cheque type",
+   "options": "\nIssued\nReceived"
+  },
+  {
+   "fieldname": "issued_by",
+   "fieldtype": "Data",
+   "label": "Issued By"
+  },
+  {
+   "fieldname": "date_info_section",
+   "fieldtype": "Section Break",
+   "label": "Date info"
+  },
+  {
+   "fieldname": "document_date",
+   "fieldtype": "Date",
+   "label": "Document Date",
+   "mandatory_depends_on": "eval:doc.document_type=='Cheque'"
+  },
+  {
+   "fieldname": "valid_from",
+   "fieldtype": "Date",
+   "label": "Valid From",
+   "mandatory_depends_on": "eval:doc.document_type=='Bank Guarantee'"
+  },
+  {
+   "fieldname": "valid_upto",
+   "fieldtype": "Date",
+   "label": "Valid Upto",
+   "mandatory_depends_on": "eval:doc.document_type=='Bank Guarantee'"
+  },
+  {
+   "fieldname": "cheque_clearance_date",
+   "fieldtype": "Date",
+   "label": "Cheque Clearance Date",
+   "mandatory_depends_on": "eval:doc.document_type=='Cheque' || doc.document_type=='Security Cheque'"
+  },
+  {
+   "fieldname": "notes_attachments_tab",
+   "fieldtype": "Tab Break",
+   "label": "Notes & Attachments"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "label": "Attachment"
+  },
+  {
+   "fieldname": "column_break_p85o",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_vxgo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_jmmv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "refer_date",
+   "fieldtype": "Date",
+   "hidden": 1,
+   "label": "Refer Date"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-28 15:23:16.073602",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "Financial Monitor Document",
+ "naming_rule": "Expression (old style)",
+ "owner": "pavithra.s@groupteampro.com",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

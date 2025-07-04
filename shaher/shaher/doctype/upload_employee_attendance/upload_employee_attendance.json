@@ -1,0 +1,125 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "EMP-ATT-.##### ",
+ "creation": "2025-04-22 10:33:14.939447",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "html",
+  "section_break_wcks",
+  "amended_from",
+  "from_date",
+  "to_date",
+  "column_break_qson",
+  "department",
+  "designation",
+  "company",
+  "column_break_okyw",
+  "download",
+  "upload_attendance"
+ ],
+ "fields": [
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Upload Employee Attendance",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "To Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_qson",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "column_break_okyw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.from_date && doc.to_date",
+   "fieldname": "download",
+   "fieldtype": "Button",
+   "label": "Download"
+  },
+  {
+   "fieldname": "upload_attendance",
+   "fieldtype": "Attach",
+   "label": "Upload Attendance"
+  },
+  {
+   "default": "<strong>Shortcodes:</strong>\n<ul style=\"list-style-type: none; padding-left: 0; margin-top: 5px;\">\n  <li><span style=\"color: green; font-weight: bold;\">P</span> \u2013 Present</li>\n  <li><span style=\"color: red; font-weight: bold;\">A</span> \u2013 Absent</li>\n  <li><span style=\"color: blue; font-weight: bold;\">HD</span> \u2013 Half Day</li>\n  <li><span style=\"color: orange; font-weight: bold;\">RD</span> \u2013 Rest Day</li>\n</ul>",
+   "description": "\n",
+   "fieldname": "html",
+   "fieldtype": "HTML",
+   "label": "html"
+  },
+  {
+   "fieldname": "section_break_wcks",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-04-30 09:32:49.895761",
+ "modified_by": "pavithra.s@groupteampro.com",
+ "module": "Shaher",
+ "name": "Upload Employee Attendance",
+ "naming_rule": "Expression (old style)",
+ "owner": "pavithra.s@groupteampro.com",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

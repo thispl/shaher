@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-07-03 15:16:36.799929",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "attachment",
+  "read_data",
+  "section_break_zdhx",
+  "html"
+ ],
+ "fields": [
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "label": "Attachment"
+  },
+  {
+   "fieldname": "read_data",
+   "fieldtype": "Button",
+   "label": "Read Data"
+  },
+  {
+   "fieldname": "section_break_zdhx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "html",
+   "fieldtype": "HTML",
+   "label": "html"
+  }
+ ],
+ "grid_page_length": 50,
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-07-03 15:17:20.826903",
+ "modified_by": "Administrator",
+ "module": "Shaher",
+ "name": "PDF Reader",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

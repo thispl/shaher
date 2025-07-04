@@ -1,0 +1,162 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "ELE/PSD/.###",
+ "creation": "2025-04-28 08:48:10.613520",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "external_provider_name",
+  "products__services",
+  "column_break_rc7c",
+  "approval_status",
+  "date_of_evaluation",
+  "ratings_section",
+  "evaluation_ratings",
+  "other_credentials",
+  "section_break_utpu",
+  "actual_score",
+  "maximum_score",
+  "acceptance_criteria",
+  "column_break_7wgb",
+  "approved_by",
+  "approved_date",
+  "evaluation_date",
+  "re_evaluation_date",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Supplier Evaluation Form",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "external_provider_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "External Provider Name",
+   "options": "Supplier",
+   "reqd": 1
+  },
+  {
+   "fieldname": "products__services",
+   "fieldtype": "Data",
+   "label": "Products / Services"
+  },
+  {
+   "fieldname": "column_break_rc7c",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "approval_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Approval Status",
+   "options": "\nApproved\nRejected\nHold",
+   "reqd": 1
+  },
+  {
+   "fieldname": "date_of_evaluation",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date of Evaluation",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ratings_section",
+   "fieldtype": "Section Break",
+   "label": "Ratings"
+  },
+  {
+   "fieldname": "other_credentials",
+   "fieldtype": "Small Text",
+   "label": "Other Credentials"
+  },
+  {
+   "fieldname": "section_break_utpu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "actual_score",
+   "fieldtype": "Float",
+   "label": "Actual Score"
+  },
+  {
+   "fieldname": "maximum_score",
+   "fieldtype": "Float",
+   "label": "Maximum Score"
+  },
+  {
+   "fieldname": "acceptance_criteria",
+   "fieldtype": "Percent",
+   "label": "Acceptance Criteria"
+  },
+  {
+   "fieldname": "column_break_7wgb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "User"
+  },
+  {
+   "fieldname": "approved_date",
+   "fieldtype": "Date",
+   "label": "Approved Date"
+  },
+  {
+   "fieldname": "evaluation_date",
+   "fieldtype": "Date",
+   "label": "Evaluation Date"
+  },
+  {
+   "fieldname": "re_evaluation_date",
+   "fieldtype": "Date",
+   "label": "Re evaluation Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "evaluation_ratings",
+   "fieldtype": "Table",
+   "label": "Evaluation Ratings",
+   "options": "Supplier Evaluation Rating"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-04-28 09:08:14.454707",
+ "modified_by": "bhuvaneswari.a@groupteampro.com",
+ "module": "Shaher",
+ "name": "Supplier Evaluation Form",
+ "naming_rule": "Expression (old style)",
+ "owner": "bhuvaneswari.a@groupteampro.com",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
