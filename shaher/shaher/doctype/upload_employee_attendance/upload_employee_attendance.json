@@ -10,14 +10,20 @@
   "section_break_wcks",
   "amended_from",
   "from_date",
+  "column_break_kof1",
   "to_date",
   "column_break_qson",
+  "download",
+  "upload_attendance",
+  "section_break_qx7v",
   "department",
   "designation",
-  "company",
   "column_break_okyw",
-  "download",
-  "upload_attendance"
+  "site_location",
+  "company",
+  "section_break_lb65",
+  "download_template",
+  "division"
  ],
  "fields": [
   {
@@ -91,13 +97,42 @@
    "fieldtype": "Link",
    "label": "Company",
    "options": "Company"
+  },
+  {
+   "fieldname": "column_break_kof1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_qx7v",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "site_location",
+   "fieldtype": "Link",
+   "label": "Site Location",
+   "options": "Site"
+  },
+  {
+   "depends_on": "eval:frappe.session.user=='pavithra.s@groupteampro.com'",
+   "fieldname": "section_break_lb65",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "download_template",
+   "fieldtype": "Button",
+   "label": "Download Template"
+  },
+  {
+   "fieldname": "division",
+   "fieldtype": "Data",
+   "label": "Division"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-30 09:32:49.895761",
+ "modified": "2025-11-22 10:40:24.962602",
  "modified_by": "pavithra.s@groupteampro.com",
  "module": "Shaher",
  "name": "Upload Employee Attendance",

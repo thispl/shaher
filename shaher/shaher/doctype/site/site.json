@@ -1,12 +1,14 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:site",
  "creation": "2025-04-21 11:05:24.456742",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "site"
+  "site",
+  "user"
  ],
  "fields": [
   {
@@ -16,12 +18,18 @@
    "label": "Site",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-21 11:05:43.144822",
- "modified_by": "gifty.p@groupteampro.com",
+ "modified": "2025-08-25 18:20:08.471464",
+ "modified_by": "jothi.m@groupteampro.com",
  "module": "Shaher",
  "name": "Site",
  "naming_rule": "By fieldname",

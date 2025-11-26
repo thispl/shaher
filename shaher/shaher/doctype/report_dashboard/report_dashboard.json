@@ -9,17 +9,17 @@
   "download",
   "column_break_ozbo",
   "from_date",
-  "column_break_xqpe",
   "to_date",
-  "column_break_ebkl",
-  "company"
+  "column_break_xqpe",
+  "company",
+  "site_location"
  ],
  "fields": [
   {
    "fieldname": "report",
    "fieldtype": "Select",
    "label": "Report",
-   "options": "\nCurrency Exchange Gain / Loss\nSalary Register Report\nStandard Rated Sales\nZero Rated Sales\nInput Tax\nVAT Summary\nMonthly Attendance Sheet"
+   "options": "\nCurrency Exchange Gain / Loss\nSalary Register Report\nStandard Rated Sales\nZero Rated Sales\nInput Tax\nVAT Summary\nMonthly Attendance Sheet\nTimesheet Report"
   },
   {
    "depends_on": "eval:(doc.from_date)&&(doc.to_date)",
@@ -28,19 +28,19 @@
    "label": "Download"
   },
   {
-   "depends_on": "eval:(doc.report =='Salary Register Report') || (doc.report=='Standard Rated Sales') ||(doc.report=='Zero Rated Sales')||(doc.report=='Input Tax') || doc.report =='VAT Summary' || doc.report =='Monthly Attendance Sheet'",
+   "depends_on": "eval:(doc.report =='Salary Register Report') || (doc.report=='Standard Rated Sales') ||(doc.report=='Zero Rated Sales')||(doc.report=='Input Tax') || doc.report =='VAT Summary' || doc.report =='Monthly Attendance Sheet' || doc.report=='Timesheet Report'",
    "fieldname": "from_date",
    "fieldtype": "Date",
    "label": "From Date"
   },
   {
-   "depends_on": "eval:(doc.report =='Salary Register Report') || (doc.report=='Standard Rated Sales') || (doc.report=='Zero Rated Sales')||(doc.report=='Input Tax') || doc.report =='VAT Summary' || doc.report =='Monthly Attendance Sheet'",
+   "depends_on": "eval:(doc.report =='Salary Register Report') || (doc.report=='Standard Rated Sales') || (doc.report=='Zero Rated Sales')||(doc.report=='Input Tax') || doc.report =='VAT Summary' || doc.report =='Monthly Attendance Sheet'|| doc.report=='Timesheet Report'",
    "fieldname": "to_date",
    "fieldtype": "Date",
    "label": "To Date"
   },
   {
-   "depends_on": "eval:doc.report =='Salary Register Report' || doc.report =='Monthly Attendance Sheet'",
+   "depends_on": "eval:doc.report =='Salary Register Report' || doc.report =='Monthly Attendance Sheet' || doc.report=='Timesheet Report'",
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
@@ -55,8 +55,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "column_break_ebkl",
-   "fieldtype": "Column Break"
+   "depends_on": "eval:doc.report=='Timesheet Report'",
+   "fieldname": "site_location",
+   "fieldtype": "Link",
+   "label": "Site Location",
+   "options": "Site"
   }
  ],
  "grid_page_length": 50,
@@ -64,8 +67,8 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-04-29 11:13:25.923051",
- "modified_by": "jothi.m@groupteampro.com",
+ "modified": "2025-08-11 11:03:46.539895",
+ "modified_by": "pavithra.s@groupteampro.com",
  "module": "Shaher",
  "name": "Report Dashboard",
  "owner": "pavithra.s@groupteampro.com",

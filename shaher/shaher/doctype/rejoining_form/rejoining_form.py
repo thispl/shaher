@@ -11,11 +11,16 @@ class RejoiningForm(Document):
     # pass
     # update the passport status and rejjoining date in employee
     def on_submit(self):
-        frappe.db.set_value("Employee",self.employee_id,"custom_rejoining_date",self.re_join)
-        frappe.db.set_value("Employee",self.employee_id,"custom_passport_at",self.passport_at)
+        if self.workflow_state=='Approved':
+            if not self.passport_submission_date:
+                frappe.throw("Passport Submission Date is required for Rejoining Form submission.")
+            frappe.db.set_value("Employee",self.employee_id,"custom_passport_submission_date",self.passport_submission_date)
+            frappe.db.set_value("Employee",self.employee_id,"custom_rejoining_date",self.re_join)
+            frappe.db.set_value("Employee",self.employee_id,"custom_passport_at",self.passport_at)
     def validate(self):
-        self.extension_from_date=add_days(self.end, 1)
-        self.extension_to_date=add_days(self.re_join, -1)
+        if add_days(self.end,1) < self.re_join:
+            self.extension_from_date=add_days(self.end, 1)
+            self.extension_to_date=add_days(self.re_join, -1)
 
 #Enable the hod checkbox in Rejoining form based on below condition
 @frappe.whitelist()

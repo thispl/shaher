@@ -133,32 +133,32 @@ def make_xlsx(sheet_name=None):
 			cell.font = header_font
 			cell.alignment = align_center
 			cell.border = border
-	for row in ws.iter_rows(min_row=4, max_row=4, min_col=1, max_col=total_column):
-		for cell in row:
-			cell.font = sub_header_font
-			cell.alignment = align_center
-			cell.border = border
-			cell.fill = header_fill
-			if cell.column == (days_count+7):
-				cell.fill = yellow
-			elif cell.column == (days_count+8):
-				cell.fill = gray
-			elif cell.column == (days_count+9):
-				cell.fill = brown
-				# cell.font =white_color_font
-			elif cell.column == (days_count+10):
-				cell.fill = purple
-			elif cell.column == (days_count+11):
-				cell.fill = sky_blue
-			elif cell.column == (days_count+12):
-				cell.fill = red
-			elif cell.column == (days_count+13):
-				cell.fill = dark_green
-			elif cell.column == (days_count+14):
-				cell.fill = dark_blue
-				cell.font =white_color_font
-			elif cell.column == (days_count+15):
-				cell.fill = yellow
+	# for row in ws.iter_rows(min_row=4, max_row=4, min_col=1, max_col=total_column):
+	# 	for cell in row:
+	# 		cell.font = sub_header_font
+	# 		cell.alignment = align_center
+	# 		cell.border = border
+	# 		cell.fill = header_fill
+	# 		if cell.column == (days_count+7):
+	# 			cell.fill = yellow
+	# 		elif cell.column == (days_count+8):
+	# 			cell.fill = gray
+	# 		elif cell.column == (days_count+9):
+	# 			cell.fill = brown
+	# 			# cell.font =white_color_font
+	# 		elif cell.column == (days_count+10):
+	# 			cell.fill = purple
+	# 		elif cell.column == (days_count+11):
+	# 			cell.fill = sky_blue
+	# 		elif cell.column == (days_count+12):
+	# 			cell.fill = red
+	# 		elif cell.column == (days_count+13):
+	# 			cell.fill = dark_green
+	# 		elif cell.column == (days_count+14):
+	# 			cell.fill = dark_blue
+	# 			cell.font =white_color_font
+	# 		elif cell.column == (days_count+15):
+	# 			cell.fill = yellow
 	for row in ws.iter_rows(min_row=5, max_row=5, min_col=1, max_col=total_column):
 		for cell in row:
 			cell.font = sub_header_font
@@ -380,35 +380,9 @@ def get_data(args):
 		row1 +=['',ot_from_oetc_per_employee,present_count_per_employee,extra_days_count_per_employee,rd_count_per_employee,leave_count_per_employee,absent_count_per_employee,m_leave_count_per_employee,e_leave_count_per_employee,round(ot_hours_per_employee)]
 		data.append(row1)
 		data.append(row2)
-		# total_dict['present_count'] += present_count_per_employee
-		# total_dict['extra_days_count'] += extra_days_count_per_employee
-		# total_dict['rd_count'] += rd_count_per_employee
-		# total_dict['absent_count'] +=absent_count_per_employee
-		# total_dict['leave_count'] +=leave_count_per_employee
-		# total_dict['m_leave_count'] += m_leave_count_per_employee
-		# total_dict['e_leave_count'] += e_leave_count_per_employee
-		# total_dict['ot_hours'] += ot_hours_per_employee
-		
-	# if total_row != []:
-	# 	total_row =[""]*(7+days_count)+[total_dict['present_count'],total_dict['extra_days_count'],total_dict['rd_count'],total_dict['leave_count'],total_dict['absent_count'],
-	# 	total_dict['m_leave_count'],total_dict['e_leave_count'],total_dict['present_count'],total_dict['ot_hours']]
-	# 	data.append(total_row)
+
 	return data
 
-# def get_att_data(employee, date):
-# 	conditions = ["docstatus != 2", "attendance_date = %s", "employee = %s"]
-# 	values = [date,employee]
-# 	condition_str = " AND ".join(conditions)
-# 	if frappe.db.exists('Attendance',{'attendance_date':date,'employee':employee,'docstatus':['!=',2]}):
-# 		attendance = frappe.db.sql(f"""
-# 			SELECT status,leave_type,custom_overtime_hours,custom_rest_day FROM `tabAttendance`
-# 			WHERE {condition_str}
-# 			ORDER BY attendance_date
-# 		""", values, as_dict=True)
-
-# 		return attendance
-# 	else:
-# 		return []
 
 def get_active_employees(args):
 	conditions = ["status = 'Active'"]

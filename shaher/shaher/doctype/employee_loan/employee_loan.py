@@ -7,10 +7,10 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from frappe.utils import getdate, get_datetime
 class EmployeeLoan(Document):
-    def on_trash(self):
-        for i in self.loan_details:
-            if i.deducted==1:
-                frappe.throw("Deductions already happened.Deletion not allowed.")
+    # def on_trash(self):
+    #     for i in self.loan_details:
+    #         if i.deducted==1:
+    #             frappe.throw("Deductions already happened.Deletion not allowed.")
     def validate(self):
         doj=frappe.db.get_value("Employee",{'name':self.employee},['date_of_joining'])
         if getdate(doj)>getdate(self.date):

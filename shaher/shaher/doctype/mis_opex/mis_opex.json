@@ -1,0 +1,481 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "MIS-OPEX-.#####",
+ "creation": "2025-10-03 11:23:07.013228",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "amended_from",
+  "month",
+  "year",
+  "column_break_vdux",
+  "invoice_from",
+  "invoice_upto",
+  "section_break_bckw",
+  "previous_manpower",
+  "manpower_total",
+  "cumulative_manpower",
+  "column_break_rxyf",
+  "previous_vehicle",
+  "vehicle_total",
+  "cumulative_vehicle",
+  "column_break_axg2",
+  "previous_accommodation",
+  "accommodation_total",
+  "cumulative_accommodation",
+  "section_break_m6bw",
+  "permanent_manpower",
+  "section_break_stvh",
+  "total_employees",
+  "total_employees_provided",
+  "column_break_gyur",
+  "total_unit_price",
+  "total_claim_this_month",
+  "column_break_ydaz",
+  "total_penalty_for_absent",
+  "total_deduction_for_absent",
+  "total_deduction",
+  "column_break_pfqs",
+  "total_absent_days",
+  "total_present_days",
+  "column_break_sjtc",
+  "cumulative_amount",
+  "previous_claim",
+  "amount_to_be_paid",
+  "section_break_ohhp",
+  "permanent_vehicle",
+  "section_break_irer",
+  "total_number_of_vehicles_required",
+  "total_number_of_vehicles_provided",
+  "column_break_qyjo",
+  "total_unit_price_for_vehicle",
+  "total_claim_this_month_for_vehicle",
+  "column_break_qmzm",
+  "total_penalty",
+  "total_deduction_for_vehicle",
+  "column_break_szub",
+  "previous_claim_for_vehicle",
+  "amount_to_be_paid_for_vehicle",
+  "cumulative_amount_for_vehicle",
+  "section_break_shid",
+  "accommodation_table",
+  "section_break_gspe",
+  "total_unit_price_for_accomodation",
+  "column_break_fbip",
+  "total_claim_this_month_for_accomodation",
+  "column_break_jnwl",
+  "total_deduction_for_accomodation",
+  "column_break_gibn",
+  "cumulative_amount_for_accomodation"
+ ],
+ "fields": [
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "MIS Opex",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "invoice_from",
+   "fieldtype": "Date",
+   "label": "Invoice from",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_vdux",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "invoice_upto",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Invoice Upto",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_m6bw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "permanent_manpower",
+   "fieldtype": "Table",
+   "label": "Permanent Manpower",
+   "options": "Permanent Manpower"
+  },
+  {
+   "fieldname": "section_break_ohhp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "permanent_vehicle",
+   "fieldtype": "Table",
+   "label": "Permanent Vehicle",
+   "options": "Permanent Vehicle"
+  },
+  {
+   "fieldname": "accommodation_table",
+   "fieldtype": "Table",
+   "label": "Accommodation Table",
+   "options": "Accommodation Table"
+  },
+  {
+   "fieldname": "section_break_bckw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "manpower_total",
+   "fieldtype": "Currency",
+   "label": "Manpower Total",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_rxyf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "vehicle_total",
+   "fieldtype": "Currency",
+   "label": "Vehicle Total",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_axg2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "accommodation_total",
+   "fieldtype": "Currency",
+   "label": "Accommodation Total",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "month",
+   "fieldtype": "Select",
+   "label": "Month",
+   "options": "\nJan\nFeb\nMar\nApr\nMay\nJun\nJul\nAug\nSep\nOct\nNov\nDec",
+   "reqd": 1
+  },
+  {
+   "fieldname": "year",
+   "fieldtype": "Link",
+   "label": "Year",
+   "options": "Year",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "previous_manpower",
+   "fieldtype": "Currency",
+   "label": "Previous Manpower",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cumulative_manpower",
+   "fieldtype": "Currency",
+   "label": "Cumulative Manpower",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "previous_vehicle",
+   "fieldtype": "Currency",
+   "label": "Previous Vehicle",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cumulative_vehicle",
+   "fieldtype": "Currency",
+   "label": "Cumulative Vehicle",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "previous_accommodation",
+   "fieldtype": "Currency",
+   "label": "Previous Accommodation",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cumulative_accommodation",
+   "fieldtype": "Currency",
+   "label": "Cumulative Accommodation",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_stvh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_employees",
+   "fieldtype": "Float",
+   "label": "Total Employees",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ydaz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_employees_provided",
+   "fieldtype": "Float",
+   "label": "Total Employees Provided",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_gyur",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_unit_price",
+   "fieldtype": "Currency",
+   "label": "Total Unit Price",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_deduction_for_absent",
+   "fieldtype": "Currency",
+   "label": "Total Deduction for Absent",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_penalty_for_absent",
+   "fieldtype": "Currency",
+   "label": "Total Penalty for Absent",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_pfqs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_absent_days",
+   "fieldtype": "Float",
+   "label": "Total Absent Days",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_present_days",
+   "fieldtype": "Float",
+   "label": "Total Present Days",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_sjtc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_claim_this_month",
+   "fieldtype": "Currency",
+   "label": "Total Claim this Month",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_deduction",
+   "fieldtype": "Currency",
+   "label": "Total Deduction",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "cumulative_amount",
+   "fieldtype": "Currency",
+   "label": "Cumulative Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "previous_claim",
+   "fieldtype": "Currency",
+   "label": "Previous Claim",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amount_to_be_paid",
+   "fieldtype": "Currency",
+   "label": "Amount to be Paid",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_irer",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_number_of_vehicles_required",
+   "fieldtype": "Float",
+   "label": "Total Number of Vehicles Required",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_number_of_vehicles_provided",
+   "fieldtype": "Float",
+   "label": "Total Number of Vehicles Provided",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_qyjo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_unit_price_for_vehicle",
+   "fieldtype": "Currency",
+   "label": "Total Unit Price for Vehicle",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_claim_this_month_for_vehicle",
+   "fieldtype": "Currency",
+   "label": "Total Claim this Month for Vehicle",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_qmzm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_penalty",
+   "fieldtype": "Currency",
+   "label": "Total Penalty",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_deduction_for_vehicle",
+   "fieldtype": "Currency",
+   "label": "Total Deduction for Vehicle",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_szub",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "previous_claim_for_vehicle",
+   "fieldtype": "Currency",
+   "label": "Previous Claim for Vehicle",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "amount_to_be_paid_for_vehicle",
+   "fieldtype": "Currency",
+   "label": "Amount to be Paid for Vehicle",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "cumulative_amount_for_vehicle",
+   "fieldtype": "Currency",
+   "label": "Cumulative Amount for Vehicle",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_shid",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_gspe",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_unit_price_for_accomodation",
+   "fieldtype": "Currency",
+   "label": "Total Unit Price for Accomodation",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_claim_this_month_for_accomodation",
+   "fieldtype": "Currency",
+   "label": "Total Claim this Month for Accomodation",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_deduction_for_accomodation",
+   "fieldtype": "Currency",
+   "label": "Total Deduction for Accomodation",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_fbip",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_jnwl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_gibn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cumulative_amount_for_accomodation",
+   "fieldtype": "Currency",
+   "label": "Cumulative Amount for Accomodation",
+   "non_negative": 1,
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-11-26 20:32:03.707979",
+ "modified_by": "jothi.m@groupteampro.com",
+ "module": "Shaher",
+ "name": "MIS Opex",
+ "naming_rule": "Expression (old style)",
+ "owner": "pavithra.s@groupteampro.com",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

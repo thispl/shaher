@@ -32,7 +32,7 @@ frappe.ui.form.on("Employee Certification", {
 					var po_name = frappe.model.make_new_doc_and_get_name('Purchase Order');
 	
 					var po = locals['Purchase Order'][po_name];
-					po.custom_division = "Certification Renewal";
+					po.custom_department = "Certification Renewal - SUTC";
 					po.company = frm.doc.company;
 					po.supplier = frm.doc.supplier;
 					po.custom_employee_certification = frm.doc.name;

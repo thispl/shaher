@@ -1,0 +1,209 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "EMP-AFLS-.####",
+ "creation": "2025-07-16 08:23:59.767852",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_c6yc",
+  "amended_from",
+  "employee",
+  "employee_name",
+  "column_break_yu0b",
+  "designation",
+  "department",
+  "company",
+  "section_break_jg3x",
+  "last_leave_availed_from_date",
+  "last_leave_availed_to_date",
+  "last_leave_availed_days",
+  "column_break_ludy",
+  "present_leave_due_date",
+  "next_eligible_leave_due_date",
+  "section_break_cems",
+  "leave_salary_period_from_date",
+  "air_fare_period_from_date",
+  "reimbursement__amount",
+  "column_break_d8uq",
+  "leave_salary_period_to_date",
+  "air_fare_period_to_date",
+  "column_break_6drt",
+  "leave_salary_amount",
+  "air_fare_amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_c6yc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Request for Air Fare and Leave Salary",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fetch_if_empty": 1,
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_yu0b",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.designation",
+   "fetch_if_empty": 1,
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.department",
+   "fetch_if_empty": 1,
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_jg3x",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "last_leave_availed_from_date",
+   "fieldtype": "Date",
+   "label": "Last Leave Availed From Date"
+  },
+  {
+   "fieldname": "last_leave_availed_to_date",
+   "fieldtype": "Date",
+   "label": "Last Leave Availed To Date"
+  },
+  {
+   "default": "0",
+   "fieldname": "last_leave_availed_days",
+   "fieldtype": "Data",
+   "label": "Last Leave Availed Days"
+  },
+  {
+   "fieldname": "column_break_ludy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "present_leave_due_date",
+   "fieldtype": "Date",
+   "label": "Present Leave Due Date"
+  },
+  {
+   "fieldname": "next_eligible_leave_due_date",
+   "fieldtype": "Date",
+   "label": "Next Eligible Leave Due Date"
+  },
+  {
+   "fieldname": "section_break_cems",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "leave_salary_period_from_date",
+   "fieldtype": "Date",
+   "label": "Leave Salary Period From Date"
+  },
+  {
+   "fieldname": "air_fare_period_from_date",
+   "fieldtype": "Date",
+   "label": "Air Fare Period From Date"
+  },
+  {
+   "fieldname": "reimbursement__amount",
+   "fieldtype": "Currency",
+   "label": "Reimbursement  Amount"
+  },
+  {
+   "fieldname": "column_break_d8uq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "leave_salary_period_to_date",
+   "fieldtype": "Date",
+   "label": "Leave Salary Period To Date"
+  },
+  {
+   "fieldname": "air_fare_period_to_date",
+   "fieldtype": "Date",
+   "label": "Air Fare Period To Date"
+  },
+  {
+   "fieldname": "column_break_6drt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "leave_salary_amount",
+   "fieldtype": "Currency",
+   "label": "Leave Salary Amount"
+  },
+  {
+   "default": "0",
+   "fieldname": "air_fare_amount",
+   "fieldtype": "Currency",
+   "label": "Air Fare Amount"
+  },
+  {
+   "fetch_from": "employee.company",
+   "fetch_if_empty": 1,
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-08-20 14:32:29.206194",
+ "modified_by": "bhuvaneswari.a@groupteampro.com",
+ "module": "Shaher",
+ "name": "Request for Air Fare and Leave Salary",
+ "naming_rule": "Expression (old style)",
+ "owner": "bhuvaneswari.a@groupteampro.com",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

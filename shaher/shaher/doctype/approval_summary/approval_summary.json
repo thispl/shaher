@@ -1,0 +1,80 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-07-21 13:00:45.025319",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "la_approval",
+  "section_break_iiro",
+  "delivery_note_approval",
+  "section_break_dfqz",
+  "mr_approval",
+  "section_break_azsm",
+  "po_approval"
+ ],
+ "fields": [
+  {
+   "fieldname": "la_approval",
+   "fieldtype": "Table",
+   "label": "Leave Approval",
+   "options": "LA Approval"
+  },
+  {
+   "fieldname": "section_break_iiro",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "delivery_note_approval",
+   "fieldtype": "Table",
+   "label": "Delivery Note Approval",
+   "options": "DN Approval"
+  },
+  {
+   "fieldname": "section_break_dfqz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "mr_approval",
+   "fieldtype": "Table",
+   "label": "Material Request Approval",
+   "options": "MR Approval"
+  },
+  {
+   "fieldname": "section_break_azsm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "po_approval",
+   "fieldtype": "Table",
+   "label": "Purchase Order Approval",
+   "options": "PO Approval"
+  }
+ ],
+ "grid_page_length": 50,
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-07-21 18:42:32.815988",
+ "modified_by": "divya.p@groupteampro.com",
+ "module": "Shaher",
+ "name": "Approval Summary",
+ "owner": "divya.p@groupteampro.com",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

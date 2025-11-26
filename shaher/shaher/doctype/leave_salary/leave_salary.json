@@ -16,6 +16,12 @@
   "designation",
   "company",
   "joining_date",
+  "section_break_syyz",
+  "last_leave_salary_taken_day",
+  "column_break_fvsy",
+  "leave_salary_days_salary",
+  "column_break_mfhl",
+  "purpose",
   "section_break_rulw",
   "type",
   "posting_date",
@@ -25,10 +31,8 @@
   "to_date",
   "resumed_duty_on",
   "section_break_bhwj",
-  "last_leave_salary_taken_day",
   "joining_or_last_rejoining_date",
   "leave_salary_days",
-  "leave_salary_days_salary",
   "column_break_bunt",
   "date_of_service",
   "total_leave",
@@ -204,8 +208,7 @@
    "depends_on": "eval:doc.type!=\"Indemnity\"",
    "fieldname": "leave_salary_days_salary",
    "fieldtype": "Int",
-   "label": "Leave Salary Days",
-   "read_only": 1
+   "label": "Leave Salary Days"
   },
   {
    "fieldname": "column_break_odzw",
@@ -504,12 +507,29 @@
    "fieldname": "transport",
    "fieldtype": "Currency",
    "label": "Transport"
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Data",
+   "label": "Purpose"
+  },
+  {
+   "fieldname": "section_break_syyz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_fvsy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_mfhl",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-28 16:58:32.199682",
- "modified_by": "pavithra.s@groupteampro.com",
+ "modified": "2025-08-06 14:57:39.032380",
+ "modified_by": "gifty.p@groupteampro.com",
  "module": "Shaher",
  "name": "Leave Salary",
  "naming_rule": "Expression (old style)",

@@ -10,6 +10,8 @@
   "purchase_order",
   "column_break_xvkp",
   "purchase_invoice",
+  "column_break_ioar",
+  "supplier",
   "section_break_amvx",
   "html"
  ],
@@ -48,6 +50,16 @@
    "fieldname": "html",
    "fieldtype": "HTML",
    "label": "Report"
+  },
+  {
+   "fieldname": "column_break_ioar",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier"
   }
  ],
  "grid_page_length": 50,
@@ -55,8 +67,8 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-06-04 10:53:27.008932",
- "modified_by": "Administrator",
+ "modified": "2025-07-10 14:52:54.832695",
+ "modified_by": "amar.p@groupteampro.com",
  "module": "Shaher",
  "name": "Internal Payment Certificate",
  "owner": "amar.p@groupteampro.com",

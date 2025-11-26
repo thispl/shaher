@@ -1,0 +1,185 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-03 11:25:47.863035",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "description",
+  "employee_type",
+  "total_employees",
+  "column_break_s2pl",
+  "employees_provided",
+  "unit_price",
+  "section_break_xppz",
+  "total_claim_this_month",
+  "no_of_days",
+  "no_of_absent",
+  "column_break_szpz",
+  "deduction_for_absent",
+  "penalty_for_absent",
+  "total_deduction",
+  "section_break_hfuj",
+  "previous_claim",
+  "column_break_pqdw",
+  "amount_to_be_paid",
+  "column_break_dlxm",
+  "cumulative_amount",
+  "section_break_2op5",
+  "comments"
+ ],
+ "fields": [
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description"
+  },
+  {
+   "fieldname": "employee_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Type"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_employees",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Total Employees"
+  },
+  {
+   "fieldname": "column_break_s2pl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "employees_provided",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Employees Provided"
+  },
+  {
+   "default": "0",
+   "fieldname": "unit_price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Unit Price",
+   "precision": "2"
+  },
+  {
+   "fieldname": "section_break_xppz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_claim_this_month",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Claim this Month",
+   "precision": "2"
+  },
+  {
+   "default": "0",
+   "fieldname": "no_of_days",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "No of Days"
+  },
+  {
+   "default": "0",
+   "fieldname": "no_of_absent",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "No of Absent"
+  },
+  {
+   "fieldname": "column_break_szpz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "deduction_for_absent",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Deduction for Absent",
+   "precision": "2"
+  },
+  {
+   "default": "0",
+   "fieldname": "penalty_for_absent",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Penalty for Absent",
+   "precision": "2"
+  },
+  {
+   "fieldname": "total_deduction",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Total Deduction",
+   "precision": "3"
+  },
+  {
+   "fieldname": "section_break_hfuj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "previous_claim",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Previous Claim",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_pqdw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "amount_to_be_paid",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount to be Paid",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_dlxm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "cumulative_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Cumulative Amount",
+   "precision": "2"
+  },
+  {
+   "fieldname": "section_break_2op5",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "comments",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Comments"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-10-04 13:48:01.009384",
+ "modified_by": "jothi.m@groupteampro.com",
+ "module": "Shaher",
+ "name": "Permanent Manpower",
+ "owner": "pavithra.s@groupteampro.com",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

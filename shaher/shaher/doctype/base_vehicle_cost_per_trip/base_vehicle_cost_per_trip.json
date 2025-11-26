@@ -1,0 +1,124 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-06 11:28:16.517167",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "description",
+  "unit_price",
+  "no_of_trip",
+  "column_break_kes8",
+  "total_claim_this_month",
+  "total_deduction",
+  "section_break_hfuj",
+  "previous_claim",
+  "column_break_pqdw",
+  "amount_to_be_paid",
+  "column_break_dlxm",
+  "cumulative_amount",
+  "section_break_2op5",
+  "comments"
+ ],
+ "fields": [
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description"
+  },
+  {
+   "default": "0",
+   "fieldname": "unit_price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Unit Price",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_kes8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_claim_this_month",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Claim this Month",
+   "precision": "2"
+  },
+  {
+   "fieldname": "total_deduction",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Deduction",
+   "precision": "2"
+  },
+  {
+   "fieldname": "section_break_hfuj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "previous_claim",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Previous Claim",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_pqdw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "amount_to_be_paid",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount to be Paid",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_dlxm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "cumulative_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Cumulative Amount",
+   "precision": "2"
+  },
+  {
+   "fieldname": "section_break_2op5",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "comments",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Comments"
+  },
+  {
+   "fieldname": "no_of_trip",
+   "fieldtype": "Int",
+   "label": "No of Trip"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-10-06 17:06:20.018420",
+ "modified_by": "pavithra.s@groupteampro.com",
+ "module": "Shaher",
+ "name": "Base Vehicle Cost Per Trip",
+ "owner": "pavithra.s@groupteampro.com",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

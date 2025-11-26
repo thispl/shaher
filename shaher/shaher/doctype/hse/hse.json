@@ -1,0 +1,228 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "format:HSE-{employee}",
+ "creation": "2025-08-19 18:45:20.111995",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "employee_name",
+  "department",
+  "date_of_joining",
+  "column_break_bpsv",
+  "company",
+  "designation",
+  "site_location",
+  "date_of_birth",
+  "section_break_bhcs",
+  "resident_card_number",
+  "email",
+  "project__contract_no",
+  "column_break_rxzr",
+  "resident_card_expiry_date",
+  "contact_number",
+  "section_break_atuo",
+  "hse_passport_number",
+  "column_break_ozrn",
+  "rop_license_expiry_date",
+  "section_break_eunc",
+  "permit_holder",
+  "column_break_gjjs",
+  "permit_applicant_holder",
+  "section_break_bkiw",
+  "hse_training_matrix",
+  "section_break_bikm",
+  "ftw_register"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "set_only_once": 1,
+   "unique": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Employee Name"
+  },
+  {
+   "fetch_from": "employee.department",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.date_of_joining",
+   "fieldname": "date_of_joining",
+   "fieldtype": "Date",
+   "label": "Date of Joining"
+  },
+  {
+   "fieldname": "column_break_bpsv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fetch_from": "employee.designation",
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fetch_from": "employee.custom_site_location",
+   "fieldname": "site_location",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Site Location",
+   "options": "Site"
+  },
+  {
+   "fetch_from": "employee.date_of_birth",
+   "fieldname": "date_of_birth",
+   "fieldtype": "Date",
+   "label": "Date of Birth"
+  },
+  {
+   "fieldname": "section_break_bhcs",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "employee.custom_resident_id_numberqid_number",
+   "fieldname": "resident_card_number",
+   "fieldtype": "Data",
+   "label": "Resident Card Number"
+  },
+  {
+   "fetch_from": "employee.custom_resident_id_expiry_date",
+   "fieldname": "resident_card_expiry_date",
+   "fieldtype": "Date",
+   "label": "Resident Card Expiry Date"
+  },
+  {
+   "fieldname": "project__contract_no",
+   "fieldtype": "Link",
+   "label": "Project / Contract No ",
+   "options": "Project"
+  },
+  {
+   "fieldname": "column_break_rxzr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.company_email",
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fetch_from": "employee.cell_number",
+   "fieldname": "contact_number",
+   "fieldtype": "Data",
+   "label": "Contact Number"
+  },
+  {
+   "fieldname": "hse_passport_number",
+   "fieldtype": "Data",
+   "label": "HSE Passport Number"
+  },
+  {
+   "fieldname": "rop_license_expiry_date",
+   "fieldtype": "Date",
+   "label": "ROP License Expiry Date"
+  },
+  {
+   "fieldname": "section_break_bkiw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "hse_training_matrix",
+   "fieldtype": "Table",
+   "label": "HSE Training Matrix",
+   "options": "HSE Training Matrix"
+  },
+  {
+   "fieldname": "section_break_bikm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "ftw_register",
+   "fieldtype": "Table",
+   "label": "FTW Register",
+   "options": "FTW Register"
+  },
+  {
+   "fieldname": "section_break_atuo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ozrn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_eunc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "permit_holder",
+   "fieldtype": "Link",
+   "label": "Permit Holder",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "column_break_gjjs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "permit_applicant_holder",
+   "fieldtype": "Link",
+   "label": "Permit Applicant Holder",
+   "options": "Employee"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-01 11:12:38.572518",
+ "modified_by": "jothi.m@groupteampro.com",
+ "module": "Shaher",
+ "name": "HSE",
+ "naming_rule": "Expression",
+ "owner": "jothi.m@groupteampro.com",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

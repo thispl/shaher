@@ -30,10 +30,10 @@ frappe.query_reports["Salary Register Report"] = {
 			"options": "Employee"
 		},
 		{
-			"label": __("Division"),
-			"fieldname": "division",
+			"label": __("Department"),
+			"fieldname": "department",
 			"fieldtype": "Link",
-			"options": "Division"
+			"options": "Department"
 		},
 	]
 

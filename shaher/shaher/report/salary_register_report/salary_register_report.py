@@ -19,7 +19,7 @@ def get_columns():
 		_("Employee") + ":Link/Employee:200",
 		_("Visa No") + ":Data:200",
 		_("Employee Name") + ":Data:200",
-		_("Division") + ":Link/Division:100",
+		_("Department") + ":Link/Department:100",
 		_("Days") + ":Data:100",
 		_("OT Hours") + ":Data:100",
 		_("Basic") + ":Currency:120",
@@ -97,9 +97,9 @@ def get_data(filters):
 			s['employee'],
 			visa_no,
 			s['employee_name'],
-			s['custom_division'],
+			s['department'],
 			s['payment_days'],
-			ot_hours,
+			s['custom_overtime_hours'],
 			basic,
 			earnings_details.get('Basic', 0.0),
 			*earning_values,
@@ -137,9 +137,9 @@ def get_salary_slips(filters):
 	if filters.get('employee'):
 		conditions.append("employee = %s")
 		values.append(filters.get('employee'))
-	if filters.get('division'):
-		conditions.append("custom_division = %s")
-		values.append(filters.get('division'))
+	if filters.get('department'):
+		conditions.append("department = %s")
+		values.append(filters.get('department'))
 	condition_str = " AND ".join(conditions)
 	salary_slips = frappe.db.sql(f"""
 		SELECT * FROM `tabSalary Slip`

@@ -94,6 +94,20 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 
 class CustomSalarySlip(SalarySlip):
     def get_date_details(self):
+        no_of_days = frappe.db.sql(
+            """
+            SELECT no_of_days_worked, ot_hours 
+            FROM `tabAttendance and OT Register` 
+            WHERE from_date <= %s or to_date>= %s
+            AND employee = %s 
+            AND docstatus = 1
+            """,
+            (self.end_date,self.start_date, self.employee),
+            as_dict=False
+        )
+        payment_days = no_of_days[0][0] if no_of_days and no_of_days[0][0] else 0
+        ot_hours  = no_of_days[0][1] if no_of_days and no_of_days[0][1] else 0
+
         ot_amount = frappe.db.sql(
             """
             SELECT SUM(custom_overtime_amount) 
@@ -107,6 +121,9 @@ class CustomSalarySlip(SalarySlip):
         )
         ot_amount = ot_amount[0][0] if ot_amount and ot_amount[0][0] else 0
         self.custom_overtime_amount =ot_amount
+        self.payment_days = frappe.db.get_value("Attendance and OT Register",{'from_date':('<=',self.end_date),'to_date':('>=',self.start_date),'employee':self.employee},['no_of_days_worked']) or 0
+        self.custom_overtime_hours = frappe.db.get_value("Attendance and OT Register",{'from_date':('<=',self.end_date),'to_date':('>=',self.start_date),'employee':self.employee},['ot_hours']) or 0
+
 @frappe.whitelist()
 def custom_round(value):
     integer_part = int(value)

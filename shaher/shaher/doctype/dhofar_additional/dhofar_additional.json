@@ -1,0 +1,333 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "DHOFAR-ADD-.#####",
+ "creation": "2025-10-04 18:29:32.551577",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "amended_from",
+  "month",
+  "year",
+  "column_break_vdux",
+  "invoice_from",
+  "invoice_upto",
+  "section_break_bckw",
+  "previous_manpower",
+  "previous_vehicle",
+  "previous_vehicle_cost_per_trip",
+  "previous_ac_spare_parts",
+  "previous_fire_fighting_parts",
+  "previous_additional_work",
+  "column_break_rxyf",
+  "manpower_total",
+  "vehicle_total",
+  "vehicle_cost_per_trip_total",
+  "ac_spare_parts_total",
+  "fire_fighting_parts_total",
+  "additional_work_total",
+  "column_break_axg2",
+  "cumulative_manpower",
+  "cumulative_vehicle",
+  "cumulative_previous_vehicle_cost_per_trip",
+  "cumulative_ac_spare_parts",
+  "cumulative_fire_fighting_parts",
+  "cumulative_additional_work",
+  "section_break_m6bw",
+  "base_manpower",
+  "section_break_ohhp",
+  "base_vehicle",
+  "section_break_3ie0",
+  "base_vehicle_cost_per_trip",
+  "section_break_ojwv",
+  "airconditioning_system_spare_parts",
+  "section_break_in47",
+  "ff_systems_spare_parts"
+ ],
+ "fields": [
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "MIS Opex",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "month",
+   "fieldtype": "Select",
+   "label": "Month",
+   "options": "\nJan\nFeb\nMar\nApr\nMay\nJun\nJul\nAug\nSep\nOct\nNov\nDec",
+   "reqd": 1
+  },
+  {
+   "fieldname": "year",
+   "fieldtype": "Link",
+   "label": "Year",
+   "options": "Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_vdux",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "invoice_from",
+   "fieldtype": "Date",
+   "label": "Invoice from",
+   "read_only": 1
+  },
+  {
+   "fieldname": "invoice_upto",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Invoice Upto",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_bckw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "previous_manpower",
+   "fieldtype": "Currency",
+   "label": "Previous Manpower",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "manpower_total",
+   "fieldtype": "Currency",
+   "label": "Manpower Total",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cumulative_manpower",
+   "fieldtype": "Currency",
+   "label": "Cumulative Manpower",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_rxyf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "previous_vehicle",
+   "fieldtype": "Currency",
+   "label": "Previous Vehicle",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "vehicle_total",
+   "fieldtype": "Currency",
+   "label": "Vehicle Total",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cumulative_vehicle",
+   "fieldtype": "Currency",
+   "label": "Cumulative Vehicle",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_axg2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_m6bw",
+   "fieldtype": "Tab Break",
+   "label": "Base Manpower"
+  },
+  {
+   "fieldname": "section_break_ohhp",
+   "fieldtype": "Tab Break",
+   "label": "Base Vehicle"
+  },
+  {
+   "fieldname": "section_break_3ie0",
+   "fieldtype": "Tab Break",
+   "label": "Base Vehicle Cost Per Trip"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "MIS Opex",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "base_manpower",
+   "fieldtype": "Table",
+   "options": "Permanent Manpower"
+  },
+  {
+   "fieldname": "base_vehicle",
+   "fieldtype": "Table",
+   "options": "Permanent Vehicle"
+  },
+  {
+   "fieldname": "base_vehicle_cost_per_trip",
+   "fieldtype": "Table",
+   "options": "Base Vehicle Cost Per Trip"
+  },
+  {
+   "fieldname": "section_break_ojwv",
+   "fieldtype": "Tab Break",
+   "label": "AC Systems Spare Parts"
+  },
+  {
+   "fieldname": "airconditioning_system_spare_parts",
+   "fieldtype": "Table",
+   "options": "AIRCONDITIONING SYSTEM SPARE PARTS"
+  },
+  {
+   "fieldname": "section_break_in47",
+   "fieldtype": "Tab Break",
+   "label": "FF Systems Spare Parts"
+  },
+  {
+   "fieldname": "ff_systems_spare_parts",
+   "fieldtype": "Table",
+   "options": "FF Systems Spare Parts"
+  },
+  {
+   "default": "0",
+   "fieldname": "previous_vehicle_cost_per_trip",
+   "fieldtype": "Currency",
+   "label": "Previous Vehicle Cost Per Trip",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "previous_ac_spare_parts",
+   "fieldtype": "Currency",
+   "label": "Previous AC Spare Parts",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "previous_fire_fighting_parts",
+   "fieldtype": "Currency",
+   "label": "Previous Fire Fighting Parts",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "vehicle_cost_per_trip_total",
+   "fieldtype": "Currency",
+   "label": "Vehicle Cost Per Trip Total",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "ac_spare_parts_total",
+   "fieldtype": "Currency",
+   "label": "AC Spare Parts Total",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "fire_fighting_parts_total",
+   "fieldtype": "Currency",
+   "label": "Fire Fighting Parts Total",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cumulative_previous_vehicle_cost_per_trip",
+   "fieldtype": "Currency",
+   "label": "Cumulative Previous Vehicle Cost Per Trip",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cumulative_ac_spare_parts",
+   "fieldtype": "Currency",
+   "label": "Cumulative AC Spare Parts",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cumulative_fire_fighting_parts",
+   "fieldtype": "Currency",
+   "label": "Cumulative Fire Fighting Parts",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "previous_additional_work",
+   "fieldtype": "Currency",
+   "label": "Previous Additional Work",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "additional_work_total",
+   "fieldtype": "Currency",
+   "label": "Additional Work Total",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "cumulative_additional_work",
+   "fieldtype": "Currency",
+   "label": "Cumulative Additional Work",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [
+  {
+   "link_doctype": "ADDITIONAL WORK",
+   "link_fieldname": "reference_id"
+  }
+ ],
+ "modified": "2025-10-07 10:41:14.543086",
+ "modified_by": "pavithra.s@groupteampro.com",
+ "module": "Shaher",
+ "name": "DHOFAR ADDITIONAL",
+ "naming_rule": "Expression (old style)",
+ "owner": "pavithra.s@groupteampro.com",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

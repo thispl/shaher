@@ -471,33 +471,33 @@ def get_columns(filters):
 
 	return columns
 
-@frappe.whitelist()
-def get_paid_amount(po):
-	# Fetch all submitted Purchase Invoices linked to the PO
-	pi_list = frappe.get_all(
-		"Purchase Invoice",
-		filters={"custom_purchase_order": po, "docstatus": 1},  # Ensure only submitted PIs
-		pluck="name"
-	)
+# @frappe.whitelist()
+# def get_paid_amount(po):
+# 	# Fetch all submitted Purchase Invoices linked to the PO
+# 	pi_list = frappe.get_all(
+# 		"Purchase Invoice",
+# 		filters={"custom_purchase_order": po, "docstatus": 1},  # Ensure only submitted PIs
+# 		pluck="name"
+# 	)
 
-	if not pi_list:
-		return 0  # No payments if there are no linked Purchase Invoices
+# 	if not pi_list:
+# 		return 0  # No payments if there are no linked Purchase Invoices
 
-	# Convert list to SQL-friendly format
-	pi_names = ", ".join(f"'{pi}'" for pi in pi_list)
+# 	# Convert list to SQL-friendly format
+# 	pi_names = ", ".join(f"'{pi}'" for pi in pi_list)
 
-	# Fetch total allocated amount from Payment Entry References
-	paid_amount = frappe.db.sql(
-		f"""
-		SELECT SUM(per.allocated_amount) as total_paid_amount
-		FROM `tabPayment Entry` pe
-		INNER JOIN `tabPayment Entry Reference` per ON per.parent = pe.name
-		WHERE per.reference_name IN ({pi_names}) AND pe.docstatus = 1
-		""",
-		as_dict=True
-	)
+# 	# Fetch total allocated amount from Payment Entry References
+# 	paid_amount = frappe.db.sql(
+# 		f"""
+# 		SELECT SUM(per.allocated_amount) as total_paid_amount
+# 		FROM `tabPayment Entry` pe
+# 		INNER JOIN `tabPayment Entry Reference` per ON per.parent = pe.name
+# 		WHERE per.reference_name IN ({pi_names}) AND pe.docstatus = 1
+# 		""",
+# 		as_dict=True
+# 	)
 
-	return paid_amount[0].get("total_paid_amount", 0) if paid_amount and paid_amount[0].get("total_paid_amount") else 0
+# 	return paid_amount[0].get("total_paid_amount", 0) if paid_amount and paid_amount[0].get("total_paid_amount") else 0
 
 @frappe.whitelist()
 def get_advance_amount(po):
@@ -514,29 +514,52 @@ def get_advance_amount(po):
 
 	return paid_amount[0].get("total_paid_amount", 0) if paid_amount and paid_amount[0].get("total_paid_amount") else 0
 
-@frappe.whitelist()
+
 def get_billed_amount(po):
-	# Fetch all submitted Purchase Invoices linked to the PO
-	pi_list = frappe.get_all(
-		"Purchase Invoice",
-		filters={"custom_purchase_order": po, "docstatus": 1},  # Ensure only submitted PIs
-		pluck="name"
-	)
+	pi_names = frappe.db.sql("""
+		SELECT DISTINCT parent 
+		FROM `tabPurchase Invoice Item` 
+		WHERE purchase_order = %s
+	""", po)
 
-	if not pi_list:
-		return 0  # No payments if there are no linked Purchase Invoices
-
-	# Convert list to SQL-friendly format
-	pi_names = ", ".join(f"'{pi}'" for pi in pi_list)
-
-	# Fetch total allocated amount from Payment Entry References
-	paid_amount = frappe.db.sql(
-		f"""
-		SELECT SUM(total) as total_paid_amount
+	if not pi_names:
+		return 0
+	pi_names = [row[0] for row in pi_names]
+	pi_name_str = ", ".join(f"'{pi}'" for pi in pi_names)
+	paid_amount = frappe.db.sql(f"""
+		SELECT SUM(base_grand_total) AS total_paid_amount
 		FROM `tabPurchase Invoice`
-		WHERE name IN ({pi_names}) AND docstatus != 2
-		""",
-		as_dict=True
-	)
+		WHERE name IN ({pi_name_str}) AND docstatus = 1
+	""", as_dict=True)
 
-	return paid_amount[0].get("total_paid_amount", 0) if paid_amount and paid_amount[0].get("total_paid_amount") else 0
+	return paid_amount[0]["total_paid_amount"] or 0 if paid_amount else 0
+
+@frappe.whitelist()
+def get_paid_amount(po):
+    # Step 1: Get all submitted Purchase Invoices that have items linked to the given PO
+    pi_names = frappe.db.sql("""
+        SELECT DISTINCT pii.parent
+        FROM `tabPurchase Invoice Item` pii
+        INNER JOIN `tabPurchase Invoice` pi ON pi.name = pii.parent
+        WHERE pii.purchase_order = %s AND pi.docstatus = 1
+    """, po)
+
+    if not pi_names:
+        return 0  # No invoices = no payments
+
+    # Step 2: Extract invoice names
+    pi_names = [row[0] for row in pi_names]
+
+    # Step 3: Make SQL-safe IN clause
+    pi_name_str = ", ".join(f"'{pi}'" for pi in pi_names)
+
+    # Step 4: Sum allocated amounts from Payment Entry References
+    paid_amount = frappe.db.sql(f"""
+        SELECT SUM(per.allocated_amount) AS total_paid_amount
+        FROM `tabPayment Entry Reference` per
+        INNER JOIN `tabPayment Entry` pe ON per.parent = pe.name
+        WHERE per.reference_name IN ({pi_name_str}) AND pe.docstatus = 1
+    """, as_dict=True)
+
+    # Step 5: Return paid amount safely
+    return paid_amount[0].get("total_paid_amount", 0) if paid_amount and paid_amount[0].get("total_paid_amount") else 0

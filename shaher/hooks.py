@@ -75,7 +75,8 @@ web_include_css = "/assets/shaher/css/shaher.css"
 
 # add methods and filters to jinja environment
 jinja = {
-	"methods": ["shaher.custom.get_leave_periods","shaher.custom.get_tot_leave_amount"],
+	"methods": ["shaher.custom.get_leave_periods","shaher.custom.get_tot_leave_amount","shaher.custom.get_so_amount","shaher.shaher.doctype.hse.hse.generate_html_table",
+	"shaher.custom.get_description_lines","shaher.custom.get_current_leave_balance"],
 	# "filters": "shaher.utils.jinja_filters"
 }
 
@@ -141,35 +142,53 @@ override_doctype_class = {
 # Hook on document methods and events
 
 doc_events = {
+    "Item":{
+        "validate": [
+			# "shaher.custom.set_item_code_if_missing",
+			"shaher.custom.update_item_type"
+		]
+        
+	},
 	"Supplier Quotation": {
 		"on_submit": ["shaher.custom.mail_for_supplier_quotation","shaher.custom.update_po_status"]
 	},
     "Purchase Invoice":{
-        "on_submit":"shaher.custom.update_approval_date_pi"
+        "on_submit":["shaher.custom.update_approval_date_pi","shaher.custom.create_reversal_entry_for_purchase"],
+        "before_insert": "shaher.custom.name_pi",
+		'on_cancel': ["shaher.custom.cancel_reverse_entry_for_purchase"],
 	},
 	"Purchase Order":{
-		"after_insert": "shaher.custom.update_employee_certification",
+		"validate":"shaher.custom.set_description_in_long_text_po",
+        "before_insert": "shaher.custom.name_po",
+		"after_insert":[ "shaher.custom.update_employee_certification"],
 		"on_submit":["shaher.custom.update_supplier_status",
                "shaher.custom.trigger_mail_for_purchase_user",
                "shaher.custom.create_vehicle_maintenance_check",
-			   "shaher.custom.update_approval_date_po"
+			   "shaher.custom.update_approval_date_po",
+               "shaher.custom.update_employee_doc_course"
                ],
 		"before_cancel": ["shaher.custom.remove_vmc_linked"],
-		"on_cancel":["shaher.custom.update_supplier_status_on_cancel", "shaher.custom.validate_remarks", "shaher.custom.cancel_vehicle_maintenance_check"],
+		"on_cancel":["shaher.custom.update_supplier_status_on_cancel",
+                # "shaher.custom.validate_remarks",
+                  "shaher.custom.cancel_vehicle_maintenance_check","shaher.custom.update_employee_doc_course_on_cancel"],
 	},
 	"Purchase Receipt": {
-		"validate": "shaher.custom.get_po_qty",
-		"on_submit":"shaher.custom.update_approval_date_pr"
+		# "validate": "shaher.custom.get_po_qty",
+		"on_submit":["shaher.custom.update_approval_date_pr","shaher.custom.create_journal_entry_for_purchase"],
+		'on_cancel': ["shaher.custom.cancel_journal_entry_for_purchase"],
+        "before_insert": "shaher.custom.name_pr"
 	},
 	"Material Request": {
 		"validate": ["shaher.custom.child_set_value", "shaher.custom.validate_kilometer",],
-        "on_submit":"shaher.custom.update_approval_date_mr"
+        "on_submit":["shaher.custom.update_approval_date_mr"],
+        "before_insert": "shaher.custom.name_mr"
 	},
 	# "Supplier":{
 	# 	"after_insert":"shaher.custom.create_user_permission_on_validate"
 	# },
 	"Leave Application":{
-		'validate':"shaher.custom.validate_next_due_date"
+		'validate':"shaher.custom.validate_next_due_date",
+        # "before_submit": ["hrms.hr.doctype.leave_application.leave_application.calculate_accumulated_leave"]
 	},
     # "Attendance":{
 		# 'on_update':"shaher.custom.ot_calculation",
@@ -177,23 +196,54 @@ doc_events = {
 	# },
     "Sales Invoice":{
 		'validate':[ "shaher.custom.udpate_date_of_supply","shaher.custom.pdo_validation",],
-		'on_submit': "shaher.custom.update_dn_workflow",
-        'on_cancel': "shaher.custom.update_workflow_on_cancelling_si",
+		'on_submit': ["shaher.custom.update_dn_workflow","shaher.custom.create_reversal_entry","shaher.custom.update_previous_claim"],
+        'on_cancel': ["shaher.custom.update_workflow_on_cancelling_si","shaher.custom.cancel_reverse_entry","shaher.custom.deduct_previous_claim"],
+        "before_insert": ["shaher.custom.name_si","shaher.custom.check_rates_fetched"],
 	},
     "Delivery Note": {
 		'validate':[ "shaher.custom.update_coc_fields",
                     "shaher.custom.custom_sutc_job_no_validation",
                    ],
         'on_update_after_submit': "shaher.custom.update_dn_status",
-        'on_cancel': "shaher.custom.update_workflow_on_cancel"
+        'on_cancel': ["shaher.custom.update_workflow_on_cancel","shaher.custom.cancel_journal_entry"],
+        'on_submit':"shaher.custom.create_journal_entry",
+        "before_insert": "shaher.custom.name_dn"
 	},
+	# "Journal Entry":{
+    #     'on_cancel':"shaher.custom.update_dn_field"
+	# },
     "Sales Order": {
-        'on_submit': ["shaher.custom.validate_project_budget"]
+        'on_submit': ["shaher.custom.validate_project_budget"],
+        "before_insert": "shaher.custom.name_so"
 	},
     "Salary Slip": {
         'after_insert': ["shaher.shaher.doctype.employee_loan.employee_loan.update_slip_id"],
         'on_trash': ["shaher.shaher.doctype.employee_loan.employee_loan.clear_slip_id"],
 	},
+    
+	"Stock Entry":{
+        'on_submit':"shaher.custom.warehouse_incharge_mail"
+	},
+
+    "User": {
+        'before_insert':'shaher.custom.set_app' 
+	},
+    "Quotation":{
+        "before_insert": "shaher.custom.name_qtn"
+	},
+    "Opportunity":{
+        "before_insert": "shaher.custom.name_opp"
+	},
+
+    "Employee": {
+        "before_insert": "shaher.custom.update_employee_doc_name"
+    },
+    "Asset":{
+        "after_insert":"shaher.custom.send_asset_mails"
+	}
+
+
+
 }
 
 # Scheduled Tasks
@@ -214,6 +264,11 @@ scheduler_events = {
 # 		"shaher.tasks.daily"
 		"shaher.custom.create_scheduled",
         "shaher.custom.update_days_left_daily",
+        "shaher.custom.check_leave_application_creation",
+        "shaher.custom.create_annual_leave_allocation",
+		"shaher.custom.create_leave_salary",
+        "shaher.custom.send_expiry_alerts"
+        
 	],
 # 	"hourly": [
 # 		"shaher.tasks.hourly"

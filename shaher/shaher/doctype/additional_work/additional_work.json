@@ -1,0 +1,151 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "ADD-WORK-.#####",
+ "creation": "2025-10-06 16:45:55.922196",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "amended_from",
+  "month",
+  "year",
+  "additional_work_against",
+  "column_break_vdux",
+  "invoice_from",
+  "invoice_upto",
+  "against",
+  "reference_id",
+  "section_break_bckw",
+  "additional_total",
+  "section_break_ohhp",
+  "additional_work_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "MIS Opex",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "month",
+   "fieldtype": "Select",
+   "label": "Month",
+   "options": "\nJan\nFeb\nMar\nApr\nMay\nJun\nJul\nAug\nSep\nOct\nNov\nDec",
+   "reqd": 1
+  },
+  {
+   "fieldname": "year",
+   "fieldtype": "Link",
+   "label": "Year",
+   "options": "Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_vdux",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "invoice_from",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Invoice from",
+   "read_only": 1
+  },
+  {
+   "fieldname": "invoice_upto",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Invoice Upto",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_bckw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_ohhp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "MIS Opex",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "additional_total",
+   "fieldtype": "Currency",
+   "label": "Additional Total",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "additional_work_details",
+   "fieldtype": "Table",
+   "label": "Additional Work Details",
+   "options": "Additional Work Details"
+  },
+  {
+   "fieldname": "additional_work_against",
+   "fieldtype": "Select",
+   "label": "Additional Work Against",
+   "options": "\nMIS\nDHOFAR",
+   "reqd": 1
+  },
+  {
+   "fieldname": "against",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Against",
+   "options": "DocType",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reference_id",
+   "fieldtype": "Dynamic Link",
+   "label": "Reference ID",
+   "options": "against",
+   "read_only": 1,
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-10-07 10:05:45.162258",
+ "modified_by": "pavithra.s@groupteampro.com",
+ "module": "Shaher",
+ "name": "ADDITIONAL WORK",
+ "naming_rule": "Expression (old style)",
+ "owner": "pavithra.s@groupteampro.com",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

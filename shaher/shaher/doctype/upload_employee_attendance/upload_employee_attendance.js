@@ -40,13 +40,27 @@ frappe.ui.form.on("Upload Employee Attendance", {
     },
 	download: function (frm) {
         window.location.href = repl(frappe.request.url +
-                 '?cmd=%(cmd)s&from_date=%(from_date)s&to_date=%(to_date)s&department=%(department)s&designation=%(designation)s&company=%(company)s&name=%(name)s',{
+                 '?cmd=%(cmd)s&from_date=%(from_date)s&to_date=%(to_date)s&department=%(department)s&designation=%(designation)s&company=%(company)s&site_location=%(site_location)s&name=%(name)s',{
                  cmd: "shaher.shaher.doctype.upload_employee_attendance.upload_employee_attendance.get_template",
                  from_date: frm.doc.from_date,
                  to_date: frm.doc.to_date,
                  department:frm.doc.department,
                  designation:frm.doc.designation,
                  company:frm.doc.company,
+                 site_location: frm.doc.site_location,
+                 name:frm.doc.name
+             })
+         },
+    download_template: function (frm) {
+        window.location.href = repl(frappe.request.url +
+                 '?cmd=%(cmd)s&from_date=%(from_date)s&to_date=%(to_date)s&department=%(department)s&designation=%(designation)s&company=%(company)s&site_location=%(site_location)s&name=%(name)s',{
+                 cmd: "shaher.shaher.doctype.upload_employee_attendance.pdo_upload_format.get_template",
+                 from_date: frm.doc.from_date,
+                 to_date: frm.doc.to_date,
+                 department:frm.doc.department,
+                 designation:frm.doc.designation,
+                 company:frm.doc.company,
+                 site_location: frm.doc.site_location,
                  name:frm.doc.name
              })
          },

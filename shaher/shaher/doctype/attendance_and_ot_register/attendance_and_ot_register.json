@@ -1,0 +1,308 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "ATT-OTR-.#####",
+ "creation": "2025-08-01 11:34:03.512090",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_n3n3",
+  "employee",
+  "employee_name",
+  "column_break_gepp",
+  "company",
+  "division",
+  "section_break_qnlm",
+  "from_date",
+  "to_date",
+  "no_of_days_worked",
+  "column_break_uruo",
+  "ot_hours",
+  "night_ot",
+  "wo_nh",
+  "section_break_bwri",
+  "rest_days",
+  "column_break_vzlb",
+  "present_days",
+  "column_break_snja",
+  "absent_days",
+  "column_break_ycie",
+  "total_weekly_holidays",
+  "column_break_thfd",
+  "holidays",
+  "section_break_krev",
+  "food_allowance",
+  "other_earnings",
+  "column_break_gktz",
+  "salary_advance_deduction",
+  "other_deduction",
+  "section_break_tzmk",
+  "breakfast",
+  "lunch",
+  "column_break_rtf2",
+  "dinner",
+  "mobile_allow",
+  "section_break_qna6",
+  "remarks",
+  "attendance_and_ot_register_upload",
+  "amended_from",
+  "attendance_upload"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_n3n3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee Name"
+  },
+  {
+   "fieldname": "column_break_gepp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "allow_on_submit": 1,
+   "fetch_from": "employee.custom_site_location",
+   "fetch_if_empty": 1,
+   "fieldname": "division",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Division",
+   "options": "Site"
+  },
+  {
+   "fieldname": "section_break_qnlm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date"
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date"
+  },
+  {
+   "fieldname": "column_break_uruo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "no_of_days_worked",
+   "fieldtype": "Float",
+   "label": " No of Days Worked "
+  },
+  {
+   "fieldname": "ot_hours",
+   "fieldtype": "Float",
+   "label": "Normal OT HRS"
+  },
+  {
+   "fieldname": "section_break_krev",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "food_allowance",
+   "fieldtype": "Currency",
+   "label": "Food Allowance"
+  },
+  {
+   "fieldname": "other_earnings",
+   "fieldtype": "Currency",
+   "label": "Other Earnings"
+  },
+  {
+   "fieldname": "column_break_gktz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "salary_advance_deduction",
+   "fieldtype": "Currency",
+   "label": "Salary Advance Deduction"
+  },
+  {
+   "fieldname": "other_deduction",
+   "fieldtype": "Currency",
+   "label": "Other Deduction"
+  },
+  {
+   "fieldname": "section_break_tzmk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Attendance and OT Register",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "attendance_and_ot_register_upload",
+   "fieldtype": "Data",
+   "label": "Attendance and OT Register Upload"
+  },
+  {
+   "fieldname": "night_ot",
+   "fieldtype": "Float",
+   "label": "Night OT"
+  },
+  {
+   "fieldname": "wo_nh",
+   "fieldtype": "Float",
+   "label": "WO/NH"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "breakfast",
+   "fieldtype": "Float",
+   "label": "Breakfast"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "lunch",
+   "fieldtype": "Float",
+   "label": "Lunch"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "dinner",
+   "fieldtype": "Float",
+   "label": "Dinner"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "mobile_allow",
+   "fieldtype": "Float",
+   "label": "Mobile Allow"
+  },
+  {
+   "fieldname": "section_break_qna6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_rtf2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "attendance_upload",
+   "fieldtype": "Data",
+   "label": "Attendance Upload"
+  },
+  {
+   "fieldname": "section_break_bwri",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "rest_days",
+   "fieldtype": "Float",
+   "label": "Rest Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_vzlb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "present_days",
+   "fieldtype": "Float",
+   "label": "Present Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_snja",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "absent_days",
+   "fieldtype": "Float",
+   "label": "Absent Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ycie",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_weekly_holidays",
+   "fieldtype": "Float",
+   "label": "Total Weekly Holidays",
+   "read_only": 1
+  },
+  {
+   "fieldname": "holidays",
+   "fieldtype": "Float",
+   "label": "Holidays",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_thfd",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-11-10 13:04:44.896662",
+ "modified_by": "jothi.m@groupteampro.com",
+ "module": "Shaher",
+ "name": "Attendance and OT Register",
+ "naming_rule": "Expression (old style)",
+ "owner": "gifty.p@groupteampro.com",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

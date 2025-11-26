@@ -195,15 +195,15 @@ frappe.ui.form.on('Project Budget', {
     },
 	update_naming: function(frm) {
 	    if(frm.doc.__islocal){
-        		    if(frm.doc.division=='OETC'){
+        		    if(frm.doc.department.toLowerCase().includes("oetc")){
         		        value = "PB-OETC-.{company_shortcode}.-.YYYY.-"
         		        frm.set_value('naming_series', value)
         		    }
-        		    else if(frm.doc.division=='PDO'){
+        		    else if(frm.doc.department.toLowerCase().includes("pdo")){
         		        value = "PB-PDO-.{company_shortcode}.-.YYYY.-"
         		        frm.set_value('naming_series', value)
         		    }
-        		    else if(frm.doc.division=='General'){
+        		    else if(frm.doc.department.toLowerCase().includes("general")){
         		        value = "PB-GEN-.{company_shortcode}.-.YYYY.-"
         		        frm.set_value('naming_series', value)
         		    }

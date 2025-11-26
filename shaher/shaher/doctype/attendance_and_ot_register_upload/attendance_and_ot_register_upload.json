@@ -1,0 +1,159 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "ATT-OT-U-.#####",
+ "creation": "2025-08-01 10:07:55.485059",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_cyyw",
+  "company",
+  "from_date",
+  "to_date",
+  "column_break_yqi9",
+  "location",
+  "project",
+  "column_break_qca8",
+  "get_tem",
+  "att",
+  "up",
+  "column_break_ng7v",
+  "get_templete",
+  "attach",
+  "emp",
+  "upload",
+  "section_break_s03q",
+  "html_preview",
+  "series"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_cyyw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "To Date ",
+   "reqd": 1
+  },
+  {
+   "fieldname": "get_templete",
+   "fieldtype": "Button",
+   "label": "Get  Template"
+  },
+  {
+   "fieldname": "attach",
+   "fieldtype": "Attach"
+  },
+  {
+   "fieldname": "column_break_yqi9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location ",
+   "options": "Site"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fieldname": "column_break_qca8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "html_preview",
+   "fieldtype": "HTML",
+   "label": "Html Preview"
+  },
+  {
+   "default": "0",
+   "fieldname": "series",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Series",
+   "options": "HR-EAD-.YYYY.-"
+  },
+  {
+   "fieldname": "upload",
+   "fieldtype": "Button",
+   "label": "Upload"
+  },
+  {
+   "fieldname": "column_break_ng7v",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_s03q",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "att",
+   "fieldtype": "HTML",
+   "label": "Att"
+  },
+  {
+   "fieldname": "up",
+   "fieldtype": "HTML",
+   "label": "up"
+  },
+  {
+   "fieldname": "get_tem",
+   "fieldtype": "HTML",
+   "label": "get_tem"
+  },
+  {
+   "fieldname": "emp",
+   "fieldtype": "HTML",
+   "label": "emp"
+  }
+ ],
+ "grid_page_length": 50,
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-10 09:14:59.591928",
+ "modified_by": "jothi.m@groupteampro.com",
+ "module": "Shaher",
+ "name": "Attendance and OT Register Upload",
+ "naming_rule": "Expression (old style)",
+ "owner": "muthuselvan.e@groupteampro.com",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

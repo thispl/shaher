@@ -41,6 +41,21 @@ frappe.ui.form.on("Report Dashboard", {
             }
             
         }
+        else if (frm.doc.report == 'Timesheet Report') {
+            var path = 'shaher.shaher.doctype.report_dashboard.timesheet_report.download'
+            var args = "from_date=" + encodeURIComponent(frm.doc.from_date || '') +
+					"&to_date=" + encodeURIComponent(frm.doc.to_date || '')+
+                    "&company=" + encodeURIComponent(frm.doc.company || '')+
+                    "&site_location=" + encodeURIComponent(frm.doc.site_location || ''); 
+            if (path) {
+                window.location.href = repl(frappe.request.url +
+                    '?cmd=%(cmd)s&%(args)s', {
+                    cmd: path,
+                    args:args
+                });
+            }
+            
+        }
         else if (frm.doc.report == 'Monthly Attendance Sheet') {
             var path = 'shaher.shaher.doctype.report_dashboard.monthly_attendance_sheet.download'
             var args = "from_date=" + encodeURIComponent(frm.doc.from_date || '') +

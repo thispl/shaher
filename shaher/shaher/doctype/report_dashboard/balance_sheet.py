@@ -111,5 +111,5 @@ def test_check():
 
 @frappe.whitelist()
 def test_check1():
-	value = frappe.db.get_value("Account", "1100 - Cash In Hand - SUTCC", "account_type")
+	value = frappe.db.get_value("Account", "1100 - Cash In Hand - SUTC", "account_type")
 	print(value)

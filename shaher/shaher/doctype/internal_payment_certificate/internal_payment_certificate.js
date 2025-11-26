@@ -19,6 +19,7 @@ frappe.ui.form.on("Internal Payment Certificate", {
             frm.set_value("sales_order", "");
             frm.set_value("purchase_order", "");
             frm.set_value("purchase_invoice", "");
+            frm.set_value("supplier", "");
             frm.fields_dict.html.$wrapper.html(`
                     <div style="min-height: 80%; max-height: 80%; display: flex; align-items: center; justify-content: center;">
                         <p style="text-align: center; font-size: 16px; color: #6c757d;">
@@ -45,6 +46,7 @@ frappe.ui.form.on("Internal Payment Certificate", {
                 sales_order_filter: frm.doc.sales_order,
                 purchase_order_filter: frm.doc.purchase_order,
                 purchase_invoice_filter: frm.doc.purchase_invoice,
+                supplier_filter: frm.doc.supplier,
             },
             freeze: true,
             freee_message: "Generating Report ...",

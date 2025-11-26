@@ -1,0 +1,150 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-03 15:07:04.736485",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "description",
+  "monthly_unit_rate",
+  "basic_salary",
+  "column_break_sb55",
+  "allowances",
+  "unit",
+  "ot_hourly_rate",
+  "section_break_knvg",
+  "qty",
+  "column_break_yfra",
+  "total",
+  "section_break_hfuj",
+  "previous_claim",
+  "column_break_pqdw",
+  "amount_to_be_paid",
+  "column_break_dlxm",
+  "cumulative_amount",
+  "section_break_2op5",
+  "comments"
+ ],
+ "fields": [
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description"
+  },
+  {
+   "fieldname": "section_break_hfuj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "previous_claim",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Previous Claim"
+  },
+  {
+   "fieldname": "column_break_pqdw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "amount_to_be_paid",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount to be Paid"
+  },
+  {
+   "fieldname": "column_break_dlxm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "cumulative_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Cumulative Amount",
+   "precision": "3"
+  },
+  {
+   "fieldname": "section_break_2op5",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "comments",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Comments"
+  },
+  {
+   "fieldname": "monthly_unit_rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Monthly Unit Rate"
+  },
+  {
+   "fieldname": "basic_salary",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Basic Salary"
+  },
+  {
+   "fieldname": "column_break_sb55",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "allowances",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Allowances"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Unit"
+  },
+  {
+   "fieldname": "ot_hourly_rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "OT Hourly Rate"
+  },
+  {
+   "fieldname": "section_break_knvg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Qty"
+  },
+  {
+   "fieldname": "column_break_yfra",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total",
+   "precision": "3"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-10-03 19:10:20.540823",
+ "modified_by": "pavithra.s@groupteampro.com",
+ "module": "Shaher",
+ "name": "Overtime Details",
+ "owner": "pavithra.s@groupteampro.com",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
