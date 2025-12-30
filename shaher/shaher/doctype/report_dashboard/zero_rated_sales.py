@@ -147,8 +147,7 @@ def get_data(args):
 		formatted_grant = f"{float(grant):.3f}"
 		a = "OMR" + "  " * (28 - len(form_a)) + form_a
 		b = "OMR" + "  " * (20 - len(form_b)) + form_b
-		form_grant=f"{float(grant):.3f}"
-		form_g=format_currency(form_grant)
+		
 		vari = rept.currency
 		row = [index,
 				taxpayervatin,
@@ -163,6 +162,8 @@ def get_data(args):
 			]
 		index+=1
 		data.append(row)
+	form_grant=f"{float(grant):.3f}"
+	form_g=format_currency(form_grant)
 	row=[""]
 	data.append(row)
 	row=["","","","","","Total",f"{'OMR':<5}{form_g:>32}"]

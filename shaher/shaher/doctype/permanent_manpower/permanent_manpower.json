@@ -12,6 +12,7 @@
   "column_break_s2pl",
   "employees_provided",
   "unit_price",
+  "read_only_row",
   "section_break_xppz",
   "total_claim_this_month",
   "no_of_days",
@@ -34,20 +35,23 @@
    "fieldname": "description",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Description"
+   "label": "Description",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "employee_type",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Employee Type"
+   "label": "Employee Type",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "default": "0",
    "fieldname": "total_employees",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "Total Employees"
+   "label": "Total Employees",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "column_break_s2pl",
@@ -58,7 +62,8 @@
    "fieldname": "employees_provided",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "Employees Provided"
+   "label": "Employees Provided",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "default": "0",
@@ -66,7 +71,8 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Unit Price",
-   "precision": "2"
+   "precision": "2",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "section_break_xppz",
@@ -78,21 +84,24 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Total Claim this Month",
-   "precision": "2"
+   "precision": "2",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "default": "0",
    "fieldname": "no_of_days",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "No of Days"
+   "label": "No of Days",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "default": "0",
    "fieldname": "no_of_absent",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "No of Absent"
+   "label": "No of Absent",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "column_break_szpz",
@@ -104,7 +113,8 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Deduction for Absent",
-   "precision": "2"
+   "precision": "2",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "default": "0",
@@ -112,14 +122,16 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Penalty for Absent",
-   "precision": "2"
+   "precision": "2",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "total_deduction",
-   "fieldtype": "Data",
+   "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Total Deduction",
-   "precision": "3"
+   "precision": "2",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "section_break_hfuj",
@@ -131,7 +143,8 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Previous Claim",
-   "precision": "2"
+   "precision": "2",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "column_break_pqdw",
@@ -143,7 +156,8 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Amount to be Paid",
-   "precision": "2"
+   "precision": "2",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "column_break_dlxm",
@@ -155,7 +169,8 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Cumulative Amount",
-   "precision": "2"
+   "precision": "2",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "section_break_2op5",
@@ -165,14 +180,23 @@
    "fieldname": "comments",
    "fieldtype": "Small Text",
    "in_list_view": 1,
-   "label": "Comments"
+   "label": "Comments",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_only_row",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Read Only",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-04 13:48:01.009384",
+ "modified": "2025-12-03 14:15:16.014619",
  "modified_by": "jothi.m@groupteampro.com",
  "module": "Shaher",
  "name": "Permanent Manpower",

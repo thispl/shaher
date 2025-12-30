@@ -40,6 +40,7 @@ def get_report_data(sales_order_filter=None, purchase_order_filter=None, purchas
 						<td class="border border-1 border-light" style="min-width: 100px;">Paid Amount (Payables)</td>
 						<td class="border border-1 border-light" style="min-width: 100px;">SUTC LPO</td>
 						<td class="border border-1 border-light" style="min-width: 100px;">VAT Amount</td>
+						<td class="border border-1 border-light" style="min-width: 100px;">Profit Margin %</td>
 						<td class="border border-1 border-light" style="min-width: 100px;">Profit Margin</td>
 						<td class="border border-1 border-light" style="min-width: 100px;">SUTC Invoice</td>
 						<td class="border border-1 border-light" style="min-width: 100px;">Date of Invoice</td>
@@ -66,6 +67,8 @@ def get_report_data(sales_order_filter=None, purchase_order_filter=None, purchas
 			sales_order_item = row.name
 			item_code = row.item_code
 			purchase_order, purchase_order_item = get_purchase_order_details(row.name, sales_order)
+			if not purchase_order:
+				purchase_order = so.custom_purchase_order
 			supplier_po = frappe.db.get_value("Purchase Order", purchase_order, "custom_supplier_reference_number")
 			supplier = frappe.db.get_value("Purchase Order", purchase_order, "supplier")
 			service_entry = get_service_entry(sales_order_item, sales_order)
@@ -77,8 +80,11 @@ def get_report_data(sales_order_filter=None, purchase_order_filter=None, purchas
 			if sales_invoice:
 				customer_payment_entry, customer_paid_amount, customer_payment_status = get_payment_details(sales_invoice, sales_invoice_amount)
 			if purchase_invoice:
+				frappe.errprint(vat_amount)
+				frappe.errprint(purchase_invoice_amount)
 				supplier_payment_entry, supplier_paid_amount, supplier_payment_status = get_payment_details(purchase_invoice, purchase_invoice_amount+vat_amount)
 			profit_margin =  (sales_invoice_amount or 0) - (purchase_invoice_amount or 0)
+			profit_margin_percentage = (profit_margin/sales_invoice_amount or purchase_invoice_amount)*100
 			if not return_sales_invoice and not return_purchase_invoice:
 				if not supplier_filter or supplier_filter == supplier:
 					html += f"""
@@ -98,6 +104,7 @@ def get_report_data(sales_order_filter=None, purchase_order_filter=None, purchas
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: right;">{fmt_money(supplier_paid_amount, currency = so.currency) or ''}</td>
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: left;">{supplier_po or ''}</td>
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: right;">{fmt_money(vat_amount, currency = so.currency) or ''}</td>
+								<td class="border border-1 border-danger" style="min-width: 100px; text-align: right;">{format(profit_margin_percentage, ".2f") if profit_margin_percentage else ""}</td>
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: right;">{fmt_money(profit_margin, currency = so.currency) or ''}</td>
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: left;"><a href="/app/sales-invoice/{sales_invoice}">{sales_invoice or ''}</a></td>
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: left;">{sales_invoice_date or ''}</td>
@@ -124,7 +131,7 @@ def get_report_data(sales_order_filter=None, purchase_order_filter=None, purchas
 		for row in po.items:
 			item_code = row.item_code
 			sales_order = row.sales_order or po.custom_supplier_reference_number
-			pdo_po = frappe.db.get_value("Sales Order", sales_order, "po_no")
+			pdo_po = frappe.db.get_value("Sales Order", row.sales_order, "po_no")
 			sales_order_item = row.sales_order_item
 
 			service_entry = get_service_entry(sales_order_item, sales_order)
@@ -138,6 +145,7 @@ def get_report_data(sales_order_filter=None, purchase_order_filter=None, purchas
 			if purchase_invoice:
 				supplier_payment_entry, supplier_paid_amount, supplier_payment_status = get_payment_details(purchase_invoice, purchase_invoice_amount+vat_amount)
 			profit_margin =  (sales_invoice_amount or 0) - (purchase_invoice_amount or 0)
+			profit_margin_percentage = (profit_margin/sales_invoice_amount or purchase_invoice_amount)*100
 			if not return_purchase_invoice and not return_sales_invoice:
 				if not supplier_filter or supplier_filter == supplier:
 					html += f""""
@@ -157,6 +165,8 @@ def get_report_data(sales_order_filter=None, purchase_order_filter=None, purchas
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: right;">{fmt_money(supplier_paid_amount, currency = po.currency) or ''}</td>
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: left;">{po.custom_supplier_reference_number or ''}</td>
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: right;">{fmt_money(vat_amount, currency = po.currency) or ''}</td>
+								<td class="border border-1 border-danger" style="min-width: 100px; text-align: right;">{format(profit_margin_percentage, ".2f") if profit_margin_percentage else ""}</td>
+
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: right;">{fmt_money(profit_margin, currency = po.currency) or ''}</td>
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: left;"><a href="/app/sales-invoice/{sales_invoice}">{sales_invoice or ''}</a></td>
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: left;">{sales_invoice_date or ''}</td>
@@ -200,6 +210,7 @@ def get_report_data(sales_order_filter=None, purchase_order_filter=None, purchas
 			if purchase_invoice:
 				supplier_payment_entry, supplier_paid_amount, supplier_payment_status = get_payment_details(purchase_invoice, purchase_invoice_amount)
 			profit_margin =  (sales_invoice_amount or 0) - (purchase_invoice_amount or 0)
+			profit_margin_percentage = (profit_margin/sales_invoice_amount or purchase_invoice_amount)*100
 			if not return_sales_invoice and not pi.is_return:
 				if not supplier_filter or supplier_filter == supplier:
 					html += f""""
@@ -219,6 +230,7 @@ def get_report_data(sales_order_filter=None, purchase_order_filter=None, purchas
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: right;">{fmt_money(supplier_paid_amount, currency = pi.currency) or ''}</td>
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: left;">{supplier_po or ''}</td>
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: right;">{fmt_money(vat_amount, currency = pi.currency) or ''}</td>
+								<td class="border border-1 border-danger" style="min-width: 100px; text-align: right;">{format(profit_margin_percentage, ".2f") if profit_margin_percentage else ""}</td>
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: right;">{fmt_money(profit_margin, currency = pi.currency) or ''}</td>
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: left;"><a href="/app/sales-invoice/{sales_invoice}">{sales_invoice or ''}</a></td>
 								<td class="border border-1 border-danger" style="min-width: 100px; text-align: left;">{sales_invoice_date or ''}</td>
@@ -254,6 +266,7 @@ def get_report_data(sales_order_filter=None, purchase_order_filter=None, purchas
 					<td class="border border-1 border-danger" style="min-width: 100px; text-align: right;">{fmt_money(total_supplier_paid_amount, currency = currency) or ''}</td>
 					<td class="border border-1 border-danger" style="min-width: 100px; text-align: left;"></td>
 					<td class="border border-1 border-danger" style="min-width: 100px; text-align: left;">{fmt_money(total_vat_amount, currency = currency) or ''}</td>
+					<td class="border border-1 border-danger" style="min-width: 100px; text-align: left;"></td>
 					<td class="border border-1 border-danger" style="min-width: 100px; text-align: right;">{fmt_money(total_profit_margin, currency = currency) or ''}</td>
 					<td class="border border-1 border-danger" style="min-width: 100px; text-align: left;"></td>
 					<td class="border border-1 border-danger" style="min-width: 100px; text-align: left;"></td>
@@ -380,7 +393,9 @@ def get_payment_details(invoice, invoice_amount):
 	amount = payment_entry[0]['paid_amount'] if payment_entry else None
 	status = "Pending"
 	if payment_entry:
-		if amount == invoice_amount:
+		frappe.errprint(f'amount {amount}: {invoice_amount}')
+		
+		if (amount - invoice_amount) < 0:
 			status = "Paid"
 		else:
 			status = "Partly Paid"
@@ -410,8 +425,8 @@ def get_purchase_order_details(sales_order_item, sales_order):
 def get_vat_amount(purchase_invoice):
 	if purchase_invoice:
 		purchase_invoice = purchase_invoice.split(', ')
-		data = frappe.db.sql("select base_tax_amount from `tabPurchase Taxes and Charges` where parent in %s and account_head like %s", (purchase_invoice, '%vat%'), as_dict=1)
-		vat = data[0]['base_tax_amount'] if data else 0
+		data = frappe.db.sql("select total from `tabPurchase Taxes and Charges` where parent in %s and account_head like %s", (purchase_invoice, '%vat%'), as_dict=1)
+		vat = data[0]['total'] if data else 0
 		return vat
 	else:
 		return 0

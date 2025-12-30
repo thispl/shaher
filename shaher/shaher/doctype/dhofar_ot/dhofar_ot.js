@@ -84,9 +84,31 @@ frappe.ui.form.on("DHOFAR OT", {
                     rateIndex++;
                 }
             });
+            let row = frm.add_child("overtime_details");
+            row.description = "Total";
+            row.monthly_unit_rate = 0;
+            row.basic_salary = 0;
+            row.allowances = 0;
+
+            row.unit = "";
+            row.ot_hourly_rate = 0; 
 
             frm.refresh_field("overtime_details");
         }
+        const grid_pm = frm.fields_dict.overtime_details?.grid;
+
+        if (grid_pm && grid_pm.grid_rows.length) {
+            const last_row_pm = grid_pm.grid_rows[grid_pm.grid_rows.length - 1];
+
+            last_row_pm.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.overtime_details.forEach(row => {
+                if (row.idx === frm.doc.overtime_details.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+
 
 	},
     month(frm) {

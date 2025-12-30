@@ -44,6 +44,42 @@ class MISOT(Document):
         self.previous_overtime = prev_ot
         self.overtime_total = ot_tot
         self.cumulative_overtime = cumm_ot
+        monthly_unit_rate = 0
+        basic_salary = 0
+        total_claim_this_month = 0
+        ot_hourly_rate = 0
+        qty = 0
+        total = 0
+        allowances = 0
+        previous_claim = 0
+        amount_to_be_paid = 0
+        cumulative_amount = 0
+        unit = 0
+        # First  pass — accumulate values from all non-total rows
+        for row in self.overtime_details:
+            if row.description != "Total":
+                monthly_unit_rate += (row.monthly_unit_rate or 0)
+                basic_salary += (row.basic_salary or 0)
+                ot_hourly_rate += (row.ot_hourly_rate or 0)
+                qty += (row.qty or 0)
+                total += (row.total or 0)
+                allowances += (row.allowances or 0)
+                previous_claim += (row.previous_claim or 0)
+                amount_to_be_paid += (row.amount_to_be_paid or 0)
+                cumulative_amount += (row.cumulative_amount or 0)
+
+        # Second pass — set totals on the Total row
+        for row in self.overtime_details:
+            if row.description == "Total":
+                row.monthly_unit_rate = monthly_unit_rate
+                row.basic_salary = basic_salary
+                row.ot_hourly_rate = ot_hourly_rate
+                row.qty = qty
+                row.total = total
+                row.allowances = allowances
+                row.previous_claim = previous_claim
+                row.amount_to_be_paid = amount_to_be_paid
+                row.cumulative_amount = cumulative_amount
         
 
         

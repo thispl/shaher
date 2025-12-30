@@ -114,7 +114,7 @@ def set_column_widths(ws):
 
 
 def get_data(args):
-	datas=frappe.db.sql(f"""SELECT sa.name,sa.posting_date,sa.currency,sa.grand_total,sa.customer,c.tax_id,c.customer_name FROM `tabSales Invoice` sa LEFT JOIN `tabCustomer` c ON sa.customer = c.customer_name Where sa.docstatus=1 AND c.vat_type='Std Vat' AND sa.posting_date BETWEEN '{args.get('from_date')}' AND '{args.get('to_date')}'""",as_dict=1)
+	datas=frappe.db.sql(f"""SELECT sa.name,sa.posting_date,sa.currency,sa.grand_total,sa.customer,c.tax_id,c.customer_name FROM `tabSales Invoice` sa LEFT JOIN `tabCustomer` c ON sa.customer_name = c.customer_name Where sa.docstatus=1 AND c.vat_type='Std Vat' AND sa.posting_date BETWEEN '{args.get('from_date')}' AND '{args.get('to_date')}'""",as_dict=1)
 	grant=0
 	ta=0
 	row =[]
@@ -149,10 +149,7 @@ def get_data(args):
 		formatted_grant = f"{float(grant):.3f}"
 		a = "OMR" + "  " * (14 - len(form_a)) + form_a
 		b = "OMR" + "  " * (20 - len(form_b)) + form_b
-		form_grant=f"{float(grant):.3f}"
-		form_g=format_currency(form_grant)
-		form_ta=f"{float(ta):.3f}"
-		form_t=format_currency(form_ta)
+		
 		g_len = len(formatted_grant)
 		row = [index,
 				taxpayervatin,
@@ -167,6 +164,10 @@ def get_data(args):
 			]
 		index+=1
 		data.append(row)
+	form_grant=f"{float(grant):.3f}"
+	form_g=format_currency(form_grant)
+	form_ta=f"{float(ta):.3f}"
+	form_t=format_currency(form_ta)
 	row=[""]
 	data.append(row)
 	row=["","","","","","Total",f"{'OMR':<5}{form_g:>28}",f"{'OMR':<5}{form_t:>18}"]

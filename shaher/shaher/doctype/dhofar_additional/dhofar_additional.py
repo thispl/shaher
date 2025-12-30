@@ -148,3 +148,242 @@ class DHOFARADDITIONAL(Document):
 		if self.additional_work_total == 0:
 			self.cumulative_additional_work=previous_total
 
+		total_employees = 0
+		employees_provided = 0
+		total_claim_this_month = 0
+		no_of_days = 0
+		no_of_absent = 0
+		total_deduction = 0
+		penalty_for_absent = 0
+		previous_claim = 0
+		amount_to_be_paid = 0
+		cumulative_amount = 0
+		unit_price = 0
+		for row in self.base_manpower:
+			if row.description != "Total":
+				total_employees += (row.total_employees or 0)
+				employees_provided += (row.employees_provided or 0)
+				total_claim_this_month += (row.total_claim_this_month or 0)
+				no_of_days += (row.no_of_days or 0)
+				no_of_absent += (row.no_of_absent or 0)
+				total_deduction += (row.total_deduction or 0)
+				penalty_for_absent += (row.penalty_for_absent or 0)
+				previous_claim += (row.previous_claim or 0)
+				amount_to_be_paid += (row.amount_to_be_paid or 0)
+				cumulative_amount += (row.cumulative_amount or 0)
+				# unit_price += (row.unit_price or 0)
+
+		for row in self.base_manpower:
+			if row.description == "Total":
+				row.total_employees = total_employees
+				row.employees_provided = employees_provided
+				row.total_claim_this_month = total_claim_this_month
+				row.no_of_days = no_of_days
+				row.no_of_absent = no_of_absent
+				row.total_deduction = total_deduction
+				row.penalty_for_absent = penalty_for_absent
+				row.previous_claim = previous_claim
+				row.amount_to_be_paid = amount_to_be_paid
+				row.cumulative_amount = cumulative_amount
+				row.unit_price = unit_price
+		
+		# Vehicle totals
+		days_of_unavailability = 0
+		total_no_of_days = 0
+		penalty = 0
+		total_total_claim = 0
+		total_total_deduction = 0
+		total_previous_claim = 0
+		total_amount_to_be_paid = 0
+		total_cumulative_amount = 0
+		total_required = 0
+		total_provided = 0
+		unit_price = 0
+		deduction = 0
+
+		for row in self.base_vehicle:
+			if row.description != "Total":
+
+				total_required += float(row.total_required or 0)
+				total_provided += float(row.total_provided or 0)
+				# unit_price += (row.unit_price or 0)
+				deduction += (row.deduction or 0)   
+
+				days_of_unavailability += (row.days_of_unavailability or 0)
+				total_no_of_days += (row.no_of_days or 0)
+				penalty += (row.penalty or 0)
+				total_total_claim += (row.total_claim_this_month or 0)
+				total_total_deduction += (row.total_deduction or 0)
+				total_previous_claim += (row.previous_claim or 0)
+				total_amount_to_be_paid += (row.amount_to_be_paid or 0)
+				total_cumulative_amount += (row.cumulative_amount or 0)
+
+		for row in self.base_vehicle:
+			if row.description == "Total":
+				row.total_required = total_required
+				row.total_provided = total_provided
+				row.unit_price = unit_price
+				row.deduction = deduction
+
+				row.days_of_unavailability = days_of_unavailability
+				row.no_of_days = total_no_of_days
+				row.penalty = penalty                     
+				row.total_claim_this_month = total_total_claim
+				row.total_deduction = total_total_deduction
+				row.previous_claim = total_previous_claim
+				row.amount_to_be_paid = total_amount_to_be_paid
+				row.cumulative_amount = total_cumulative_amount
+
+
+
+		total_employees = 0
+		employees_provided = 0
+		total_claim_this_month = 0
+		no_of_days = 0
+		no_of_absent = 0
+		total_deduction = 0
+		penalty_for_absent = 0
+		previous_claim = 0
+		amount_to_be_paid = 0
+		cumulative_amount = 0
+		unit_price = 0
+		# for row in self.additional_manpower:
+		# 	if row.description != "Total":
+		# 		total_employees += (row.total_employees or 0)
+		# 		employees_provided += (row.employees_provided or 0)
+		# 		total_claim_this_month += (row.total_claim_this_month or 0)
+		# 		no_of_days += (row.no_of_days or 0)
+		# 		no_of_absent += (row.no_of_absent or 0)
+		# 		total_deduction += (row.total_deduction or 0)
+		# 		penalty_for_absent += (row.penalty_for_absent or 0)
+		# 		previous_claim += (row.previous_claim or 0)
+		# 		amount_to_be_paid += (row.amount_to_be_paid or 0)
+		# 		cumulative_amount += (row.cumulative_amount or 0)
+		# 		unit_price += (row.unit_price or 0)
+
+		# for row in self.additional_manpower:
+		# 	if row.description == "Total":
+		# 		row.total_employees = total_employees
+		# 		row.employees_provided = employees_provided
+		# 		row.total_claim_this_month = total_claim_this_month
+		# 		row.no_of_days = no_of_days
+		# 		row.no_of_absent = no_of_absent
+		# 		row.total_deduction = total_deduction
+		# 		row.penalty_for_absent = penalty_for_absent
+		# 		row.previous_claim = previous_claim
+		# 		row.amount_to_be_paid = amount_to_be_paid
+		# 		row.cumulative_amount = cumulative_amount
+		# 		row.unit_price = unit_price
+		
+		monthly_unit_rate = 0
+		basic_salary = 0
+		total_claim_this_month = 0
+		ot_hourly_rate = 0
+		qty = 0
+		total = 0
+		allowances = 0
+		previous_claim = 0
+		amount_to_be_paid = 0
+		cumulative_amount = 0
+		unit = 0
+		# First  pass — accumulate values from all non-total rows
+		# for row in self.overtime_details:
+		# 	if row.description != "Total":
+		# 		monthly_unit_rate += (row.monthly_unit_rate or 0)
+		# 		basic_salary += (row.basic_salary or 0)
+		# 		ot_hourly_rate += (row.ot_hourly_rate or 0)
+		# 		qty += (row.qty or 0)
+		# 		total += (row.total or 0)
+		# 		allowances += (row.allowances or 0)
+		# 		previous_claim += (row.previous_claim or 0)
+		# 		amount_to_be_paid += (row.amount_to_be_paid or 0)
+		# 		cumulative_amount += (row.cumulative_amount or 0)
+
+		# Second pass — set totals on the Total row
+		# for row in self.overtime_details:
+		# 	if row.description == "Total":
+		# 		row.monthly_unit_rate = monthly_unit_rate
+		# 		row.basic_salary = basic_salary
+		# 		row.ot_hourly_rate = ot_hourly_rate
+		# 		row.qty = qty
+		# 		row.total = total
+		# 		row.allowances = allowances
+		# 		row.previous_claim = previous_claim
+		# 		row.amount_to_be_paid = amount_to_be_paid
+		# 		row.cumulative_amount = cumulative_amount
+		
+		unit_price = 0
+		no_of_trip = 0
+		total_claim_this_month = 0
+		total_deduction = 0
+		previous_claim = 0
+		amount_to_be_paid = 0
+		cumulative_amount = 0
+		for row in self.base_vehicle_cost_per_trip:
+			if row.description != "Total":
+				# unit_price += (row.unit_price or 0)
+				no_of_trip += (row.no_of_trip or 0)
+				total_deduction += (row.total_deduction or 0)
+				previous_claim += (row.previous_claim or 0)
+				amount_to_be_paid += (row.amount_to_be_paid or 0)
+				cumulative_amount += (row.cumulative_amount or 0)
+
+		for row in self.base_vehicle_cost_per_trip:
+			if row.description == "Total":
+				row.unit_price = unit_price
+				row.no_of_trip = no_of_trip
+				row.total_deduction = total_deduction
+				row.previous_claim = previous_claim
+				row.amount_to_be_paid = amount_to_be_paid
+				row.cumulative_amount = cumulative_amount
+		
+		unit_price = 0
+		unit_qty = 0
+		total_claim_this_month = 0
+		total_deduction = 0
+		previous_claim = 0
+		amount_to_be_paid = 0
+		cumulative_amount = 0
+		for row in self.airconditioning_system_spare_parts:
+			if row.description != "Total":
+				# unit_price += (row.unit_price or 0)
+				unit_qty += (row.unit_qty or 0)
+				total_deduction += (row.total_deduction or 0)
+				previous_claim += (row.previous_claim or 0)
+				amount_to_be_paid += (row.amount_to_be_paid or 0)
+				cumulative_amount += (row.cumulative_amount or 0)
+
+		for row in self.airconditioning_system_spare_parts:
+			if row.description == "Total":
+				row.unit_price = unit_price
+				row.unit_qty = unit_qty
+				row.total_deduction = total_deduction
+				row.previous_claim = previous_claim
+				row.amount_to_be_paid = amount_to_be_paid
+				row.cumulative_amount = cumulative_amount
+		unit_price = 0
+		unit_qty = 0
+		total_claim_this_month = 0
+		total_deduction = 0
+		previous_claim = 0
+		amount_to_be_paid = 0
+		cumulative_amount = 0
+		for row in self.ff_systems_spare_parts:
+			if row.description != "Total":
+				# unit_price += (row.unit_price or 0)
+				unit_qty += (row.unit_qty or 0)
+				total_deduction += (row.total_deduction or 0)
+				previous_claim += (row.previous_claim or 0)
+				amount_to_be_paid += (row.amount_to_be_paid or 0)
+				cumulative_amount += (row.cumulative_amount or 0)
+
+		for row in self.ff_systems_spare_parts:
+			if row.description == "Total":
+				row.unit_price = unit_price
+				row.unit_qty = unit_qty
+				row.total_deduction = total_deduction
+				row.previous_claim = previous_claim
+				row.amount_to_be_paid = amount_to_be_paid
+				row.cumulative_amount = cumulative_amount
+		self.month_total  = self.manpower_total + self.vehicle_total + self.vehicle_cost_per_trip_total + self.ac_spare_parts_total + self.fire_fighting_parts_total +self.additional_work_total
+

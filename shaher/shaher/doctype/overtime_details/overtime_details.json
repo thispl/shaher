@@ -13,6 +13,7 @@
   "allowances",
   "unit",
   "ot_hourly_rate",
+  "read_only_row",
   "section_break_knvg",
   "qty",
   "column_break_yfra",
@@ -31,7 +32,8 @@
    "fieldname": "description",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Description"
+   "label": "Description",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "section_break_hfuj",
@@ -42,7 +44,8 @@
    "fieldname": "previous_claim",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Previous Claim"
+   "label": "Previous Claim",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "column_break_pqdw",
@@ -53,7 +56,8 @@
    "fieldname": "amount_to_be_paid",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Amount to be Paid"
+   "label": "Amount to be Paid",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "column_break_dlxm",
@@ -65,7 +69,8 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Cumulative Amount",
-   "precision": "3"
+   "precision": "3",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "section_break_2op5",
@@ -75,19 +80,22 @@
    "fieldname": "comments",
    "fieldtype": "Small Text",
    "in_list_view": 1,
-   "label": "Comments"
+   "label": "Comments",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "monthly_unit_rate",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Monthly Unit Rate"
+   "label": "Monthly Unit Rate",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "basic_salary",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Basic Salary"
+   "label": "Basic Salary",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "column_break_sb55",
@@ -97,19 +105,22 @@
    "fieldname": "allowances",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Allowances"
+   "label": "Allowances",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "unit",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Unit"
+   "label": "Unit",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "ot_hourly_rate",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "OT Hourly Rate"
+   "label": "OT Hourly Rate",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "section_break_knvg",
@@ -119,7 +130,8 @@
    "fieldname": "qty",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Qty"
+   "label": "Qty",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   },
   {
    "fieldname": "column_break_yfra",
@@ -130,15 +142,24 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Total",
-   "precision": "3"
+   "precision": "3",
+   "read_only_depends_on": "eval:doc.read_only_row==1"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_only_row",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "read_only": 1,
+   "read_only_depends_on": "eval:doc.read_only_row==1"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-03 19:10:20.540823",
- "modified_by": "pavithra.s@groupteampro.com",
+ "modified": "2025-11-28 08:34:19.635411",
+ "modified_by": "jothi.m@groupteampro.com",
  "module": "Shaher",
  "name": "Overtime Details",
  "owner": "pavithra.s@groupteampro.com",

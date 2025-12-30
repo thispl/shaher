@@ -2,7 +2,13 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("MIS Opex", {
+    
     refresh(frm) {
+        
+
+
+
+
         frm.fields_dict["accommodation_table"].grid.cannot_add_rows = true;
         frm.fields_dict["accommodation_table"].grid.wrapper.find('.grid-remove-rows').hide();
         frm.fields_dict["accommodation_table"].grid.only_sortable = false;
@@ -42,6 +48,7 @@ frappe.ui.form.on("MIS Opex", {
                 ["Helper", "Omani", 15, 824.929],
                 ["Helper", "Foreign", 8, 214.308],
                 ["Cleaner", "Foreign", 23, 214.308],
+                ["Total", "", 186, 97765.14],
             ];
 
             frm.clear_table("permanent_manpower");
@@ -75,6 +82,7 @@ frappe.ui.form.on("MIS Opex", {
                 ["Four Wheel Drive Vehicles - Double Pick -up", 4, "Musandam", 283.100],
                 ["Four Wheel Drive Vehicles - Double Pick -up", 2, "Wusat", 283.100],
                 ["Emergency vehicle", 1, "Muscat", 637.270],
+                ["Total",0,"",0]
             ];
 
             frm.clear_table("permanent_vehicle");
@@ -88,7 +96,7 @@ frappe.ui.form.on("MIS Opex", {
             frm.refresh_field("permanent_vehicle");
             const AccomData = [
                 ["Accommodation rent (including water electricity etc.)", "Lump Sum",  10286.532 ,  1028.653],
-                ['Consumables materials as per clause no. 3.11.1','Lump Sum', 454.545 , 45.455 ]
+                ['Consumables materials as per clause no. 3.11.1','Lump Sum', 454.545 , 45.455 ],["Total",0,"",0]
             ];
             frm.clear_table("accommodation_table");
             AccomData.forEach(([tools, total_required, unit_price, total_claim_this_month]) => {
@@ -100,6 +108,52 @@ frappe.ui.form.on("MIS Opex", {
             });
             frm.refresh_field("accommodation_table");
         }
+
+        const grid_pm = frm.fields_dict.permanent_manpower?.grid;
+
+        if (grid_pm && grid_pm.grid_rows.length) {
+            const last_row_pm = grid_pm.grid_rows[grid_pm.grid_rows.length - 1];
+
+            last_row_pm.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.permanent_manpower.forEach(row => {
+                if (row.idx === frm.doc.permanent_manpower.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+
+        const grid_acc = frm.fields_dict.accommodation_table?.grid;
+
+        if (grid_acc && grid_acc.grid_rows.length) {
+            const last_row_acc = grid_acc.grid_rows[grid_acc.grid_rows.length - 1];
+
+            last_row_acc.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.accommodation_table.forEach(row => {
+                if (row.idx === frm.doc.accommodation_table.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+        const grid_v = frm.fields_dict.permanent_vehicle?.grid;
+
+        if (grid_v && grid_v.grid_rows.length) {
+            const last_row_v = grid_v.grid_rows[grid_v.grid_rows.length - 1];
+
+            last_row_v.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.permanent_vehicle.forEach(row => {
+                if (row.idx === frm.doc.permanent_vehicle.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+
+  
+
+
+
         
     },
     invoice_from(frm) {
@@ -151,7 +205,24 @@ frappe.ui.form.on("MIS Opex", {
     },
     year(frm) {
         set_invoice_dates_and_update_rows(frm);
+    },
+    show_summary(frm) {
+        frappe.call({
+            method: "shaher.shaher.doctype.mis_opex.mis_opex.show_summary",
+            args: {
+                name: frm.doc.name
+            },
+            callback: function (r) {
+                console.log(r)
+                if (r.message) {
+                    frm.fields_dict.summary_total_for_manpower.$wrapper.html(r.message);
+                }
+            }
+        });
     }
+
+
+    
 });
 
 function set_invoice_dates_and_update_rows(frm) {
@@ -182,14 +253,38 @@ function set_invoice_dates_and_update_rows(frm) {
 
 
 frappe.ui.form.on('Permanent Manpower', {
+    
+
 	
 	employees_provided(frm, cdt, cdn) {
+        
 		var row = locals[cdt][cdn];
         if (row.employees_provided>0 && row.unit_price > 0){
             row.total_claim_this_month = row.employees_provided*row.unit_price
             row.amount_to_be_paid=row.total_claim_this_month
 		    frm.refresh_field('permanent_manpower')
+        } 
+        let total_row = null;
+        let total_employees = 0;
+        frm.doc.permanent_manpower.forEach(r => {
+            if (r.description === "Total") {
+                total_row = r;   // store total row
+            } else {
+                // sum only non-total rows
+                total_employees += (r.employees_provided || 0);
+            }
+        });
+        if (total_row) {
+            total_row.employees_provided = total_employees;
         }
+    //     if (row.description =="Total"){
+    //         frm.fields_dict['permanent_manpower'].grid.update_docfield_property(
+    //         'employees_provided', 
+    //         'read_only',
+    //         1, // value
+    //         row.name // specific row
+    //     );
+    // }
 		
 	},
     no_of_absent(frm, cdt, cdn) {
@@ -205,6 +300,28 @@ frappe.ui.form.on('Permanent Manpower', {
             row.amount_to_be_paid= row.amount_to_be_paid-tot
             frm.refresh_field('permanent_manpower')
         }
+        let total_row = null;
+        let total_employees = 0;
+        let total_deduction = 0;
+
+        frm.doc.permanent_manpower.forEach(r => {
+            if (r.description === "Total") {
+                total_row = r;   
+            } else {
+                total_employees += (r.employees_provided || 0);
+                total_deduction += (r.total_deduction || 0);
+            }
+        });
+
+        if (total_row) {
+            total_row.no_of_absent = total_employees;
+            total_row.total_deduction = total_deduction;
+            const base_amount = total_row.amount_to_be_paid || 0;
+            total_row.amount_to_be_paid = base_amount - total_deduction;
+        }
+
+        frm.refresh_field("permanent_manpower");
+
 		
 	},
     deduction_for_absent(frm, cdt, cdn) {

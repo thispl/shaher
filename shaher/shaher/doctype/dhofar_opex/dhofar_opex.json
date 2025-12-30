@@ -7,21 +7,24 @@
  "engine": "InnoDB",
  "field_order": [
   "month",
+  "manpower_total",
+  "column_break_egwg",
   "year",
+  "vehicle_total",
   "column_break_vdux",
   "invoice_from",
+  "accommodation_total",
+  "column_break_tpns",
   "invoice_upto",
+  "month_total",
   "section_break_bckw",
   "previous_manpower",
-  "manpower_total",
   "cumulative_manpower",
   "column_break_rxyf",
   "previous_vehicle",
-  "vehicle_total",
   "cumulative_vehicle",
   "column_break_axg2",
   "previous_accommodation",
-  "accommodation_total",
   "cumulative_accommodation",
   "section_break_m6bw",
   "permanent_manpower",
@@ -200,13 +203,27 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "column_break_egwg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_tpns",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "month_total",
+   "fieldtype": "Currency",
+   "label": "Month Total",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-04 14:03:31.918286",
+ "modified": "2025-12-09 09:32:49.380431",
  "modified_by": "jothi.m@groupteampro.com",
  "module": "Shaher",
  "name": "DHOFAR OPEX",

@@ -36,13 +36,19 @@ frappe.ui.form.on("DHOFAR OPEX", {
                 ["Driver (Omani)", "Omani", 7, 636.476],
                 ["Helper (Omani)", "Omani", 1, 824.929],
                 ["Helper (Foreign)", "Foreign", 2, 214.308],
-                ["Cleaner", "Foreign", 4, 214.308]
+                ["Cleaner", "Foreign", 4, 214.308],
+                ["Total", "", 0, 0],
             ];
 
             frm.clear_table("permanent_manpower");
             manpowerData.forEach(([description, employee_type, total_employees, unit_price]) => {
                 let row = frm.add_child("permanent_manpower");
-                row.description = `${description} (${employee_type})`;
+                if(description != "Total"){
+                    row.description = `${description} (${employee_type})`;
+                }
+                else{
+                    row.description = `${description}`;
+                }
                 row.employee_type = employee_type;
                 row.total_employees = total_employees;
                 row.unit_price = unit_price;
@@ -52,7 +58,8 @@ frappe.ui.form.on("DHOFAR OPEX", {
                 ["Four Wheel Drive Vehicles", 3, "Dhofar", 413.36],
                 ["Four Wheel Drive Vehicles - Double Pick -up", 9, "Dhofar", 283.1],
                 ["Emergency vehicle", 1, "Dhofar", 637.27],
-                ["Hiab Truck (12 Ton) with hydraulic lifting capacity (8 Ton) (Dofar)", 1, "Dhofar", 677.97]
+                ["Hiab Truck (12 Ton) with hydraulic lifting capacity (8 Ton) (Dofar)", 1, "Dhofar", 677.97],
+                ["Total", 0,"", 0],
             ];
 
             frm.clear_table("permanent_vehicle");
@@ -66,7 +73,7 @@ frappe.ui.form.on("DHOFAR OPEX", {
             frm.refresh_field("permanent_vehicle");
             const AccomData = [
                 ["Accommodation rent (including water electricity etc.)", "Lump Sum",  10286.532 ,  1028.653],
-                ['Consumables materials as per clause no. 3.11.1','Lump Sum', 454.545 , 45.455 ]
+                ['Consumables materials as per clause no. 3.11.1','Lump Sum', 454.545 , 45.455 ],["Total",0,"",0]
             ];
             frm.clear_table("accommodation_table");
             AccomData.forEach(([tools, total_required, unit_price, total_claim_this_month]) => {
@@ -78,6 +85,56 @@ frappe.ui.form.on("DHOFAR OPEX", {
             });
             frm.refresh_field("accommodation_table");
         }
+       const grid_pm = frm.fields_dict.permanent_manpower?.grid;
+
+if (grid_pm && grid_pm.grid_rows.length) {
+
+    const last_row = grid_pm.grid_rows[grid_pm.grid_rows.length - 1];
+
+    // Highlight only the last row
+    last_row.wrapper.css('background-color', '#f2f2f2');
+
+    // Make ONLY the last row read-only
+    last_row.toggle_editable(false);
+
+    // Ensure all other rows are editable
+    grid_pm.grid_rows.forEach((row, index) => {
+        if (index !== grid_pm.grid_rows.length - 1) {
+            row.toggle_editable(true);
+        }
+    });
+}
+
+
+        const grid_acc = frm.fields_dict.accommodation_table?.grid;
+
+        if (grid_acc && grid_acc.grid_rows.length) {
+            const last_row_acc = grid_acc.grid_rows[grid_acc.grid_rows.length - 1];
+
+            last_row_acc.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.accommodation_table.forEach(row => {
+                if (row.idx === frm.doc.accommodation_table.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+        const grid_v = frm.fields_dict.permanent_vehicle?.grid;
+
+        if (grid_v && grid_v.grid_rows.length) {
+            const last_row_v = grid_v.grid_rows[grid_v.grid_rows.length - 1];
+
+            last_row_v.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.permanent_vehicle.forEach(row => {
+                if (row.idx === frm.doc.permanent_vehicle.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+        frm.refresh_field("permanent_manpower");
+        frm.refresh_field("permanent_vehicle");
+        frm.refresh_field("accommodation_table");
         
     },
     invoice_from(frm) {

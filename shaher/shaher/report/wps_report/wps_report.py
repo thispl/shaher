@@ -48,11 +48,11 @@ def get_data(filters):
 		joining_date, relieving_date = frappe.get_cached_value(
 			"Employee", s['employee'], ["date_of_joining", "relieving_date"]
 		)
-		ot_hours = get_ot_hours(s['employee'],start_date, end_date) or 0.0
-		if relieving_date and (getdate(start_date) <= relieving_date < getdate(end_date)):
-			ot_hours = get_ot_hours(s['employee'], start_date, relieving_date) or 0.0
-		if joining_date and (getdate(start_date) < joining_date <= getdate(end_date)):
-			ot_hours = get_ot_hours(s['employee'], joining_date, end_date)  or 0.0
+		# ot_hours = get_ot_hours(s['employee'],start_date, end_date) or 0.0
+		# if relieving_date and (getdate(start_date) <= relieving_date < getdate(end_date)):
+		# 	ot_hours = get_ot_hours(s['employee'], start_date, relieving_date) or 0.0
+		# if joining_date and (getdate(start_date) < joining_date <= getdate(end_date)):
+		# 	ot_hours = get_ot_hours(s['employee'], joining_date, end_date)  or 0.0
 		for e in earnings:
 			earnings_details[e.name] = frappe.get_value("Salary Detail", {'parent': s['name'], 'salary_component': e.name}, 'amount') or 0.0
 		for d in deductions:
@@ -74,11 +74,11 @@ def get_data(filters):
 			bank_ac_no,
 			s['payroll_frequency'],
 			s['payment_days'],
-			ot_hours,
+			s['custom_overtime_hours'],
 			earnings_details.get('Basic', 0.0),
 			br_earnings,
-			deductions_details.get('Public Authority for Social Insurance', 0.0),
 			br_deductions,
+			deductions_details.get('Public Authority for Social Insurance', 0.0),
 			s['net_pay'],
 			'',
 			'Completed' if s['status'] =='Submitted' else 'Processing' 

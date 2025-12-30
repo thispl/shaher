@@ -36,9 +36,9 @@ def make_xlsx(sheet_name=None):
     if not data:
         frappe.throw("No data available to generate the report.")
 
-    earnings_count = frappe.db.count("Salary Component", {'type': "Earning"})
-    deductions_count = frappe.db.count("Salary Component", {'type': "Deduction"})
-    total_column = 15 + earnings_count + deductions_count
+    earnings_count = frappe.db.count("Salary Component", {'type': "Earning",'custom_sequence_id':['!=',0]})
+    deductions_count = frappe.db.count("Salary Component",{'type': "Deduction",'custom_sequence_id':['!=',0]})
+    total_column = 16 + earnings_count + deductions_count
 
     for row in data:
         if not isinstance(row, (list, tuple)):
@@ -91,10 +91,26 @@ def apply_styles(ws, total_column):
             cell.border = border
             cell.fill = header_fill_1
 
-    for row in ws.iter_rows(min_row=8, max_row=ws.max_row, min_col=1, max_col=total_column):
+    for row in ws.iter_rows(min_row=8, max_row=ws.max_row, min_col=1, max_col=1):
         for cell in row:
             cell.font = text_font_data
             cell.alignment = align_center
+            cell.border = border
+    for row in ws.iter_rows(min_row=8, max_row=ws.max_row, min_col=2, max_col=5):
+        for cell in row:
+            cell.font = text_font_data
+            cell.alignment = align_left
+            cell.border = border
+    for row in ws.iter_rows(min_row=8, max_row=ws.max_row, min_col=6, max_col=total_column-3):
+        for cell in row:
+            cell.font = text_font_data
+            cell.alignment = align_right
+            cell.border = border
+            cell.number_format = '#,##0.000' 
+    for row in ws.iter_rows(min_row=8, max_row=ws.max_row, min_col=total_column-2, max_col=total_column):
+        for cell in row:
+            cell.font = text_font_data
+            cell.alignment = align_left
             cell.border = border
     for row in ws.iter_rows(min_row=ws.max_row, max_row=ws.max_row, min_col=1, max_col=total_column):
         for cell in row:
@@ -102,10 +118,13 @@ def apply_styles(ws, total_column):
             cell.alignment = align_center
             cell.border = border
             cell.fill = header_fill_1
+            if cell.column not in [1, 2,3,4,5]:
+                cell.number_format = '#,##0.000'
+                cell.alignment = align_right 
 
 def set_column_widths(ws,total_column):
    # total_column = total number of columns in your report
-    column_widths = [10, 15, 15, 20] + [10] * (total_column - 7) + [20, 20, 20, 20,10]
+    column_widths = [10, 15, 25, 30] + [10] * (total_column - 7) + [20, 20, 20, 20,10]
 
     for i, width in enumerate(column_widths, start=1):
         ws.column_dimensions[openpyxl.utils.get_column_letter(i)].width = width
@@ -141,13 +160,13 @@ def get_data(args):
         [""] *total_column,
         [""] *total_column,
         [""] *total_column,
-        ["S.No", "Employee", "Visa No", "Name", "Div", "Days", "OT Hours", "Basic", 
+        ["S.No", "Employee", "Salary Slip", "Name", "Div", "Days", "Normal OT Hours","Normal Overtime Amount",
+        "Night OT Hours","Night Overtime Amount","Holiday OT Hours","Holiday Overtime Amount", "Basic", 
          "Earned Basic"]
-        + [e.name for e in earnings if e.name != 'Basic']
-        + ["BR Earning"]
-        + ["Total"]
+        + [e.name for e in earnings if e.name not in  ['Basic',"Normal Overtime Amount","Night Overtime Amount","Holiday Overtime Amount"]]
+        + ["Gross Salary"]
         + [d.name for d in deductions]
-        + ["BR Deductions","Total Deductions", "Net Pay","Bank Account","Bank Swift Code","Bank Branch","Bank Account No","Net Pay"],
+        + ["Total Deductions", "Net Pay","Bank Account","Bank Swift Code","Bank Account No"],
         [""]
     ]
 
@@ -156,8 +175,6 @@ def get_data(args):
     salary_slips = get_salary_slips(args)
     total = {
         "payment_days": 0.0,
-        "br_earnings": 0.0,
-        "br_deductions":0.0,
         "gross_pay": 0.0,
         "total_deduction": 0.0,
         "net_pay": 0.0,
@@ -169,19 +186,20 @@ def get_data(args):
     total_row =[]
     total_basic =0
     total_ot_hours =0
+    total_night_ot_hours =0
+    total_holiday_ot_hours =0
+
     
     for s in salary_slips:
         
         index += 1
         
-        visa_no = frappe.db.get_value('Employee',{'name':s['employee']},['custom_visa_number']) or ''
         basic = frappe.db.get_value('Employee',{'name':s['employee']},['custom_basic']) or 0.0
         total_basic +=basic
-        division = frappe.db.get_value('Employee',{'name':s['employee']},['grade']) or ''
+        division = frappe.db.get_value('Employee',{'name':s['employee']},['custom_division']) or ''
         bank_ac_no = frappe.db.get_value('Employee',{'name':s['employee']},['bank_ac_no']) or ''
         bank = frappe.db.get_value('Employee',{'name':s['employee']},['bank_name']) or ''
         iban = frappe.db.get_value('Employee',{'name':s['employee']},['iban']) or ''
-        branch_name = frappe.db.get_value('Employee',{'name':s['employee']},['custom_branch_name']) or ''
         earnings_details = {}
         deductions_details = {}
         earning_values =[]
@@ -189,12 +207,16 @@ def get_data(args):
         joining_date, relieving_date = frappe.get_cached_value(
             "Employee", s['employee'], ["date_of_joining", "relieving_date"]
         )
-        ot_hours = get_ot_hours(s['employee'],start_date, end_date) or 0.0
-        if relieving_date and (getdate(start_date) <= relieving_date < getdate(end_date)):
-            ot_hours = get_ot_hours(s['employee'], start_date, relieving_date) or 0.0
-        if joining_date and (getdate(start_date) < joining_date <= getdate(end_date)):
-            ot_hours = get_ot_hours(s['employee'], joining_date, end_date)  or 0.0
+        ot_hours = s['custom_overtime_hours'] or 0.0
+        holiday_ot_hours = s['custom_holiday_ot_hours'] or 0.0
+        night_ot_hours = s['custom_night_ot_hours'] or 0.0
+        # if relieving_date and (getdate(start_date) <= relieving_date < getdate(end_date)):
+        #     ot_hours = get_ot_hours(s['employee'], start_date, relieving_date) or 0.0
+        # if joining_date and (getdate(start_date) < joining_date <= getdate(end_date)):
+        #     ot_hours = get_ot_hours(s['employee'], joining_date, end_date)  or 0.0
         total_ot_hours +=ot_hours     
+        total_holiday_ot_hours +=holiday_ot_hours   
+        total_night_ot_hours +=night_ot_hours   
         for e in earnings:
             earnings_details[e.name] = frappe.get_value("Salary Detail", {'parent': s['name'], 'salary_component': e.name}, 'amount') or 0.0
             total[e.name] += earnings_details[e.name]
@@ -203,32 +225,26 @@ def get_data(args):
             deductions_details[d.name] = frappe.get_value("Salary Detail", {'parent': s['name'], 'salary_component': d.name}, 'amount') or 0.0
             total[d.name] += deductions_details[d.name]
 
-        br_earnings =0.0
-        br_deductions =0.0
         for e in earnings:
-            if e.name != 'Basic':
-                earning = format_currency(earnings_details.get(e.name, 0.0))
+            if e.name not in  ['Basic',"Normal Overtime Amount","Night Overtime Amount","Holiday Overtime Amount"]:
+                earning = earnings_details.get(e.name, 0.0)
                 earning_values.append(earning)
-                br_earnings += earnings_details.get(e.name, 0.0)
         
         for d in deductions:
-            deduction =format_currency(deductions_details.get(d.name, 0.0))
+            deduction =deductions_details.get(d.name, 0.0)
             deduction_values.append(deduction)
-            br_deductions += deductions_details.get(d.name, 0.0)
 
-        total['br_earnings'] += br_earnings
         total['payment_days'] += s['payment_days']
-        total['br_deductions'] += br_deductions
         total['gross_pay'] += s['gross_pay']
         total['total_deduction'] += s['total_deduction']
         total['net_pay'] += s['net_pay']
         row = [
-            index, s['employee'], visa_no, s['employee_name'], division, s['payment_days'],
-            ot_hours, format_currency(basic), format_currency(earnings_details.get('Basic', 0.0))
-        ] + earning_values + [
-            format_currency(br_earnings), format_currency(s['gross_pay'])
-        ] + deduction_values + [
-            format_currency(br_deductions), format_currency(s['total_deduction']), format_currency(s['net_pay']), bank, iban, branch_name, bank_ac_no, format_currency(s['net_pay'])
+            index, s['employee'], s['name'], s['employee_name'], division, s['payment_days'],
+            ot_hours,earnings_details.get('Normal Overtime Amount', 0.0),night_ot_hours,earnings_details.get('Night Overtime Amount', 0.0),holiday_ot_hours,earnings_details.get('Holiday Overtime Amount', 0.0), basic, earnings_details.get('Basic', 0.0)
+        ] + earning_values + [s['gross_pay']
+        ] + deduction_values + [s['total_deduction'], 
+        s['net_pay'],
+         bank, iban, bank_ac_no
         ]
 
 
@@ -236,44 +252,47 @@ def get_data(args):
 
         total_row = (
         ["TOTAL", "", "", ""] +
-        [total["payment_days"], "", "", total_basic,format_currency(total.get("Basic", 0.0))] +
-        [format_currency(total.get(e.name, 0.0)) for e in earnings if e.name != 'Basic'] +
-        [format_currency(total["br_earnings"]), format_currency(total["gross_pay"])] +
-        [format_currency(total.get(d.name, 0.0)) for d in deductions] +
-        [format_currency(total["br_deductions"]), format_currency(total["total_deduction"]), format_currency(total["net_pay"]), "", "", "", "", format_currency(total["net_pay"])]
+        ["", "", total_ot_hours,total.get("Normal Overtime Amount", 0.0),total_night_ot_hours,total.get("Night Overtime Amount", 0.0),
+        total_holiday_ot_hours, total.get("Holiday Overtime Amount", 0.0),total_basic,total.get("Basic", 0.0)] +
+        [total.get(e.name, 0.0) for e in earnings if e.name not in  ['Basic',"Normal Overtime Amount","Night Overtime Amount","Holiday Overtime Amount"]] +
+        [total["gross_pay"]] +
+        [total.get(d.name, 0.0) for d in deductions] +
+        [total["total_deduction"], total["net_pay"], "", "", ""]
     )
     data.append(total_row)
     return data
-
 
 def format_currency(value):
     if value is None:
         return "0"
     
-    number_str = str(int(value))
+    number_str = f"{float(value):,.3f}"
     
-    if len(number_str) > 3:
-        last_three = number_str[-3:]  
-        other_digits = number_str[:-3] 
-        
-        formatted_other = []
-        while len(other_digits) > 2:
-            formatted_other.append(other_digits[-2:])
-            other_digits = other_digits[:-2]
-        if other_digits:
-            formatted_other.append(other_digits)        
-        formatted_other.reverse()
-        formatted_number = ','.join(formatted_other) + ',' + last_three
-    else:
-        formatted_number = number_str
+    if '.' not in number_str:
+        return number_str
     
-    return formatted_number
+    integer_part, decimal_part = number_str.split('.')
+    
+    integer_part = integer_part.replace(",", "")
+    
+    formatted_integer = f"{int(integer_part):,}"
+    
+    return f"{formatted_integer}.{decimal_part}"
 
+
+
+
+
+
+import re
+import frappe
 
 def get_salary_slips(args):
     args = frappe.local.form_dict
-    conditions = ["docstatus != 2"]
+    conditions = ["docstatus != 2"]  # Ensures only valid documents are selected
     values = []
+
+    # Date filtering
     if args.get('from_date') and args.get('to_date'):
         conditions.append("start_date >= %s AND end_date <= %s")
         values.extend([args.get('from_date'), args.get('to_date')])
@@ -283,18 +302,39 @@ def get_salary_slips(args):
     elif args.get('to_date'):
         conditions.append("end_date <= %s")
         values.append(args.get('to_date'))
+
+    # Company filtering
     if args.get('company'):
         conditions.append("company = %s")
         values.append(args.get('company'))
+
+    # Construct SQL condition string
     condition_str = " AND ".join(conditions)
+
+    # Query to fetch salary slips
     salary_slips = frappe.db.sql(f"""
         SELECT * FROM `tabSalary Slip`
         WHERE {condition_str}
         ORDER BY employee
     """, values, as_dict=True)
 
-    return salary_slips
+    # Sorting function for employee names
+    def sort_key(emp):
+        code = emp['employee']
+        match = re.match(r"([A-Za-z]+)(\d*)", code)
 
+        if match:
+            prefix = match.group(1)
+            number = match.group(2)
+            number = int(number) if number.isdigit() else 0
+            return (prefix, number)
+        else:
+            return (code, 0)  # Default to just the name if regex doesn't match
+
+    # Sort the salary slips based on the employee name
+    employees = sorted(salary_slips, key=sort_key)
+
+    return employees  # Returning the sorted salary slips
 
 def get_ot_hours(employee, from_date, to_date):
 

@@ -9,14 +9,13 @@ from frappe.utils import getdate, date_diff, add_days
 from frappe import _, msgprint
 class AttendanceandOTRegister(Document):
 	def validate(self):
-		if self.name:
-			exist_doc = frappe.db.get_value('Attendance and OT Register',{'name': ['!=', self.name],'from_date': ['<=', self.to_date],'to_date': ['>=', self.from_date],'employee': self.employee,'docstatus': ["!=", 2]},['name'])
-			if exist_doc:
-				frappe.throw(
-					f'Attendance and OT Register already exists for this Period: '
-					f'<a href="/app/attendance-and-ot-register/{exist_doc}" target="_blank">{exist_doc}</a>.'
-				)
-
+		# if self.name:
+		# 	exist_doc = frappe.db.get_value('Attendance and OT Register',{'name': ['!=', self.name],'from_date': ['<=', self.to_date],'to_date': ['>=', self.from_date],'employee': self.employee,'docstatus': ["!=", 2]},['name'])
+		# 	if exist_doc:
+		# 		frappe.throw(
+		# 			f'Attendance and OT Register already exists for this Period: '
+		# 			f'<a href="/app/attendance-and-ot-register/{exist_doc}" target="_blank">{exist_doc}</a>.'
+		# 		)
 		if self.from_date and self.to_date and self.to_date < self.from_date:
 			frappe.throw("To Date cannot be earlier than From Date.")
 
@@ -30,8 +29,8 @@ class AttendanceandOTRegister(Document):
 				_("Please set the Date Of Joining for employee {0}").format(frappe.bold(self.employee_name))
 			)
 		
-		if date_diff(getdate(self.to_date), getdate(date_of_joining)) < 0:
-			frappe.throw(_("Cannot create Attendance and OT Register for Employee joining after Payroll Period"))
+		# if date_diff(getdate(self.to_date), getdate(date_of_joining)) < 0:
+		# 	frappe.throw(_("Cannot create Attendance and OT Register for Employee joining after Payroll Period"))
 
 		if relieving_date and date_diff(getdate(relieving_date), getdate(self.from_date)) < 0:
 			frappe.throw(_("Cannot create Attendance and OT Register for Employee who has left before Payroll Period"))
@@ -39,15 +38,21 @@ class AttendanceandOTRegister(Document):
 	def on_submit(self):
 		salary_components=[]
 		if self.food_allowance and self.food_allowance !=0:
-			salary_components.append('Food')
+			salary_components.append('Food Allowance')
 		if self.salary_advance_deduction and self.salary_advance_deduction != 0.0:
-			salary_components.append('Employee Advance')
+			salary_components.append('Salary Advance')
 		if self.other_earnings and self.other_earnings != 0.0:
-			salary_components.append('Other Earnings')
+			salary_components.append('Other Allowance')
 		if self.other_deduction and self.other_deduction != 0.0:
 			salary_components.append('Other Deductions')
-		if (self.ot_hours and self.ot_hours != 0.0) or (self.night_ot and self.night_ot != 0.0) or (self.wo_nh and self.wo_nh != 0.0)  :
-			salary_components.append('Overtime')
+		if (self.ot_hours and self.ot_hours != 0.0):
+			salary_components.append('Normal Overtime Amount')
+		if self.night_ot and self.night_ot != 0.0:
+			salary_components.append('Night Overtime Amount')
+		if self.wo_nh and self.wo_nh != 0.0:
+			salary_components.append('Holiday Overtime Amount')
+
+
 		
 
 		for sal in salary_components:
@@ -56,21 +61,24 @@ class AttendanceandOTRegister(Document):
 			add_sal.payroll_date = self.from_date
 			add_sal.company = self.company
 			add_sal.custom_attendance_and_ot_register = self.name
-			if sal == 'Food':
+			if sal == 'Food Allowance':
 				add_sal.salary_component = sal
 				add_sal.amount = self.food_allowance
-			if sal == 'Employee Advance':
+				add_sal.overwrite_salary_structure_amount = 1
+			if sal == 'Salary Advance':
 				add_sal.salary_component = sal
 				add_sal.amount = self.salary_advance_deduction
-			if sal == 'Other Earnings':
+			if sal == 'Other Allowance':
 				add_sal.salary_component = sal
 				add_sal.amount = self.other_earnings
 			if sal == 'Other Deductions':
 				add_sal.salary_component = sal
 				add_sal.amount = self.other_deduction
-			if sal == 'Overtime':
+			if sal in ['Holiday Overtime Amount','Normal Overtime Amount','Night Overtime Amount']:
 				add_sal.salary_component = sal
 				overtime_amount=0
+				holiday_overtime_amount  =0
+				night_overtime_amount =0
 				basic = frappe.db.get_value("Employee",{'name':self.employee},"custom_basic")
 				today = self.from_date
 				year = getdate(today).year
@@ -90,17 +98,17 @@ class AttendanceandOTRegister(Document):
 					if self.ot_hours:
 						overtime_amount += (basic/days_in_prev_month/8)*1.25*self.ot_hours
 					if self.night_ot:
-						overtime_amount += (basic/days_in_prev_month/8)*1.5*self.night_ot
+						night_overtime_amount += (basic/days_in_prev_month/8)*1.5*self.night_ot
 					if self.wo_nh:
-						overtime_amount += (basic/days_in_prev_month/8)*2*self.wo_nh
+						holiday_overtime_amount += (basic/days_in_prev_month/8)*2*self.wo_nh
 				elif self.company =='THE PALACE HOTEL':
 					days_in_prev_month =30
 					if self.ot_hours:
 						overtime_amount += (basic/days_in_prev_month/10)*1.25*self.ot_hours
 					if self.night_ot:
-						overtime_amount += (basic/days_in_prev_month/10)*1.5*self.night_ot
+						night_overtime_amount += (basic/days_in_prev_month/10)*1.5*self.night_ot
 					if self.wo_nh:
-						overtime_amount += (basic/days_in_prev_month/10)*2*self.wo_nh
+						holiday_overtime_amount += (basic/days_in_prev_month/10)*2*self.wo_nh
 
 				else:
 					days_in_prev_month =30
@@ -112,11 +120,15 @@ class AttendanceandOTRegister(Document):
 						ot_rate =1.25
 						overtime_amount += (basic/days_in_prev_month/8)*ot_rate*self.ot_hours
 					if self.night_ot:
-						overtime_amount += (basic/days_in_prev_month/8)*1.5*self.night_ot
+						night_overtime_amount += (basic/days_in_prev_month/8)*1.5*self.night_ot
 					if self.wo_nh:
-						overtime_amount += (basic/days_in_prev_month/8)*2*self.wo_nh
-	 
-				add_sal.amount = overtime_amount
+						holiday_overtime_amount += (basic/days_in_prev_month/8)*2*self.wo_nh
+				if sal =="Holiday Overtime Amount":
+					add_sal.amount = holiday_overtime_amount
+				if sal =="Night Overtime Amount":
+					add_sal.amount = night_overtime_amount
+				if sal =="Normal Overtime Amount":
+					add_sal.amount = overtime_amount
 					
 				
 				

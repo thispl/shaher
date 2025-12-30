@@ -12,6 +12,19 @@
   "column_break_vdux",
   "invoice_from",
   "invoice_upto",
+  "column_break_pzdt",
+  "month_total",
+  "summary_for_the_current_month_section",
+  "manpower_total",
+  "ac_spare_parts_total",
+  "additional_manpower_total",
+  "column_break_ixbo",
+  "vehicle_total",
+  "fire_fighting_parts_total",
+  "additional_work_total",
+  "column_break_rxyf",
+  "vehicle_cost_per_trip_total",
+  "ot_total",
   "section_break_bckw",
   "previous_manpower",
   "previous_vehicle",
@@ -21,15 +34,6 @@
   "previous_ot",
   "previous_additional_manpower",
   "previous_additional_work",
-  "column_break_rxyf",
-  "manpower_total",
-  "vehicle_total",
-  "vehicle_cost_per_trip_total",
-  "ac_spare_parts_total",
-  "fire_fighting_parts_total",
-  "ot_total",
-  "additional_manpower_total",
-  "additional_work_total",
   "column_break_axg2",
   "cumulative_manpower",
   "cumulative_vehicle",
@@ -364,6 +368,25 @@
    "fieldtype": "Currency",
    "label": "Cumulative Additional Work",
    "read_only": 1
+  },
+  {
+   "fieldname": "summary_for_the_current_month_section",
+   "fieldtype": "Section Break",
+   "label": "Summary for the Current Month"
+  },
+  {
+   "fieldname": "column_break_ixbo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_pzdt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "month_total",
+   "fieldtype": "Currency",
+   "label": "Month Total",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
@@ -375,8 +398,8 @@
    "link_fieldname": "reference_id"
   }
  ],
- "modified": "2025-10-07 10:44:19.872970",
- "modified_by": "pavithra.s@groupteampro.com",
+ "modified": "2025-12-09 09:34:04.909388",
+ "modified_by": "jothi.m@groupteampro.com",
  "module": "Shaher",
  "name": "MIS ADDITIONAL",
  "naming_rule": "Expression (old style)",

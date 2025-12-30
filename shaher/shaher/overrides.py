@@ -123,6 +123,8 @@ class CustomSalarySlip(SalarySlip):
         self.custom_overtime_amount =ot_amount
         self.payment_days = frappe.db.get_value("Attendance and OT Register",{'from_date':('<=',self.end_date),'to_date':('>=',self.start_date),'employee':self.employee},['no_of_days_worked']) or 0
         self.custom_overtime_hours = frappe.db.get_value("Attendance and OT Register",{'from_date':('<=',self.end_date),'to_date':('>=',self.start_date),'employee':self.employee},['ot_hours']) or 0
+        self.custom_night_ot_hours = frappe.db.get_value("Attendance and OT Register",{'from_date':('<=',self.end_date),'to_date':('>=',self.start_date),'employee':self.employee},['night_ot']) or 0
+        self.custom_holiday_ot_hours = frappe.db.get_value("Attendance and OT Register",{'from_date':('<=',self.end_date),'to_date':('>=',self.start_date),'employee':self.employee},['wo_nh']) or 0
 
 @frappe.whitelist()
 def custom_round(value):

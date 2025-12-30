@@ -43,7 +43,10 @@ web_include_css = "/assets/shaher/css/shaher.css"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {
+    "Asset" : "public/js/asset.js",
+    "Asset Depreciation Schedule" : "public/js/asset_depreciation_schedule.js",
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -134,6 +137,7 @@ override_doctype_class = {
 	# "ToDo": "custom_app.overrides.CustomToDo"
     "Payroll Entry":"shaher.shaher.overrides.CustomPayrollEntry",
     "Salary Slip":"shaher.shaher.overrides.CustomSalarySlip",
+    "Asset Depreciation Schedule": "shaher.overrides.asset_depreciation_schedule_custom.CustomAssetDepreciationSchedule"
     
 }
 
@@ -153,9 +157,12 @@ doc_events = {
 		"on_submit": ["shaher.custom.mail_for_supplier_quotation","shaher.custom.update_po_status"]
 	},
     "Purchase Invoice":{
-        "on_submit":["shaher.custom.update_approval_date_pi","shaher.custom.create_reversal_entry_for_purchase"],
+		"validate":["shaher.custom.validate_items"],
+        "on_submit":["shaher.custom.update_approval_date_pi",
+		# "shaher.custom.create_reversal_entry_for_purchase"
+		],
         "before_insert": "shaher.custom.name_pi",
-		'on_cancel': ["shaher.custom.cancel_reverse_entry_for_purchase"],
+		# 'on_cancel': ["shaher.custom.cancel_reverse_entry_for_purchase"],
 	},
 	"Purchase Order":{
 		"validate":"shaher.custom.set_description_in_long_text_po",
@@ -173,9 +180,11 @@ doc_events = {
                   "shaher.custom.cancel_vehicle_maintenance_check","shaher.custom.update_employee_doc_course_on_cancel"],
 	},
 	"Purchase Receipt": {
-		# "validate": "shaher.custom.get_po_qty",
-		"on_submit":["shaher.custom.update_approval_date_pr","shaher.custom.create_journal_entry_for_purchase"],
-		'on_cancel': ["shaher.custom.cancel_journal_entry_for_purchase"],
+		"validate": "shaher.custom.validate_items",
+		"on_submit":["shaher.custom.update_approval_date_pr",
+		# "shaher.custom.create_journal_entry_for_purchase"
+		],
+		# 'on_cancel': ["shaher.custom.cancel_journal_entry_for_purchase"],
         "before_insert": "shaher.custom.name_pr"
 	},
 	"Material Request": {
@@ -187,7 +196,7 @@ doc_events = {
 	# 	"after_insert":"shaher.custom.create_user_permission_on_validate"
 	# },
 	"Leave Application":{
-		'validate':"shaher.custom.validate_next_due_date",
+		'after_insert':"shaher.custom.validate_next_due_date",
         # "before_submit": ["hrms.hr.doctype.leave_application.leave_application.calculate_accumulated_leave"]
 	},
     # "Attendance":{
@@ -195,7 +204,8 @@ doc_events = {
     #     'after_insert':"shaher.custom.ot_calculation",
 	# },
     "Sales Invoice":{
-		'validate':[ "shaher.custom.udpate_date_of_supply","shaher.custom.pdo_validation",],
+		'validate':[ "shaher.custom.udpate_date_of_supply","shaher.custom.pdo_validation",
+		"shaher.custom.validate_items"],
 		'on_submit': ["shaher.custom.update_dn_workflow","shaher.custom.create_reversal_entry","shaher.custom.update_previous_claim"],
         'on_cancel': ["shaher.custom.update_workflow_on_cancelling_si","shaher.custom.cancel_reverse_entry","shaher.custom.deduct_previous_claim"],
         "before_insert": ["shaher.custom.name_si","shaher.custom.check_rates_fetched"],
@@ -219,6 +229,7 @@ doc_events = {
     "Salary Slip": {
         'after_insert': ["shaher.shaher.doctype.employee_loan.employee_loan.update_slip_id"],
         'on_trash': ["shaher.shaher.doctype.employee_loan.employee_loan.clear_slip_id"],
+		'validate':["shaher.custom.validate_slip_creation"]
 	},
     
 	"Stock Entry":{
@@ -240,7 +251,10 @@ doc_events = {
     },
     "Asset":{
         "after_insert":"shaher.custom.send_asset_mails"
-	}
+	},
+    "Asset Depreciation Schedule": {
+		'validate': 'shaher.events.asset_depreciation_schedule.update_opening_value'	
+	},
 
 
 

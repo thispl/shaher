@@ -41,16 +41,14 @@ frappe.ui.form.on("Full and Final Settlement", {
             }
         }
         if (frm.doc.from_date && frm.doc.to_date) {
-            // Call the Python method to calculate the balance amount
             frappe.call({
-                method: "shaher.shaher.doctype.full_and_final_settlement.full_and_final_settlement.calculate_balance_amount",  // Path to the method
+                method: "shaher.shaher.doctype.full_and_final_settlement.full_and_final_settlement.calculate_balance_amount",  
                 args: {
                     "employee": frm.doc.employee,
                     "from_date": frm.doc.from_date,
                     "to_date": frm.doc.to_date
                 },
                 callback: function(response) {
-                    // Set the balance amount in the form
                     frm.set_value('balance_amount', response.message);
                 }
             });

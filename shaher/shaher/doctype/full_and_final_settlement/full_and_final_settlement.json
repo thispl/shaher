@@ -10,13 +10,13 @@
   "employee",
   "employee_name",
   "department",
+  "rdate",
+  "date_of_joining",
   "column_break_zjes",
   "designation",
   "company",
   "last_leave_availed_on",
   "resumed_duty_on",
-  "date_of_joining",
-  "rdate",
   "assets_allocated_section",
   "assets_allocated_table",
   "section_break_rd8o",
@@ -76,19 +76,19 @@
   },
   {
    "fetch_from": "employee.department",
+   "fetch_if_empty": 1,
    "fieldname": "department",
    "fieldtype": "Link",
    "label": "Department",
-   "options": "Department",
-   "read_only": 1
+   "options": "Department"
   },
   {
    "fetch_from": "employee.department",
+   "fetch_if_empty": 1,
    "fieldname": "designation",
    "fieldtype": "Link",
    "label": "Designation",
-   "options": "Designation",
-   "read_only": 1
+   "options": "Designation"
   },
   {
    "fetch_from": "employee.company",
@@ -268,10 +268,11 @@
   },
   {
    "fetch_from": "employee.relieving_date",
+   "fetch_if_empty": 1,
    "fieldname": "rdate",
    "fieldtype": "Date",
-   "hidden": 1,
-   "label": "Rdate"
+   "label": "Relieving Date",
+   "reqd": 1
   },
   {
    "fieldname": "gratuity_details_section",
@@ -288,8 +289,8 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-28 17:19:58.756499",
- "modified_by": "pavithra.s@groupteampro.com",
+ "modified": "2025-12-07 14:50:04.964685",
+ "modified_by": "Administrator",
  "module": "Shaher",
  "name": "Full and Final Settlement",
  "naming_rule": "By fieldname",

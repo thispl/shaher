@@ -23,7 +23,9 @@
   "company",
   "section_break_lb65",
   "download_template",
-  "division"
+  "division",
+  "view_data",
+  "upload_att_employee"
  ],
  "fields": [
   {
@@ -96,7 +98,8 @@
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
-   "options": "Company"
+   "options": "Company",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_kof1",
@@ -113,7 +116,6 @@
    "options": "Site"
   },
   {
-   "depends_on": "eval:frappe.session.user=='pavithra.s@groupteampro.com'",
    "fieldname": "section_break_lb65",
    "fieldtype": "Section Break"
   },
@@ -124,16 +126,29 @@
   },
   {
    "fieldname": "division",
-   "fieldtype": "Data",
-   "label": "Division"
+   "fieldtype": "Select",
+   "label": "Division",
+   "options": "\nPDO\nOETC"
+  },
+  {
+   "fieldname": "view_data",
+   "fieldtype": "Button",
+   "label": "View Data"
+  },
+  {
+   "fieldname": "upload_att_employee",
+   "fieldtype": "Table",
+   "hidden": 1,
+   "label": "Upload Att Employee",
+   "options": "Upload Att Employee"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-22 10:40:24.962602",
- "modified_by": "pavithra.s@groupteampro.com",
+ "modified": "2025-12-24 11:06:47.000514",
+ "modified_by": "jothi.m@groupteampro.com",
  "module": "Shaher",
  "name": "Upload Employee Attendance",
  "naming_rule": "Expression (old style)",

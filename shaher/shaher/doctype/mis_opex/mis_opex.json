@@ -8,24 +8,28 @@
  "field_order": [
   "amended_from",
   "month",
-  "year",
+  "manpower_total",
   "column_break_vdux",
+  "year",
+  "vehicle_total",
+  "column_break_rava",
   "invoice_from",
+  "accommodation_total",
+  "column_break_yufj",
   "invoice_upto",
+  "month_total",
   "section_break_bckw",
   "previous_manpower",
-  "manpower_total",
   "cumulative_manpower",
   "column_break_rxyf",
   "previous_vehicle",
-  "vehicle_total",
   "cumulative_vehicle",
   "column_break_axg2",
   "previous_accommodation",
-  "accommodation_total",
   "cumulative_accommodation",
   "section_break_m6bw",
   "permanent_manpower",
+  "summary_total_for_manpower",
   "section_break_stvh",
   "total_employees",
   "total_employees_provided",
@@ -61,13 +65,16 @@
   "section_break_shid",
   "accommodation_table",
   "section_break_gspe",
+  "column_break_jnax",
   "total_unit_price_for_accomodation",
   "column_break_fbip",
   "total_claim_this_month_for_accomodation",
   "column_break_jnwl",
   "total_deduction_for_accomodation",
   "column_break_gibn",
-  "cumulative_amount_for_accomodation"
+  "cumulative_amount_for_accomodation",
+  "previous_claim_for_accomodation",
+  "column_break_cffm"
  ],
  "fields": [
   {
@@ -102,6 +109,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "allow_bulk_edit": 1,
    "fieldname": "permanent_manpower",
    "fieldtype": "Table",
    "label": "Permanent Manpower",
@@ -112,6 +120,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "allow_bulk_edit": 1,
    "fieldname": "permanent_vehicle",
    "fieldtype": "Table",
    "label": "Permanent Vehicle",
@@ -223,7 +232,8 @@
   },
   {
    "fieldname": "section_break_stvh",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "hidden": 1
   },
   {
    "fieldname": "total_employees",
@@ -323,7 +333,8 @@
   },
   {
    "fieldname": "section_break_irer",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "hidden": 1
   },
   {
    "fieldname": "total_number_of_vehicles_required",
@@ -406,7 +417,9 @@
   },
   {
    "fieldname": "section_break_gspe",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "hide_border": 1
   },
   {
    "fieldname": "total_unit_price_for_accomodation",
@@ -447,13 +460,49 @@
    "label": "Cumulative Amount for Accomodation",
    "non_negative": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "previous_claim_for_accomodation",
+   "fieldtype": "Currency",
+   "label": "Previous Claim for Accomodation",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_cffm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "summary_total_for_manpower",
+   "fieldtype": "HTML",
+   "hidden": 1,
+   "label": "Summary Total for Manpower"
+  },
+  {
+   "fieldname": "column_break_jnax",
+   "fieldtype": "Column Break",
+   "hidden": 1
+  },
+  {
+   "fieldname": "column_break_rava",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_yufj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "month_total",
+   "fieldtype": "Currency",
+   "label": "Month Total",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-26 20:32:03.707979",
+ "modified": "2025-12-09 09:26:17.440434",
  "modified_by": "jothi.m@groupteampro.com",
  "module": "Shaher",
  "name": "MIS Opex",

@@ -498,7 +498,7 @@ def send_expiry_notifications_for_visa_on_december_1st():
 
 import frappe
 from frappe.utils import today
-
+@frappe.whitelist()
 def send_notifications_for_se_number_update_pending():
     from_date = today()
     to_date = today()
@@ -611,7 +611,7 @@ def send_notifications_for_se_number_update_pending():
                 message=html,
             )
 
-
+@frappe.whitelist()
 def get_raw_data(filters):
     so_conditions = [
         "dn_parent.docstatus = 1",
@@ -674,3 +674,280 @@ def get_raw_data(filters):
     """
 
     return frappe.db.sql(query, filters, as_dict=True)
+
+
+import copy
+from collections import OrderedDict
+
+import frappe
+from frappe import _, _dict
+from frappe.query_builder import Criterion
+from frappe.utils import cstr, getdate
+
+from erpnext import get_company_currency, get_default_company
+from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
+    get_accounting_dimensions,
+    get_dimension_with_children,
+)
+from erpnext.accounts.report.financial_statements import get_cost_centers_with_children
+from erpnext.accounts.report.utils import convert_to_presentation_currency, get_currency
+from erpnext.accounts.utils import get_account_currency
+from erpnext.accounts.report.general_ledger.general_ledger import validate_filters,validate_party,set_account_currency,get_result
+import datetime
+
+@frappe.whitelist()
+def create_html_view_gl(filters=None):
+
+    # MUST PARSE FILTERS HERE FIRST
+    if isinstance(filters, str):
+        filters = frappe.parse_json(filters)
+
+    data = """
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>General Ledger Report</title>
+
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    padding: 20px;
+                    background: #f7f7f7;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    border:3px solid #f7f7f7;
+                }
+                tr{
+                border:3px solid #f7f7f7;
+                }
+                th {
+                    background: #e8e8e8;
+                    padding: 8px;
+                    border:3px solid #f7f7f7;
+                }
+                td {
+                    padding: 8px;
+                    border:3px solid #f7f7f7;
+                }
+            </style>
+        </head>
+
+        <body>
+           
+            <table>
+                <thead>
+                    <tr>
+    """
+
+    columns = get_gl_columns(filters)
+    for col in columns:
+        if not col.get("hidden"):
+            data += f'<th>{col.get("label")}</th>'
+
+    data += "</tr></thead><tbody>"
+
+    rows = get_gl_data(filters)
+
+    for row in rows:
+        account_name = str(row.get("account", "")).replace("'", "")
+        if account_name in ["Opening","Closing (Opening + Total)"]:
+            continue 
+        data += "<tr>"
+        for col in columns:
+            if not col.get("hidden"):
+                field = col["fieldname"]
+                value = row.get(field, "")
+                if value is None:
+                    value = ""
+
+                if isinstance(value, (datetime.date, datetime.datetime)):
+                    value = value.strftime("%d-%m-%Y")
+                if col.get("fieldtype") in ["Currency", "Float"]:
+                    precision = col.get("precision", 3)  # default 3
+                    try:
+                        value = f"{float(value):.{precision}f}"
+                    except:
+                        pass
+                data += f"<td>{value}</td>"
+        data += "</tr>"
+
+    data += "</tbody></table></body></html>"
+
+    return data
+
+def get_gl_data(filters=None):
+
+    if isinstance(filters, str):
+        filters = frappe.parse_json(filters)
+
+    if not filters:
+        return [], []
+
+    account_details = {}
+
+    if filters and filters.get("print_in_account_currency") and not filters.get("account"):
+        frappe.throw(_("Select an account to print in account currency"))
+
+    for acc in frappe.db.sql("""select name, is_group from tabAccount""", as_dict=1):
+        account_details.setdefault(acc.name, acc)
+
+    if filters.get("party"):
+        filters.party = frappe.parse_json(filters.get("party"))
+
+    validate_filters(filters, account_details)
+
+    validate_party(filters)
+
+    filters = set_account_currency(filters)
+
+
+    res = get_result(filters, account_details)
+    return res
+
+def get_gl_columns(filters=None):
+
+    if isinstance(filters, str):
+        filters = frappe.parse_json(filters)
+
+    if filters.get("presentation_currency"):
+        currency = filters["presentation_currency"]
+    else:
+        if filters.get("company"):
+            currency = get_company_currency(filters["company"])
+        else:
+            company = get_default_company()
+            currency = get_company_currency(company)
+    
+    # if filters.get("voucher_no"):
+    #     reversal_of = frappe.db.get_value('Journal Entry',filters.get("voucher_no"),'reversal_of')
+    columns = [
+        {
+            "label": _("GL Entry"),
+            "fieldname": "gl_entry",
+            "fieldtype": "Link",
+            "options": "GL Entry",
+            "hidden": 1,
+        },
+        {"label": _("Posting Date"), "fieldname": "posting_date", "fieldtype": "Date", "width": 100},
+        {
+            "label": _("Account"),
+            "fieldname": "account",
+            "fieldtype": "Link",
+            "options": "Account",
+            "width": 180,
+        },
+        {"label": _("Chart Classification"), "fieldname": "root_type", "fieldtype": "Data","width": 150,"align": "left"}
+    ]
+    if filters.get("include_dimensions"):
+        columns += [
+            {"label": _("Cost Center"), "options": "Cost Center", "fieldname": "cost_center", "width": 100}
+        ]
+    columns += [
+        {
+            "label": _("Debit ({0})").format(currency),
+            "fieldname": "debit",
+            "fieldtype": "Float",
+            "width": 130,
+            "precision": 3
+
+        },
+        {
+            "label": _("Credit ({0})").format(currency),
+            "fieldname": "credit",
+            "fieldtype": "Float",
+            "width": 130,
+            "precision": 3
+
+        },
+        {
+            "label": _("Balance ({0})").format(currency),
+            "fieldname": "balance",
+            "fieldtype": "Float",
+            "width": 130,
+            "precision": 3
+
+        },
+    ]
+
+    if filters.get("add_values_in_transaction_currency"):
+        columns += [
+            {
+                "label": _("Debit (Transaction)"),
+                "fieldname": "debit_in_transaction_currency",
+                "fieldtype": "Currency",
+                "width": 130,
+                "options": "transaction_currency",
+            },
+            {
+                "label": _("Credit (Transaction)"),
+                "fieldname": "credit_in_transaction_currency",
+                "fieldtype": "Currency",
+                "width": 130,
+                "options": "transaction_currency",
+            },
+            {
+                "label": "Transaction Currency",
+                "fieldname": "transaction_currency",
+                "fieldtype": "Link",
+                "options": "Currency",
+                "width": 70,
+            },
+        ]
+
+    columns += [
+        {"label": _("Voucher Type"), "fieldname": "voucher_type", "width": 120,"hidden": filters.get("voucher_no", "").startswith("ACC")},
+        {
+            "label": _("Voucher Subtype"),
+            "fieldname": "voucher_subtype",
+            "fieldtype": "Data",
+            "width": 180,
+            "hidden": filters.get("voucher_no", "").startswith("ACC")
+        },
+        {
+            "label": _("Voucher No"),
+            "fieldname": "voucher_no",
+            "fieldtype": "Dynamic Link",
+            "options": "voucher_type",
+            "width": 180,
+            "hidden": filters.get("voucher_no", "").startswith("ACC") 
+
+        },
+        {"label": _("Against Account"), "fieldname": "against", "width": 120,"hidden": filters.get("voucher_no", "").startswith("ACC")},
+        
+        {"label": _("Party Type"), "fieldname": "party_type", "width": 100,"hidden": filters.get("voucher_no", "").startswith("ACC")},
+        {"label": _("Party"), "fieldname": "party", "width": 100, "hidden": filters.get("voucher_no", "").startswith("ACC")},
+    ]
+
+    if filters.get("include_dimensions"):
+        columns.append({"label": _("Project"), "options": "Project", "fieldname": "project", "width": 100,})
+
+        for dim in get_accounting_dimensions(as_list=False):
+            columns.append(
+                {"label": _(dim.label), "options": dim.label, "fieldname": dim.fieldname, "width": 100,"hidden": filters.get("voucher_no", "").startswith("ACC")}
+            )
+        # columns.append(
+        # 	{"label": _("Cost Center"), "options": "Cost Center", "fieldname": "cost_center", "width": 100}
+        # )
+
+    columns.extend(
+        [
+            {"label": _("Against Voucher Type"), "fieldname": "against_voucher_type", "width": 100,"hidden": filters.get("voucher_no", "").startswith("ACC")},
+            {
+                "label": _("Against Voucher"),
+                "fieldname": "against_voucher",
+                "fieldtype": "Dynamic Link",
+                "options": "against_voucher_type",
+                "width": 100,
+                "hidden": filters.get("voucher_no", "").startswith("ACC")
+            },
+            {"label": _("Supplier Invoice No"), "fieldname": "bill_no", "fieldtype": "Data", "width": 100,"hidden": filters.get("voucher_no", "").startswith("ACC")},
+            
+        ]
+    )
+
+    if filters.get("show_remarks"):
+        columns.extend([{"label": _("Remarks"), "fieldname": "remarks", "width": 400,"hidden": filters.get("voucher_no", "").startswith("ACC") }])
+
+    return columns

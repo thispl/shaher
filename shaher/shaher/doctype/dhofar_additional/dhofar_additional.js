@@ -60,9 +60,12 @@ frappe.ui.form.on("DHOFAR ADDITIONAL", {
             frm.clear_table("base_manpower");
             manpowerData.forEach(([description, unit_price]) => {
                 let row = frm.add_child("base_manpower");
-                row.description = `${description})`;
+                row.description = `(${description})`;
                 row.unit_price = unit_price;
             });
+            let row = frm.add_child("base_manpower");
+            row.description = `Total`;
+            row.unit_price = 0;
             frm.refresh_field("base_manpower");
             const vehicleData = [
     ["(Hiab) 3 TON", 1900, 0, 0],
@@ -110,7 +113,7 @@ frappe.ui.form.on("DHOFAR ADDITIONAL", {
     ["PP Rope 200mtr x 18mm", 10, 6, 60],
     ["PP Rope 200mtr x 20mm", 12, 6, 72],
     ["Snatch block 5 Ton", 25, 12, 300],
-    ["Snatch block 4 Ton", 20, 2, 40]
+    ["Snatch block 4 Ton", 20, 2, 40],["Total",0,0,0]
 ];
 
 
@@ -132,7 +135,7 @@ frappe.ui.form.on("DHOFAR ADDITIONAL", {
                 ["Water tanker 1300 Gallon for GS", 40.000],
                 ["Water tanker 5000 Gallon for GS", 90.000],
                 ["Water tanker 10000 Gallon for GS", 200.000],
-                ["Drainage tanker 5000 Gallon for GS", 90.000]
+                ["Drainage tanker 5000 Gallon for GS", 90.000],["Total",0]
             ];
 
             frm.clear_table("base_vehicle_cost_per_trip");
@@ -201,7 +204,7 @@ frappe.ui.form.on("DHOFAR ADDITIONAL", {
                 ["Hose", "1 No.", 188.000],
                 ["Cooling coil", "1 No.", 306.000],
                 ["Indoor temperature sensor", "1 No.", 56.000],
-                ["Ambient temperature sensor", "1 No.", 190.000]
+                ["Ambient temperature sensor", "1 No.", 190.000],["Total","",0]
                 ];
             frm.clear_table("airconditioning_system_spare_parts");
             acPartsData.forEach(([ description,uom,unit_price]) => {
@@ -446,7 +449,8 @@ frappe.ui.form.on("DHOFAR ADDITIONAL", {
                 ["Liner O Ring Set - AR 65507", "Set", 120.000],
                 ["Solenoid Valve", "1 No.", 150.000],
                 ["50Kg DCP type Fire Extinguisher", "1 No.", 120.000],
-                ["Fire Extinguisher Refilling charges", "1 No.", 75.000]
+                ["Fire Extinguisher Refilling charges", "1 No.", 75.000],
+                ["Total", "", 0]
             ]
             frm.clear_table("ff_systems_spare_parts");
             ffPartsData.forEach(([ description,uom,unit_price]) => {
@@ -457,6 +461,102 @@ frappe.ui.form.on("DHOFAR ADDITIONAL", {
             });
             frm.refresh_field("ff_systems_spare_parts");
         }
+        function add_or_move_total(frm, table_name) {
+            let table = frm.doc[table_name];
+
+            // Find index of existing Total row (if any)
+            let total_index = table.findIndex(row => row.description === "Total");
+
+            let total_row;
+
+            if (total_index === -1) {
+                total_row = frm.add_child(table_name);
+                total_row.description = "Total";
+                total_row.read_only_row = 1;    
+            } else {
+                total_row = table.splice(total_index, 1)[0];
+                total_row.read_only_row = 0;    
+            }
+
+            table.push(total_row);
+
+            frm.refresh_field(table_name);
+        }
+
+
+    // Apply to all tables
+    add_or_move_total(frm, "base_manpower");
+    add_or_move_total(frm, "airconditioning_system_spare_parts");
+    add_or_move_total(frm, "ff_systems_spare_parts");
+
+
+        const grid_pm = frm.fields_dict.base_manpower?.grid;
+
+        if (grid_pm && grid_pm.grid_rows.length) {
+            const last_row_pm = grid_pm.grid_rows[grid_pm.grid_rows.length - 1];
+
+            last_row_pm.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.base_manpower.forEach(row => {
+                if (row.idx === frm.doc.base_manpower.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+        const grid_acc = frm.fields_dict.base_vehicle?.grid;
+
+        if (grid_acc && grid_acc.grid_rows.length) {
+            const last_row_acc = grid_acc.grid_rows[grid_acc.grid_rows.length - 1];
+
+            last_row_acc.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.base_vehicle.forEach(row => {
+                if (row.idx === frm.doc.base_vehicle.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+        const table_3 = frm.fields_dict.base_vehicle_cost_per_trip?.grid;
+
+        if (table_3 && table_3.grid_rows.length) {
+            const last_row_t3 = table_3.grid_rows[table_3.grid_rows.length - 1];
+
+            last_row_t3.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.base_vehicle_cost_per_trip.forEach(row => {
+                if (row.idx === frm.doc.base_vehicle_cost_per_trip.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+        const table_4 = frm.fields_dict.airconditioning_system_spare_parts?.grid;
+
+        if (table_4 && table_4.grid_rows.length) {
+            const last_row_t4 = table_4.grid_rows[table_4.grid_rows.length - 1];
+
+            last_row_t4.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.airconditioning_system_spare_parts.forEach(row => {
+                if (row.idx === frm.doc.airconditioning_system_spare_parts.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+        const table_5 = frm.fields_dict.ff_systems_spare_parts?.grid;
+
+        if (table_5 && table_5.grid_rows.length) {
+            const last_row_t5 = table_5.grid_rows[table_5.grid_rows.length - 1];
+
+            last_row_t5.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.ff_systems_spare_parts.forEach(row => {
+                if (row.idx === frm.doc.ff_systems_spare_parts.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+        
+        
         
     },
     invoice_from(frm) {

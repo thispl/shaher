@@ -34,15 +34,25 @@
   "section_break_krev",
   "food_allowance",
   "other_earnings",
+  "other_earnings_remark",
   "column_break_gktz",
   "salary_advance_deduction",
   "other_deduction",
+  "other_deduction_remark",
   "section_break_tzmk",
   "breakfast",
   "lunch",
   "column_break_rtf2",
   "dinner",
   "mobile_allow",
+  "section_break_h7zq",
+  "extra_rate_per_day",
+  "nh_rate_per_day",
+  "medical_leave_days",
+  "column_break_hdkl",
+  "salary_adjustment",
+  "arrear_salary",
+  "remarks_for_adjustment",
   "section_break_qna6",
   "remarks",
   "attendance_and_ot_register_upload",
@@ -272,14 +282,62 @@
   {
    "fieldname": "column_break_thfd",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "other_earnings_remark",
+   "fieldtype": "Small Text",
+   "label": "Other Earnings Remark"
+  },
+  {
+   "fieldname": "other_deduction_remark",
+   "fieldtype": "Small Text",
+   "label": "Other Deduction Remark"
+  },
+  {
+   "fieldname": "section_break_h7zq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "extra_rate_per_day",
+   "fieldtype": "Currency",
+   "label": "Extra Rate Per Day"
+  },
+  {
+   "fieldname": "nh_rate_per_day",
+   "fieldtype": "Currency",
+   "label": "NH Rate Per Day"
+  },
+  {
+   "fieldname": "medical_leave_days",
+   "fieldtype": "Data",
+   "label": "Medical Leave Days"
+  },
+  {
+   "fieldname": "column_break_hdkl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "salary_adjustment",
+   "fieldtype": "Data",
+   "label": "Salary Adjustment"
+  },
+  {
+   "fieldname": "arrear_salary",
+   "fieldtype": "Data",
+   "label": "Arrear Salary"
+  },
+  {
+   "fieldname": "remarks_for_adjustment",
+   "fieldtype": "Data",
+   "label": "Remarks for Adjustment"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-10 13:04:44.896662",
- "modified_by": "jothi.m@groupteampro.com",
+ "modified": "2025-12-05 10:33:36.675873",
+ "modified_by": "pavithra.s@groupteampro.com",
  "module": "Shaher",
  "name": "Attendance and OT Register",
  "naming_rule": "Expression (old style)",

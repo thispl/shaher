@@ -16,19 +16,26 @@ frappe.ui.form.on("DHOFAR CAPEX", {
             frm.set_value('year', currentYear);
             const manpowerData = [
                 ["Protection Engineer (Foreign)", "Foreign", 9,  2859.819 ],
+                ["Total", "", 0, 0],
             ];
 
             frm.clear_table("permanent_manpower");
             manpowerData.forEach(([description, employee_type, total_employees, unit_price]) => {
                 let row = frm.add_child("permanent_manpower");
-                row.description = `${description} (${employee_type})`;
+                if(description != "Total"){
+                    row.description = `${description} (${employee_type})`;
+                }
+                else{
+                    row.description = `${description}`;
+                }
                 row.employee_type = employee_type;
                 row.total_employees = total_employees;
                 row.unit_price = unit_price;
             });
             frm.refresh_field("permanent_manpower");
             const vehicleData = [
-                ["Four Wheel Drive Vehicles", 2, "Dhofar", 413.360]
+                ["Four Wheel Drive Vehicles", 2, "Dhofar", 413.360],
+                ["Total", 0,"", 0],
             ];
 
             frm.clear_table("permanent_vehicle");
@@ -41,6 +48,32 @@ frappe.ui.form.on("DHOFAR CAPEX", {
             });
             frm.refresh_field("permanent_vehicle");
             
+        }
+        const grid_pm = frm.fields_dict.permanent_manpower?.grid;
+
+        if (grid_pm && grid_pm.grid_rows.length) {
+            const last_row_pm = grid_pm.grid_rows[grid_pm.grid_rows.length - 1];
+
+            last_row_pm.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.permanent_manpower.forEach(row => {
+                if (row.idx === frm.doc.permanent_manpower.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+        const grid_acc = frm.fields_dict.permanent_vehicle?.grid;
+
+        if (grid_acc && grid_acc.grid_rows.length) {
+            const last_row_acc = grid_acc.grid_rows[grid_acc.grid_rows.length - 1];
+
+            last_row_acc.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.permanent_vehicle.forEach(row => {
+                if (row.idx === frm.doc.permanent_vehicle.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
         }
         
     },

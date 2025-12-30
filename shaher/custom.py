@@ -775,12 +775,12 @@ def validate_next_due_date(doc,method):
     if doc.leave_type=='Annual Leave' and doc.custom_is_extension == 0:
         days,doj = frappe.db.get_value("Employee",{'name':doc.employee},['custom_annual_leave_applicable_after','date_of_joining'])
         if days:
-            if frappe.db.exists("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2)}):
+            if frappe.db.exists("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2),'name':['!=',doc.name]}):
                 count =frappe.db.count("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2),'name':['!=',doc.name]})
                 if count > 0:
-                    leave_app = frappe.get_doc("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2)},order_by='creation DESC')
-                    if frappe.db.exists("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2),'custom_is_extension':1,'from_date':('>',(add_days(leave_app.to_date,1)))}):
-                        leave_app_extn = frappe.get_doc("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2),'custom_is_extension':1,'from_date':('>',(add_days(leave_app.to_date,1)))},order_by='creation DESC')
+                    leave_app = frappe.get_doc("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2),'name':['!=',doc.name]},order_by='creation DESC')
+                    if frappe.db.exists("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2),'name':['!=',doc.name],'custom_is_extension':1,'from_date':('>',(add_days(leave_app.to_date,1)))}):
+                        leave_app_extn = frappe.get_doc("Leave Application",{'employee':doc.employee,'leave_type':'Annual Leave','docstatus':('!=',2),'name':['!=',doc.name],'custom_is_extension':1,'from_date':('>',(add_days(leave_app.to_date,1)))},order_by='creation DESC')
                         end_date = leave_app_extn.to_date
                     else:
                         end_date = leave_app.to_date
@@ -893,6 +893,7 @@ def check_holiday(date,emp):
 def update_service_entry_number(docname,se_no, se_date):
     frappe.db.set_value("Delivery Note", docname, "service_entry_number", se_no)
     frappe.db.set_value("Delivery Note", docname, "custom_service_entry_date", se_date)
+    frappe.db.set_value("Delivery Note", docname, "custom_service_entry_number_entered_on", frappe.utils.now())
     return "done"
 
 @frappe.whitelist()
@@ -1208,14 +1209,32 @@ def get_next_account_number(parent_account):
 @frappe.whitelist()
 def get_leave_periods(date_of_joining, relieving_date, employee):
     emp = frappe.get_doc("Employee", employee)
+    if emp.custom_nationality_type!="Expat":
+        return {
+            "periods": [],
+            "total_amount": 0
+        }
     basic = emp.custom_basic
 
     periods = []
-    current = date_of_joining
+    total_amount = 0
+
+    doj = getdate(date_of_joining)
+    relieving_date = getdate(relieving_date)
+
+    # 1-year anniversary
+    first_anniversary = doj.replace(year=doj.year + 1)
+
+    # If relieving before completing 1 year → return nothing
+    if relieving_date <= first_anniversary:
+        return {
+            "periods": [],
+            "total_amount": 0
+        }
+
+    current = doj
     year = 1
-    total_amount=0
-    current=getdate(current)
-    relieving_date=getdate(relieving_date)
+
     while current < relieving_date:
         try:
             next_year = current.replace(year=current.year + 1)
@@ -1228,8 +1247,9 @@ def get_leave_periods(date_of_joining, relieving_date, employee):
         if year <= 3:
             amount = (diff / 2) * (basic / 365)
         else:
-            amount = (diff) * (basic / 365)
-        total_amount+=amount
+            amount = basic
+        total_amount += amount
+
         periods.append({
             "year_number": year,
             "from_date": current,
@@ -1658,50 +1678,52 @@ def get_payment_details(invoice, invoice_amount):
 
 @frappe.whitelist()
 def create_journal_entry(doc,method):
-    amt = 0
+    if doc.customer in ['Petroleum Development Oman LLC','Daleel Petroleum LLC']:
+        frappe.db.set_value("Delivery Note",doc.name,'custom_service_entry_status',"Awaiting Finance Approval")
+        amt = 0
 
-    for item in doc.items:
-        if frappe.db.exists('Item', {'name': item.item_code}):
-            rate = frappe.db.get_value("Sales Order Item", {'name': item.so_detail}, "base_rate")
-            if rate:
-                amt += (rate*item.qty) or    0
-            else:
-                amt += 0
-    if amt <= 0:
-        return
+        for item in doc.items:
+            if frappe.db.exists('Item', {'name': item.item_code}):
+                rate = frappe.db.get_value("Sales Order Item", {'name': item.so_detail}, "base_rate")
+                if rate:
+                    amt += (rate*item.qty) or    0
+                else:
+                    amt += 0
+        if amt <= 0:
+            return
 
-    je = frappe.new_doc("Journal Entry")
-    je.company = doc.company
-    je.posting_date = doc.posting_date
-    je.voucher_type = "Journal Entry"
-    je.custom_cost_center = doc.cost_center
-    je.custom_project = doc.project
-    debit_acc = frappe.db.get_value(
-        "Account",
-        {'name': ('like', '%Contract Asset%'), 'company': doc.company}
-    )
-    # if "pdo" in doc.custom_department.lower():
-    #     credit_acc = frappe.db.get_value("Account", {'name': ('like', '%Rev Maintenance Contract PDO%'), 'company': doc.company})
-    # elif "oetc" in doc.custom_department.lower():
-    #     credit_acc = frappe.db.get_value("Account", {'name': ('like', '%Rev Maintenance Contract OETC%'), 'company': doc.company})
-    # else:
-    credit_acc = frappe.db.get_value("Account", {'name': ('like', '%Unbilled Revenue%'), 'company': doc.company})
-    je.append('accounts', {
-        'account': debit_acc,
-        'debit_in_account_currency': amt,
-        'cost_center':doc.cost_center,
-        'project':doc.project
+        je = frappe.new_doc("Journal Entry")
+        je.company = doc.company
+        je.posting_date = doc.posting_date
+        je.voucher_type = "Journal Entry"
+        je.custom_cost_center = doc.cost_center
+        je.custom_project = doc.project
+        debit_acc = frappe.db.get_value(
+            "Account",
+            {'name': ('like', '%Contract Asset%'), 'company': doc.company}
+        )
+        # if "pdo" in doc.custom_department.lower():
+        #     credit_acc = frappe.db.get_value("Account", {'name': ('like', '%Rev Maintenance Contract PDO%'), 'company': doc.company})
+        # elif "oetc" in doc.custom_department.lower():
+        #     credit_acc = frappe.db.get_value("Account", {'name': ('like', '%Rev Maintenance Contract OETC%'), 'company': doc.company})
+        # else:
+        credit_acc = frappe.db.get_value("Account", {'name': ('like', '%Unbilled Revenue%'), 'company': doc.company})
+        je.append('accounts', {
+            'account': debit_acc,
+            'debit_in_account_currency': amt,
+            'cost_center':doc.cost_center,
+            'project':doc.project
+            })
+        je.append('accounts', {
+            'account': credit_acc,
+            'credit_in_account_currency': amt,
+            'cost_center':doc.cost_center,
+            'project':doc.project
         })
-    je.append('accounts', {
-        'account': credit_acc,
-        'credit_in_account_currency': amt,
-        'cost_center':doc.cost_center,
-        'project':doc.project
-    })
-    je.user_remark = doc.name
-    je.custom_delivery_note = doc.name
-    je.save(ignore_permissions=True)
-    je.submit()
+        je.user_remark = doc.name
+        je.custom_delivery_note = doc.name
+        je.save(ignore_permissions=True)
+        je.submit()
 
 
 import frappe
@@ -1709,16 +1731,17 @@ import frappe
 @frappe.whitelist()
 def cancel_journal_entry(doc, method):
     # Get submitted JE linked by user_remark
-    je_name = frappe.db.get_value('Journal Entry', {'user_remark': doc.name, 'docstatus': 1})
-    if je_name:
-        rev_je_name = frappe.db.get_value('Journal Entry', {'reversal_of': je_name, 'docstatus': 1})
-        if rev_je_name:
-            frappe.get_doc('Journal Entry', {'reversal_of': je_name, 'docstatus': 1})
-            if rev_je_name.docstatus == 1:
-                rev_je_name.cancel()
-        je = frappe.get_doc('Journal Entry', je_name)
-        je.cancel()
-        frappe.db.commit()
+    if doc.customer in ['Petroleum Development Oman LLC','Daleel Petroleum LLC']:
+        je_name = frappe.db.get_value('Journal Entry', {'user_remark': doc.name, 'docstatus': 1})
+        if je_name:
+            rev_je_name = frappe.db.get_value('Journal Entry', {'reversal_of': je_name, 'docstatus': 1})
+            if rev_je_name:
+                frappe.get_doc('Journal Entry', {'reversal_of': je_name, 'docstatus': 1})
+                if rev_je_name.docstatus == 1:
+                    rev_je_name.cancel()
+            je = frappe.get_doc('Journal Entry', je_name)
+            je.cancel()
+            frappe.db.commit()
 
 @frappe.whitelist()
 def update_dn_field(doc,method):
@@ -1733,74 +1756,77 @@ def update_dn_field(doc,method):
 
 @frappe.whitelist()
 def create_reversal_entry(doc,method):
-    dn=''
-    credit_amt=0
-    debit_amt=0
-    for i in doc.items:
-        if i.delivery_note:
-            dn=i.delivery_note
-            rate = frappe.db.get_value("Sales Order Item", {'name': i.so_detail}, "base_rate")
-            if rate:
-                credit_amt += (rate*i.qty) or 0
-                debit_amt += (rate*i.qty) or 0
-            else:
-                credit_amt += 0
-                debit_amt += 0
-    if credit_amt <= 0:
-        return
-    if debit_amt <= 0:
-        return
-    if frappe.db.exists('Journal Entry',{'user_remark':dn,'docstatus':1}):
-        je=frappe.get_doc('Journal Entry',{'user_remark':dn,'docstatus':1})
-        # for j in je.accounts:
-        #     credit_amt+=j.credit_in_account_currency
-        #     debit_amt+=j.debit_in_account_currency
-        rev_entry = frappe.new_doc("Journal Entry")
-        rev_entry.company = doc.company
-        rev_entry.posting_date = doc.posting_date
-        rev_entry.voucher_type = "Journal Entry"
-        debit_acc = frappe.db.get_value(
-            "Account",
-            {'name': ('like', '%Contract Asset%'), 'company': doc.company}
-        )
-        # if "pdo" in doc.custom_department.lower():
-        #     credit_acc = frappe.db.get_value("Account", {'name': ('like', '%Rev Maintenance Contract PDO%'), 'company': doc.company})
-        # elif "oetc" in doc.custom_department.lower():
-        #     credit_acc = frappe.db.get_value("Account", {'name': ('like', '%Rev Maintenance Contract OETC%'), 'company': doc.company})
-        # else:
-        credit_acc = frappe.db.get_value("Account", {'name': ('like', '%Unbilled Revenue%'), 'company': doc.company})
-        rev_entry.append('accounts', {
-            'account': debit_acc,
-            'credit_in_account_currency': credit_amt,
-            'reference_type':'Journal Entry',
-            'reference_name':je.name,
-            'cost_center':doc.cost_center,
-            'project':doc.project
-        })
-        rev_entry.append('accounts', {
-            'account': credit_acc,
-            'debit_in_account_currency': debit_amt,
-            'reference_type':'Journal Entry',
-            'reference_name':je.name,
-            'cost_center':doc.cost_center,
-            'project':doc.project
-        })
-        rev_entry.user_remark = doc.name
-        rev_entry.reversal_of = je.name
-        rev_entry.cost_center=doc.cost_center
-        rev_entry.project = doc.project
-        rev_entry.custom_references=str(je.name)+','+str(doc.name)
-        rev_entry.save(ignore_permissions=True)
-        rev_entry.submit()
+    if doc.customer in ['Petroleum Development Oman LLC','Daleel Petroleum LLC']:
+        dn=''
+        credit_amt=0
+        debit_amt=0
+        for i in doc.items:
+            if i.delivery_note:
+                dn=i.delivery_note
+                rate = frappe.db.get_value("Sales Order Item", {'name': i.so_detail}, "base_rate")
+                if rate:
+                    credit_amt += (rate*i.qty) or 0
+                    debit_amt += (rate*i.qty) or 0
+                else:
+                    credit_amt += 0
+                    debit_amt += 0
+        if credit_amt <= 0:
+            return
+        if debit_amt <= 0:
+            return
+        if frappe.db.exists('Journal Entry',{'user_remark':dn,'docstatus':1}):
+            je=frappe.get_doc('Journal Entry',{'user_remark':dn,'docstatus':1})
+            # for j in je.accounts:
+            #     credit_amt+=j.credit_in_account_currency
+            #     debit_amt+=j.debit_in_account_currency
+            rev_entry = frappe.new_doc("Journal Entry")
+            rev_entry.company = doc.company
+            rev_entry.posting_date = doc.posting_date
+            rev_entry.voucher_type = "Journal Entry"
+            debit_acc = frappe.db.get_value(
+                "Account",
+                {'name': ('like', '%Contract Asset%'), 'company': doc.company}
+            )
+            # if "pdo" in doc.custom_department.lower():
+            #     credit_acc = frappe.db.get_value("Account", {'name': ('like', '%Rev Maintenance Contract PDO%'), 'company': doc.company})
+            # elif "oetc" in doc.custom_department.lower():
+            #     credit_acc = frappe.db.get_value("Account", {'name': ('like', '%Rev Maintenance Contract OETC%'), 'company': doc.company})
+            # else:
+            credit_acc = frappe.db.get_value("Account", {'name': ('like', '%Unbilled Revenue%'), 'company': doc.company})
+            rev_entry.append('accounts', {
+                'account': credit_acc,
+                'debit_in_account_currency': debit_amt,
+                'reference_type':'Journal Entry',
+                'reference_name':je.name,
+                'cost_center':doc.cost_center,
+                'project':doc.project
+            })
+            rev_entry.append('accounts', {
+                'account': debit_acc,
+                'credit_in_account_currency': credit_amt,
+                'reference_type':'Journal Entry',
+                'reference_name':je.name,
+                'cost_center':doc.cost_center,
+                'project':doc.project
+            })
+            
+            rev_entry.user_remark = doc.name
+            rev_entry.reversal_of = je.name
+            rev_entry.cost_center=doc.cost_center
+            rev_entry.project = doc.project
+            rev_entry.custom_references=str(je.name)+','+str(doc.name)
+            rev_entry.save(ignore_permissions=True)
+            rev_entry.submit()
 
 @frappe.whitelist()
 def cancel_reverse_entry(doc, method):
-    je_name = frappe.db.get_value('Journal Entry', {'user_remark': doc.name, 'docstatus': 1})
-    if je_name:
-        je = frappe.get_doc('Journal Entry', je_name)
-        if je.docstatus == 1:
-            je.cancel()
-        frappe.db.commit()
+    if doc.customer in ['Petroleum Development Oman LLC','Daleel Petroleum LLC']:
+        je_name = frappe.db.get_value('Journal Entry', {'user_remark': doc.name, 'docstatus': 1})
+        if je_name:
+            je = frappe.get_doc('Journal Entry', je_name)
+            if je.docstatus == 1:
+                je.cancel()
+            frappe.db.commit()
 
 @frappe.whitelist()
 def create_journal_entry_for_purchase(doc,method):
@@ -1825,20 +1851,28 @@ def create_journal_entry_for_purchase(doc,method):
     je.custom_project = doc.project
     debit_acc = frappe.db.get_value(
         "Account",
-        {'name': ('like', '%Unbilled Revenue%'), 'company': doc.company}
+        {'name': ('like', '%Cost of Goods Sold%'), 'company': doc.company}
     )
     credit_acc = frappe.db.get_value("Account", {'name': ('like', '%Service Received But Not Billed%'), 'company': doc.company})
     je.append('accounts', {
         'account': debit_acc,
         'debit_in_account_currency': amt,
         'cost_center':doc.cost_center,
-        'project':doc.project
+        'project':doc.project,
+        # 'party_type':'Supplier',
+        # 'party':doc.supplier,
+        # 'reference_type':doc.doctype,
+        # 'reference_name':doc.name,
         })
     je.append('accounts', {
         'account': credit_acc,
         'credit_in_account_currency': amt,
         'cost_center':doc.cost_center,
-        'project':doc.project
+        'project':doc.project,
+        # 'party_type':'Supplier',
+        # 'party':doc.supplier,
+        # 'reference_type':doc.doctype,
+        # 'reference_name':doc.name,
     })
     je.user_remark = doc.name
     je.custom_purchase_receipt = doc.name
@@ -1865,7 +1899,7 @@ def create_reversal_entry_for_purchase(doc,method):
     credit_amt=0
     debit_amt=0
     for i in doc.items:
-        if i.purchase_receipt and i.item_type =='Service Item':
+        if i.purchase_receipt and i.custom_item_type =='Service Item':
             pr=i.purchase_receipt
             rate = frappe.db.get_value("Purchase Order Item", {'name': i.po_detail}, "base_rate")
             if rate:
@@ -1886,29 +1920,30 @@ def create_reversal_entry_for_purchase(doc,method):
         rev_entry.voucher_type = "Journal Entry"
         debit_acc = frappe.db.get_value(
             "Account",
-            {'name': ('like', '%Unbilled Revenue%'), 'company': doc.company}
+            {'name': ('like', '%Cost of Goods Sold%'), 'company': doc.company}
         )
         credit_acc = frappe.db.get_value("Account", {'name': ('like', '%Service Received But Not Billed%'), 'company': doc.company})
-        rev_entry.append('accounts', {
-            'account': debit_acc,
-            'credit_in_account_currency': credit_amt,
-            # 'party_type':'Supplier',
-            # 'party':doc.supplier,
-            'reference_type':'Journal Entry',
-            'reference_name':je.name,
-            'cost_center':doc.cost_center,
-            'project':doc.project
-        })
         rev_entry.append('accounts', {
             'account': credit_acc,
             # 'party_type':'Supplier',
             # 'party':doc.supplier,
             'debit_in_account_currency': debit_amt,
-            'reference_type':'Journal Entry',
+            # 'reference_type':"Journal Entry",
+            # 'reference_name':je.name,
+            'cost_center':doc.cost_center,
+            'project':doc.project
+        })
+        rev_entry.append('accounts', {
+            'account': debit_acc,
+            'credit_in_account_currency': credit_amt,
+            # 'party_type':'Supplier',
+            # 'party':doc.supplier,
+            'reference_type':"Journal Entry",
             'reference_name':je.name,
             'cost_center':doc.cost_center,
             'project':doc.project
         })
+        
         rev_entry.user_remark = doc.name
         rev_entry.reversal_of = je.name
         rev_entry.cost_center=doc.cost_center
@@ -3856,17 +3891,58 @@ def create_scheduled_job():
 
 @frappe.whitelist()
 def set_description_in_long_text_po(doc, method):
+    import re
+    from bs4 import BeautifulSoup
+
     if doc.items:
         for row in doc.items:
             if hasattr(row, "description") and row.description:
-                if row.description:
-                    clean_desc = row.description.replace('<br>', '\n')\
-                                            .replace('<br/>', '\n')\
-                                            .replace('<br />', '\n')
-                    clean_desc = clean_desc.replace('</p>', '\n').replace('</div>', '\n')
-                    clean_desc = strip_html(clean_desc)
-                    lines = [line.rstrip() for line in clean_desc.splitlines()]
-                    row.custom_long_description = "\n".join(lines)
+
+                # Parse HTML
+                soup = BeautifulSoup(row.description, "html.parser")
+
+                formatted_lines = []
+                counter = 1  # for numbered lists
+
+                for tag in soup.find_all(['li', 'p', 'div', 'br']):
+                    text = tag.get_text(strip=True)
+
+                    # Skip empty lines
+                    if not text:
+                        continue
+
+                    # Handle numbered list <ol><li>
+                    if tag.name == "li" and tag.find_parent("ol"):
+                        formatted_lines.append(f"{counter}. {text}")
+                        counter += 1
+                        continue
+
+                    # Handle bullet list <ul><li>
+                    if tag.name == "li" and tag.find_parent("ul"):
+                        formatted_lines.append(f"• {text}")
+                        continue
+
+                    # Normal paragraph or <p>, <div>
+                    if tag.name in ["p", "div"]:
+                        formatted_lines.append(text)
+                        continue
+
+                    # <br> line breaks
+                    if tag.name == "br":
+                        formatted_lines.append("")
+                        continue
+
+                # Fallback if nothing extracted (text without tags)
+                if not formatted_lines:
+                    formatted_lines = [line.strip() for line in row.description.split("\n")]
+
+                # Join lines with newline
+                final_text = "\n".join(formatted_lines)
+                row.custom_long_description = final_text
+
+                frappe.errprint("Final Description:")
+                frappe.errprint(final_text)
+
            
 
 import re
@@ -4399,17 +4475,18 @@ def send_asset_mails(doc, method):
     )
 
     sponsor = frappe.get_doc("Visa Sponsor", sponsor_doc)
-    recipients = [row.user for row in sponsor.recipient_directory if row.user]
+    # sponsor.load_from_db()     
 
-    if recipients:
-        send_email_to_recipient(recipients, doc, asset_company)
+    recipients = []
+    for row in sponsor.recipient_directory:
+        recipients.append(row.user.strip())
+    # recipients = [row.user for row in sponsor.recipient_directory if row.user]
+    
 
-
-def send_email_to_recipient(email, asset_doc, company):
-    subject = f"New Asset Created for {company}"
+    subject = f"New Asset Created for {asset_company}"
     message = f"""
         Dear Sir / Mam,<br><br>
-        A new Asset <b>{asset_doc.name}</b> has been created for company <b>{company}</b>.
+        A new Asset <b>{doc.name}</b> has been created for company <b>{asset_company}</b>.
         <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse;">
             <tr style="background-color:#b81a0f;color:white;">
                 <th>Asset Code</th>
@@ -4422,20 +4499,354 @@ def send_email_to_recipient(email, asset_doc, company):
                 <th>Purchase Amount</th>
             </tr>
             <tr>
-                <td>{asset_doc.item_code or ''}</td>
-                <td>{asset_doc.asset_name or ''}</td>
-                <td>{asset_doc.asset_category}</td>
-                <td>{asset_doc.company or ''}</td>
-                <td>{asset_doc.asset_owner or ''}</td>
-                <td>{asset_doc.asset_owner_company or asset_doc.supplier or asset_doc.customer or ''}</td>
-                <td>{asset_doc.purchase_date or ''}</td>
-                <td>{asset_doc.gross_purchase_amount or ''}</td>
+                <td>{doc.item_code or ''}</td>
+                <td>{doc.asset_name or ''}</td>
+                <td>{doc.asset_category}</td>
+                <td>{doc.company or ''}</td>
+                <td>{doc.asset_owner or ''}</td>
+                <td>{doc.asset_owner_company or doc.supplier or doc.customer or ''}</td>
+                <td>{doc.purchase_date or ''}</td>
+                <td>{doc.gross_purchase_amount or ''}</td>
             </tr>
         </table>
     """
 
     frappe.sendmail(
-        recipients=email,
+        recipients=recipients,
         subject=subject,
         message=message
     )
+
+
+@frappe.whitelist()
+def validate_items(doc,method):
+    if not doc.items:
+        return
+    row = doc.items[0]
+    if doc.doctype in ["Purchase Receipt"]:
+        duplicate_found = any(
+            item.item_type and item.item_type != row.item_type
+            for item in doc.items if item.name != row.name
+        )
+    elif doc.doctype in ["Sales Invoice","Purchase Invoice"]:
+        duplicate_found = any(
+            item.custom_item_type and item.custom_item_type != row.custom_item_type
+            for item in doc.items if item.name != row.name
+        )
+    if duplicate_found:
+        frappe.throw(
+            f"Not allowed to club Stock Items and Service Items in the same document. ",
+            title="Invalid Item Combination"
+        )
+
+
+
+@frappe.whitelist()
+def validate_slip_creation(doc, method):
+    if not doc.start_date or not doc.end_date or not doc.employee:
+        return
+
+    start_date = getdate(doc.start_date)
+    end_date = getdate(doc.end_date)
+    att_and_ot_reg = frappe.db.get_all(
+        "Attendance and OT Register",
+        filters={
+            "employee": doc.employee,
+            "docstatus": 1, 
+            "from_date": start_date,
+            "to_date": end_date,
+        },
+        fields=["name"],
+    )
+    if not att_and_ot_reg:
+        frappe.throw(
+            title="Attendance and OT Register Missing",
+            msg=(
+                "Salary Slip cannot be created."
+            ),
+        )
+    leave_applications = frappe.db.get_all(
+        "Leave Application",
+        filters={
+            "employee": doc.employee,
+            "docstatus": 1,  
+            "to_date": ["BETWEEN", [start_date,end_date]],
+            "leave_type": "Annual Leave",
+        },
+        fields=["name", "from_date", "to_date", "leave_type"],
+        order_by="to_date desc",
+    )
+
+    blocked_leaves = []
+
+    for leave in leave_applications:
+        rejoining_exists = frappe.db.exists(
+            "Rejoining Form",
+            {
+                "leave_application": leave.name,
+                "docstatus": 1,  
+            },
+        )
+
+        if not rejoining_exists:
+            blocked_leaves.append(
+                f"{leave.leave_type}: {leave.from_date} to {leave.to_date}"
+            )
+
+    if blocked_leaves:
+        leave_details = "<br>".join(blocked_leaves)
+        frappe.throw(
+            title="Rejoining Form Missing",
+            msg=(
+                "Salary Slip cannot be created because the employee has not "
+                "created a Rejoining Form."
+            ),
+        )
+
+
+from io import BytesIO
+from openpyxl import Workbook
+from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
+from openpyxl.utils import get_column_letter
+
+@frappe.whitelist()
+def download_rfq_template(rfq_name):
+    filename = "Supplier Quotation Template"
+    xlsx_file = make_rfq_template(rfq_name)
+    frappe.response["filename"] = filename + ".xlsx"
+    frappe.response["filecontent"] = xlsx_file.getvalue()
+    frappe.response["type"] = "binary"
+
+
+
+def make_rfq_template(rfq_name):
+    items = frappe.get_all(
+        "Request for Quotation Item",
+        filters={"parent": rfq_name},
+        fields=["item_code", "item_name", "description", "qty"],
+        order_by="idx ASC"
+    )
+    suppliers = frappe.get_all(
+        "Request for Quotation Supplier",
+        filters={"parent": rfq_name},
+        fields=["supplier"],
+        order_by="idx ASC"
+    )
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Supplier Quotation"
+
+    headers = ["Sr No", "Item Code", "Item Name", "Qty"]
+    headers.extend([s["supplier"] for s in suppliers])
+    ws.append(headers)
+
+    for idx, item in enumerate(items, start=1):
+        row = [
+            idx,
+            item.item_code,
+            item.item_name,
+            item.qty
+        ]
+        row.extend(["" for _ in suppliers])
+        ws.append(row)
+
+    total_qty = sum([i.qty for i in items])
+    total_row_index = ws.max_row + 1
+    ws.merge_cells(start_row=total_row_index, start_column=1, end_row=total_row_index, end_column=3)
+    ws.cell(row=total_row_index, column=1, value="Total")
+    ws.cell(row=total_row_index, column=4, value=total_qty)
+    for col in range(5, ws.max_column + 1):
+        col_letter = get_column_letter(col)
+        formula = f"=SUM({col_letter}2:{col_letter}{total_row_index - 1})"
+        ws.cell(row=total_row_index, column=col, value=formula)
+
+    header_fill = PatternFill(start_color="cc0c36", end_color="cc0c36", fill_type="solid")  
+    total_fill = PatternFill(start_color="cc0c36", end_color="cc0c36", fill_type="solid") 
+    white_font = Font(color="FFFFFF", bold=True)
+    border_style = Side(border_style="thin", color="000000")
+    border = Border(left=border_style, right=border_style, top=border_style, bottom=border_style)
+
+    ws.column_dimensions['A'].width = 7
+    ws.column_dimensions['B'].width = 10
+    ws.column_dimensions['C'].width = 35
+    ws.column_dimensions['D'].width = 6
+    for col in range(5, ws.max_column + 1):
+        ws.column_dimensions[get_column_letter(col)].width = 25
+
+    for row in range(1, ws.max_row + 1):
+        for col in range(1, ws.max_column + 1):
+            cell = ws.cell(row=row, column=col)
+            cell.border = border
+            if row == 1:
+                cell.fill = header_fill
+                cell.font = white_font
+                cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+            elif row == total_row_index:
+                cell.fill = total_fill
+                cell.font = white_font
+                cell.alignment = Alignment(horizontal="center", vertical="center")
+
+    for row in range(2, total_row_index):
+        ws[f'C{row}'].alignment = Alignment(wrap_text=True)
+
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+    return output
+
+
+@frappe.whitelist()
+def custom_upload_template(**kwargs):
+    rfq_name = kwargs.get("rfq_name")
+    rfq_doc = frappe.get_doc("Request for Quotation", rfq_name)
+
+    if not rfq_doc.custom_sq_attachment:
+        frappe.throw("Please upload the filled RFQ template first.")
+
+    file_doc = frappe.get_doc("File", {'file_url': rfq_doc.custom_sq_attachment})
+    file_bytes = file_doc.get_content()
+
+
+    from openpyxl import load_workbook
+
+    wb = load_workbook(filename=BytesIO(file_bytes))
+    ws = wb.active
+
+    headers = [cell.value for cell in ws[1]]
+    supplier_names = headers[4:]
+
+    items_data = []
+    for row in ws.iter_rows(min_row=2, max_row=ws.max_row-1, values_only=True):
+        items_data.append({
+            "item_code": row[1],
+            "item_name": row[2],
+            "qty": row[3],
+            "amounts": row[4:]
+        })
+
+    skipped_suppliers = []
+
+    for idx, supplier in enumerate(supplier_names):
+        material_requests = [rfq_item.material_request for rfq_item in rfq_doc.items]
+
+        submitted_sq = frappe.db.sql("""
+            SELECT sq.name
+            FROM `tabSupplier Quotation` sq
+            JOIN `tabSupplier Quotation Item` sqi
+              ON sqi.parent = sq.name
+            WHERE sq.supplier=%s
+              AND sq.docstatus=1
+              AND sqi.request_for_quotation=%s
+              AND sqi.material_request IN %s
+            GROUP BY sq.name
+        """, (supplier, rfq_name, tuple(material_requests)), as_dict=True)
+
+        if submitted_sq:
+            skipped_suppliers.append(supplier)
+            continue 
+
+        draft_sq = frappe.db.sql("""
+            SELECT sq.name
+            FROM `tabSupplier Quotation` sq
+            JOIN `tabSupplier Quotation Item` sqi
+              ON sqi.parent = sq.name
+            WHERE sq.supplier=%s
+              AND sq.docstatus=0
+              AND sqi.request_for_quotation=%s
+              AND sqi.material_request IN %s
+            GROUP BY sq.name
+            HAVING COUNT(DISTINCT sqi.item_code) = %s
+        """, (supplier, rfq_name, tuple(material_requests), len(rfq_doc.items)), as_dict=True)
+
+        if draft_sq:
+            sq_doc = frappe.get_doc("Supplier Quotation", draft_sq[0]["name"])
+            sq_doc.items = []  
+        else:
+            sq_doc = frappe.get_doc({
+                "doctype": "Supplier Quotation",
+                "supplier": supplier,
+                "company":rfq_doc.company,
+                "items": [],
+                "custom_department": rfq_doc.custom_department,
+            })
+
+        for rfq_item in rfq_doc.items:
+            excel_item = next((i for i in items_data if i["item_code"] == rfq_item.item_code), None)
+            rate = 0
+            if excel_item:
+                amount = excel_item["amounts"][idx] or 0
+                rate = round(amount / (rfq_item.qty or 1), 2)
+
+            sq_doc.append("items", {
+                "item_code": rfq_item.item_code,
+                "item_name": rfq_item.item_name,
+                "description": rfq_item.description,
+                "qty": rfq_item.qty,
+                "uom": rfq_item.uom,
+                "rate": rate,
+                "request_for_quotation": rfq_name,
+                "material_request": rfq_item.material_request
+            })
+
+        sq_doc.save(ignore_permissions=True)
+        frappe.db.commit()
+
+    msg = f"Supplier Quotations processed for RFQ {rfq_name}.<br>"
+    if skipped_suppliers:
+        msg += f"<b>{skipped_suppliers}</b> - skipped because SQ already submitted"
+    frappe.msgprint(msg)
+
+
+
+@frappe.whitelist()
+def get_rfq_chart_data(name):
+    sq_list = frappe.db.sql("""
+        SELECT sq.supplier, SUM(sq.base_grand_total) AS total_amount
+        FROM `tabSupplier Quotation` sq
+        INNER JOIN `tabSupplier Quotation Item` sqi
+            ON sq.name = sqi.parent
+        WHERE sq.docstatus = 0
+            AND sqi.request_for_quotation = %s
+        GROUP BY sq.supplier
+    """, (name,), as_dict=True)
+
+    if not sq_list:
+        return {"labels": [], "values": []}
+
+    labels = [row.supplier for row in sq_list]
+    values = [row.total_amount for row in sq_list]
+
+    return {"labels": labels, "values": values}
+@frappe.whitelist()
+def get_rfq_item_wise_chart(name):
+    rows = frappe.db.sql("""
+        SELECT
+            sq.supplier,
+            sqi.item_code,
+            SUM(sqi.amount) AS total
+        FROM `tabSupplier Quotation Item` sqi
+        JOIN `tabSupplier Quotation` sq
+            ON sq.name = sqi.parent
+        WHERE sq.docstatus = 0 AND sqi.request_for_quotation = %s
+        GROUP BY sq.supplier, sqi.item_code
+        ORDER BY sqi.item_code
+    """, (name,), as_dict=True)
+
+    if not rows:
+        return {"items": [], "suppliers": [], "dataset_map": {}}
+
+    suppliers = sorted({r.supplier for r in rows})
+    items = sorted({r.item_code for r in rows})
+
+    dataset_map = {s: [0] * len(items) for s in suppliers}
+
+    for r in rows:
+        idx = items.index(r.item_code)
+        dataset_map[r.supplier][idx] = float(r.total)
+
+    return {
+        "items": items,
+        "suppliers": suppliers,
+        "dataset_map": dataset_map
+    }

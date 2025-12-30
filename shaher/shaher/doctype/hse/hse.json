@@ -27,6 +27,8 @@
   "hse_passport_number",
   "column_break_ozrn",
   "rop_license_expiry_date",
+  "column_break_o8jb",
+  "issued_institute_name",
   "section_break_eunc",
   "permit_holder",
   "column_break_gjjs",
@@ -196,13 +198,22 @@
    "fieldtype": "Link",
    "label": "Permit Applicant Holder",
    "options": "Employee"
+  },
+  {
+   "fieldname": "column_break_o8jb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "issued_institute_name",
+   "fieldtype": "Data",
+   "label": "HSE Passport Issued Institute Name"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-01 11:12:38.572518",
- "modified_by": "jothi.m@groupteampro.com",
+ "modified": "2025-12-30 10:16:02.383046",
+ "modified_by": "pavithra.s@groupteampro.com",
  "module": "Shaher",
  "name": "HSE",
  "naming_rule": "Expression",

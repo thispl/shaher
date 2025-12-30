@@ -63,7 +63,8 @@ frappe.ui.form.on("MIS ADDITIONAL", {
                 ["Snatch block 1 Ton", 2.000],
                 ["Snatch block 2 Ton", 2.000],
                 ["Snatch block 3 Ton", 2.000],
-                ["Snatch block 6 Ton", 5.000]
+                ["Snatch block 6 Ton", 5.000],
+                ["Total",0]
                 ];
 
 
@@ -79,7 +80,8 @@ frappe.ui.form.on("MIS ADDITIONAL", {
                 ["Water tanker 1300 Gallon for GS", 40.000],
                 ["Water tanker 5000 Gallon for GS", 90.000],
                 ["Water tanker 10000 Gallon for GS", 200.000],
-                ["Drainage tanker 5000 Gallon for GS", 90.000]
+                ["Drainage tanker 5000 Gallon for GS", 90.000],
+                ["Total",0]
             ];
             
             frm.clear_table("base_vehicle_cost_per_trip");
@@ -91,6 +93,146 @@ frappe.ui.form.on("MIS ADDITIONAL", {
             frm.refresh_field("base_vehicle_cost_per_trip");
             
             
+
+
+        }
+        function add_or_move_total(frm, table_name) {
+    let table = frm.doc[table_name];
+
+    // If table does not exist or is empty, skip
+    if (!table || !table.length) return;
+
+    // 1. Find existing Total row
+    let total_index = table.findIndex(row => row.description === "Total");
+    let total_row;
+
+    if (total_index === -1) {
+        // 2. Create new Total row if not found
+        total_row = frm.add_child(table_name);
+        total_row.description = "Total";
+    } else {
+        // 3. Remove existing Total row from original position
+        total_row = table.splice(total_index, 1)[0];
+    }
+
+    // 4. Make Total row read-only
+    total_row.read_only_row = 1;
+
+    // 5. Push Total row to bottom of the table
+    table.push(total_row);
+
+    // 6. Reset read_only_row for all other rows
+    table.forEach((row, idx) => {
+        if (row.description !== "Total") {
+            row.read_only_row = 0;
+        }
+        row.idx = idx + 1;  // Update index properly
+    });
+
+    // 7. Refresh field
+    frm.refresh_field(table_name);
+}
+
+
+
+    // Apply to all tables
+    add_or_move_total(frm, "base_manpower");
+    add_or_move_total(frm, "airconditioning_system_spare_parts");
+    add_or_move_total(frm, "ff_systems_spare_parts");
+    add_or_move_total(frm, "overtime_details");
+    add_or_move_total(frm, "additional_manpower");
+
+
+        const grid_pm = frm.fields_dict.base_manpower?.grid;
+
+        if (grid_pm && grid_pm.grid_rows.length) {
+            const last_row_pm = grid_pm.grid_rows[grid_pm.grid_rows.length - 1];
+
+            last_row_pm.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.base_manpower.forEach(row => {
+                if (row.idx === frm.doc.base_manpower.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+        const grid_acc = frm.fields_dict.base_vehicle?.grid;
+
+        if (grid_acc && grid_acc.grid_rows.length) {
+            const last_row_acc = grid_acc.grid_rows[grid_acc.grid_rows.length - 1];
+
+            last_row_acc.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.base_vehicle.forEach(row => {
+                if (row.idx === frm.doc.base_vehicle.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+        const table_3 = frm.fields_dict.base_vehicle_cost_per_trip?.grid;
+
+        if (table_3 && table_3.grid_rows.length) {
+            const last_row_t3 = table_3.grid_rows[table_3.grid_rows.length - 1];
+
+            last_row_t3.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.base_vehicle_cost_per_trip.forEach(row => {
+                if (row.idx === frm.doc.base_vehicle_cost_per_trip.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+        const table_4 = frm.fields_dict.airconditioning_system_spare_parts?.grid;
+
+        if (table_4 && table_4.grid_rows.length) {
+            const last_row_t4 = table_4.grid_rows[table_4.grid_rows.length - 1];
+
+            last_row_t4.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.airconditioning_system_spare_parts.forEach(row => {
+                if (row.idx === frm.doc.airconditioning_system_spare_parts.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+        const table_5 = frm.fields_dict.ff_systems_spare_parts?.grid;
+
+        if (table_5 && table_5.grid_rows.length) {
+            const last_row_t5 = table_5.grid_rows[table_5.grid_rows.length - 1];
+
+            last_row_t5.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.ff_systems_spare_parts.forEach(row => {
+                if (row.idx === frm.doc.ff_systems_spare_parts.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+        const table_6 = frm.fields_dict.overtime_details?.grid;
+
+        if (table_6 && table_6.grid_rows.length) {
+            const last_row_t6 = table_6.grid_rows[table_6.grid_rows.length - 1];
+
+            last_row_t6.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.overtime_details.forEach(row => {
+                if (row.idx === frm.doc.overtime_details.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
+        }
+        const table_7 = frm.fields_dict.additional_manpower?.grid;
+
+        if (table_7 && table_7.grid_rows.length) {
+            const last_row_t7 = table_7.grid_rows[table_7.grid_rows.length - 1];
+
+            last_row_t7.wrapper.css('background-color', '#f2f2f2');
+
+            frm.doc.additional_manpower.forEach(row => {
+                if (row.idx === frm.doc.additional_manpower.length) {
+                    frappe.model.set_value(row.doctype, row.name, "read_only_row", 1);
+                }
+            });
         }
         
     },
