@@ -4850,3 +4850,49 @@ def get_rfq_item_wise_chart(name):
         "suppliers": suppliers,
         "dataset_map": dataset_map
     }
+
+@frappe.whitelist()
+def back_to_back_so():
+
+    so_list = frappe.db.sql("""
+        SELECT DISTINCT poi.sales_order
+        FROM `tabPurchase Order Item` poi
+        INNER JOIN `tabSales Order` so
+            ON so.name = poi.sales_order
+        WHERE poi.sales_order IS NOT NULL
+            AND poi.sales_order != ''
+            AND so.docstatus = 1
+    """, as_dict=False)
+
+    return [row[0] for row in so_list]
+
+@frappe.whitelist()
+def back_to_back_po():
+    po_list = frappe.db.sql("""
+        SELECT DISTINCT poi.parent
+        FROM `tabPurchase Order Item` poi
+        INNER JOIN `tabPurchase Order` po ON po.name = poi.parent
+        INNER JOIN `tabSales Order` so ON so.name = poi.sales_order
+        WHERE poi.sales_order IS NOT NULL
+            AND poi.sales_order != ''
+            AND so.docstatus = 1
+            AND po.docstatus = 1
+    """, as_dict=False)
+
+    return [row[0] for row in po_list]
+
+@frappe.whitelist()
+def back_to_back_pi():
+    pi_list = frappe.db.sql("""
+        SELECT DISTINCT pi.name
+        FROM `tabPurchase Invoice` pi
+        INNER JOIN `tabPurchase Invoice Item` pii ON pii.parent = pi.name
+        INNER JOIN `tabPurchase Order` po ON po.name = pii.purchase_order
+        INNER JOIN `tabPurchase Order Item` poi ON poi.parent = po.name
+        INNER JOIN `tabSales Order` so ON so.name = poi.sales_order
+        WHERE so.docstatus = 1    
+            AND po.docstatus = 1    
+            AND pi.docstatus = 1   
+    """, as_dict=False)
+
+    return [row[0] for row in pi_list]

@@ -14,6 +14,54 @@ frappe.ui.form.on("Internal Payment Certificate", {
                 `);
     },
 	refresh(frm) {
+        frappe.call({
+            method: "shaher.custom.back_to_back_so",
+            callback: function(r) {
+                if (!r.message) return;
+                
+                let so_list = r.message;
+
+                frm.set_query("sales_order", () => {
+                    return {
+                        filters: {
+                            name: ["in", so_list]
+                        }
+                    };
+                });
+            }
+        });
+        frappe.call({
+            method: "shaher.custom.back_to_back_po",
+            callback: function(r) {
+                if (!r.message) return;
+                
+                let po_list = r.message;
+
+                frm.set_query("purchase_order", () => {
+                    return {
+                        filters: {
+                            name: ["in", po_list]
+                        }
+                    };
+                });
+            }
+        });
+        frappe.call({
+            method: "shaher.custom.back_to_back_pi",
+            callback: function(r) {
+                if (!r.message) return;
+                
+                let pi_list = r.message;
+
+                frm.set_query("purchase_invoice", () => {
+                    return {
+                        filters: {
+                            name: ["in", pi_list]
+                        }
+                    };
+                });
+            }
+        });
 		frm.disable_save();
         frm.add_custom_button('Clear Filters', function() {
             frm.set_value("sales_order", "");

@@ -3,11 +3,11 @@ from openpyxl.styles import Alignment, PatternFill, Border, Side, Font
 from openpyxl.utils import get_column_letter
 from io import BytesIO
 import frappe
-
+from datetime import datetime, timedelta
 
 @frappe.whitelist()
 def download():
-    filename = "HSE Register"
+    filename = "HSE TRAINING MATRIX"
     file = make_hse_xlsx(filename)
     frappe.response["filename"] = filename + ".xlsx"
     frappe.response["filecontent"] = file.getvalue()
@@ -24,9 +24,6 @@ def make_hse_xlsx(sheet_name):
         "HSE Passport Issued Institute Name","HSE Passport Number"
     ]
 
-    # ------------------------------------
-    # Collect Course Groups & Courses
-    # ------------------------------------
     course_groups = frappe.get_all("Course Group", fields=["name"])
     group_courses = {}
 
@@ -39,14 +36,10 @@ def make_hse_xlsx(sheet_name):
         )
         group_courses[grp.name] = [c.course_name for c in courses]
 
-    # ---- flat ordered course list (important for training map & row order)
     all_courses = []
     for group, courses in group_courses.items():
         all_courses.extend(courses)
 
-    # ------------------------------------
-    # Prepare Workbook
-    # ------------------------------------
     wb = Workbook()
     ws = wb.active
     ws.title = sheet_name
@@ -60,18 +53,14 @@ def make_hse_xlsx(sheet_name):
 
     total_cols = len(detail_fields) + len(all_courses)
 
-    # ------------------------------------
-    # ROW 1 — Title
-    # ------------------------------------
+    
     ws.append(["HSE TRAINING REGISTER"])
     ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=total_cols)
     ws["A1"].fill = yellow
     ws["A1"].font = Font(bold=True, size=14)
     ws["A1"].alignment = title_al
 
-    # ------------------------------------
-    # ROW 2 — DETAILS + Group Headers
-    # ------------------------------------
+    
     row2 = ["DETAILS"] + [""] * (len(detail_fields) - 1)
 
     for group, courses in group_courses.items():
@@ -81,11 +70,9 @@ def make_hse_xlsx(sheet_name):
 
     ws.append(row2)
 
-    # merge DETAILS
     ws.merge_cells(start_row=2, start_column=1,
                    end_row=2, end_column=len(detail_fields))
 
-    # merge groups
     col_start = len(detail_fields) + 1
     for group, courses in group_courses.items():
         if courses:
@@ -94,17 +81,28 @@ def make_hse_xlsx(sheet_name):
                            end_row=2, end_column=col_end)
             col_start = col_end + 1
 
-    # formatting row2
-    for col in range(1, total_cols + 1):
-        c = ws.cell(row=2, column=col)
-        c.fill = yellow
-        c.font = Font(bold=True)
-        c.alignment = title_al
-        c.border = border
+    
 
-    # ------------------------------------
-    # ROW 3 — Column Headers (Details + Courses)
-    # ------------------------------------
+    yellow = PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid")
+    title_al = Alignment(horizontal="center", vertical="center")
+    thin_border = Border(
+        left=Side(style='thin'),
+        right=Side(style='thin'),
+        top=Side(style='thin'),
+        bottom=Side(style='thin')
+    )
+    
+    for row in range(1, ws.max_row + 1):
+        for col in range(1, ws.max_column + 1):
+            c = ws.cell(row=row, column=col)
+            if row == 2:
+                c.fill = yellow
+                c.font = Font(bold=True)
+                c.alignment = title_al
+            c.border = thin_border
+    
+
+    
     row3 = detail_fields[:] + all_courses[:]
     ws.append(row3)
 
@@ -116,36 +114,35 @@ def make_hse_xlsx(sheet_name):
         c.border = border
         ws.column_dimensions[get_column_letter(col)].width = 25
 
-    # ------------------------------------
-    # TRAINING MATRIX → latest expiry per employee & course
-    # ------------------------------------
+    
     training_map = get_training_matrix_latest()
 
-    # ------------------------------------
-    # EMPLOYEE ROWS
-    # ------------------------------------
+   
     employees = get_filtered_employees()
     serial_no = 1
 
     for emp in employees:
+        # frappe.log_error(emp.name)
+        dob = emp.date_of_birth.strftime('%d-%m-%Y') if emp.date_of_birth else ''
+        resident_expiry = emp.custom_resident_id_expiry_date.strftime('%d-%m-%Y') if emp.custom_resident_id_expiry_date else ''
+        visa_expiry = emp.custom_visa_expiry_date.strftime('%d-%m-%Y') if emp.custom_visa_expiry_date else ''
         row = [
             serial_no,
             emp.employee_name,
             emp.designation,
             emp.name,
             emp.custom_site_location,
-            emp.date_of_birth,
+            dob,
             emp.custom_resident_id_numberqid_number,
             emp.user_id,
             emp.cell_number,
-            emp.custom_resident_id_expiry_date,
-            emp.custom_visa_expiry_date,
+            resident_expiry,
+            visa_expiry,
             emp.branch,
             emp.issued_institute_name,
             emp.hse_passport_number,
         ]
 
-        # fill latest expiry date for each course
         for course in all_courses:
             key = (emp.name, course)
             expiry = training_map.get(key, "")
@@ -153,7 +150,41 @@ def make_hse_xlsx(sheet_name):
 
         ws.append(row)
         serial_no += 1
+    red_font    = Font(color="FF0000", bold=True)      
+    orange_font = Font(color="FFA500", bold=True)     
 
+    today = datetime.today().date()
+    warning_date = today + timedelta(days=30)
+
+    start_row = 4
+    start_col = 15  
+
+    for row_idx in range(start_row, ws.max_row + 1):
+        for col_idx in range(start_col, ws.max_column + 1):
+            cell = ws.cell(row=row_idx, column=col_idx)
+            value = cell.value
+
+            if not value:
+                continue
+
+            try:
+                expiry = datetime.strptime(value, "%d-%m-%Y").date()
+            except:
+                continue
+
+            if expiry < today:
+                cell.font = red_font
+
+            elif today <= expiry <= warning_date:
+                cell.font = orange_font
+    ws.column_dimensions['A'].width = 6
+    cols=['D','E','F','G','I','K']
+    for c in cols:
+        ws.column_dimensions[c].width = 15
+    ws.column_dimensions['H'].width = 30
+    for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=ws.max_column):
+        for cell in row:
+            cell.border = thin_border
     ws.freeze_panes = "A4"
     ws.auto_filter.ref = ws.dimensions
 
@@ -162,10 +193,6 @@ def make_hse_xlsx(sheet_name):
     out.seek(0)
     return out
 
-
-# --------------------------------------------------
-# DATA FETCHING METHODS
-# --------------------------------------------------
 
 def get_training_matrix_latest():
 
@@ -180,19 +207,25 @@ def get_training_matrix_latest():
 
     out = {}
     for r in rows:
-        out[(r.employee, r.course_name)] = r.latest_expiry
+        dt = r.latest_expiry
+        if dt:   
+            formatted = dt.strftime('%d-%m-%Y')
+        else:
+            formatted = ""
+
+        out[(r.employee, r.course_name)] = formatted
+
     return out
 
 
 def get_filtered_employees():
-    """Return active employees who have an HSE document,
-    filtered by company & division if provided."""
+    company    = frappe.local.form_dict.get("company")
+    division   = frappe.local.form_dict.get("division")
+    from_date  = frappe.local.form_dict.get("from_date")
+    to_date    = frappe.local.form_dict.get("to_date")
 
-    company  = frappe.local.form_dict.get("company")
-    division = frappe.local.form_dict.get("division")
-
-    filters = []
-    params  = []
+    filters  = []
+    params   = []
 
     if company:
         filters.append("e.company = %s")
@@ -203,6 +236,35 @@ def get_filtered_employees():
         params.append(division)
 
     where_clause = " AND ".join(filters) if filters else "1=1"
+
+    if from_date and to_date:
+        # frappe.log_error('Filters',where_clause)
+        # frappe.log_error('Filters2',params)
+        return frappe.db.sql("""
+            SELECT
+                e.name,
+                e.employee_name,
+                e.designation,
+                e.custom_site_location,
+                e.date_of_birth,
+                e.custom_resident_id_numberqid_number,
+                e.user_id,
+                e.cell_number,
+                e.custom_resident_id_expiry_date,
+                e.custom_visa_expiry_date,
+                e.branch,
+                ed.issued_institute_name,
+                ed.hse_passport_number
+            FROM `tabEmployee` e
+            INNER JOIN `tabHSE` ed ON ed.employee = e.name
+            INNER JOIN `tabHSE Training Matrix` tm ON tm.parent = ed.name
+            WHERE
+                {where_clause}
+                AND STR_TO_DATE(tm.expiry_date, '%%Y-%%m-%%d') BETWEEN %s AND %s
+            GROUP BY e.name
+            ORDER BY e.employee_name
+        """.format(where_clause=where_clause), params + [from_date, to_date], as_dict=True)
+
 
     return frappe.db.sql(f"""
         SELECT
@@ -220,8 +282,7 @@ def get_filtered_employees():
             ed.issued_institute_name,
             ed.hse_passport_number
         FROM `tabEmployee` e
-        INNER JOIN `tabHSE` ed
-            ON ed.employee = e.name
+        INNER JOIN `tabHSE` ed ON ed.employee = e.name
         WHERE
             e.status = 'Active'
             AND {where_clause}

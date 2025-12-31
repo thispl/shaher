@@ -3,6 +3,16 @@ from frappe.utils import nowdate
 from datetime import date
 import frappe
 from frappe.utils import getdate, nowdate, formatdate
+from datetime import datetime, timedelta
+from erpnext.accounts.doctype.sales_invoice.sales_invoice import (
+	check_if_return_invoice_linked_with_payment_entry,
+	get_total_in_party_account_currency,
+	is_overdue,
+	unlink_inter_company_doc,
+	update_linked_doc,
+	validate_inter_company_party,
+)
+from frappe.utils import get_url
 @frappe.whitelist()
 def update_employee_certification_status():
     ec = frappe.get_all("Employee Certification",fields=['name','possibility_status','expiry_date'])
@@ -951,3 +961,270 @@ def get_gl_columns(filters=None):
         columns.extend([{"label": _("Remarks"), "fieldname": "remarks", "width": 400,"hidden": filters.get("voucher_no", "").startswith("ACC") }])
 
     return columns
+
+
+@frappe.whitelist()
+def payment_due_alert_pi():
+    yesterday = (datetime.today()).date()
+
+    pis = frappe.db.sql("""
+        SELECT
+            pi.name, pi.supplier, pi.due_date, pi.outstanding_amount, pi.company
+        FROM
+            `tabPurchase Invoice` pi
+        WHERE
+            pi.docstatus = 1
+            AND pi.status != 'Paid'
+            AND pi.due_date = %s
+            AND EXISTS (
+                SELECT 1 FROM `tabPurchase Invoice Item` pii
+                WHERE pii.parent = pi.name AND pii.sales_order IS NOT NULL AND pii.sales_order != ''
+            )
+    """, (yesterday,), as_dict=True)
+
+    if not pis:
+        return
+
+    site = frappe.utils.get_url()
+
+    for pi in pis:
+        users = frappe.db.sql("""
+            SELECT DISTINCT u.email
+            FROM `tabUser` u
+            INNER JOIN `tabEmployee` e ON u.name = e.user_id
+            INNER JOIN `tabHas Role` hr ON hr.parent = u.name
+            WHERE e.company = %s
+              AND hr.role = 'Accounts User'
+              AND u.enabled = 1
+              AND u.email IS NOT NULL
+        """, (pi.company,), as_dict=True)
+
+        recipients = [u.email for u in users if u.email]
+        if not recipients:
+            continue
+
+        link = f"{site}/app/purchase-invoice/{pi.name}"
+
+        message = f"""
+            <b>Purchase Invoice Payment Pending</b><br><br>
+            <b>Invoice:</b> <a href="{link}" target="_blank">{pi.name}</a><br>
+            <b>Company:</b> {pi.company}<br>
+            <b>Supplier:</b> {pi.supplier}<br>
+            <b>Outstanding:</b> {pi.outstanding_amount}<br>
+            <b>Due Date:</b> {pi.due_date}<br><br>
+            Please process the payment.
+        """
+
+        frappe.sendmail(
+            recipients='pavithra.s@groupteampro.com',
+            subject=f"Payment Due Alert - {pi.name}",
+            message=message
+        )
+
+@frappe.whitelist()
+def payment_due_alert_si():
+    yesterday = (datetime.today() - timedelta(days=1)).date()
+    site = frappe.utils.get_url()
+
+    sis = frappe.db.sql("""
+        SELECT
+            si.name, si.customer, si.company, si.due_date, si.outstanding_amount
+        FROM `tabSales Invoice` si
+        WHERE si.docstatus = 1
+          AND si.status != 'Paid'
+          AND si.due_date = %s
+          AND EXISTS (
+                SELECT 1 FROM `tabSales Invoice Item` sii
+                WHERE sii.parent = si.name
+                  AND sii.sales_order IS NOT NULL AND sii.sales_order != ''
+          )
+    """, (yesterday,), as_dict=True)
+
+    if not sis:
+        return
+
+    for si in sis:
+        so_link = frappe.db.get_value(
+            "Sales Invoice Item",
+            {"parent": si.name, "sales_order": ["!=", ""]},
+            "sales_order"
+        )
+        if not so_link:
+            continue
+
+        po_exists = frappe.db.get_value(
+            "Purchase Order Item",
+            {"sales_order": so_link},
+            "parent"
+        )
+        if not po_exists:
+            continue  
+
+        users = frappe.db.sql("""
+            SELECT DISTINCT u.email
+            FROM `tabUser` u
+            INNER JOIN `tabEmployee` e ON u.name = e.user_id
+            INNER JOIN `tabHas Role` hr ON hr.parent = u.name
+            WHERE e.company = %s
+              AND hr.role = 'Accounts User'
+              AND u.enabled = 1
+              AND u.email IS NOT NULL
+        """, (si.company,), as_dict=True)
+
+        recipients = [u.email for u in users if u.email]
+        if not recipients:
+            continue
+
+        link = f"{site}/app/sales-invoice/{si.name}"
+
+        msg = f"""
+            <b>Sales Invoice Payment Overdue</b><br><br>
+            <b>Invoice:</b> <a href="{link}" target="_blank">{si.name}</a><br>
+            <b>Company:</b> {si.company}<br>
+            <b>Customer:</b> {si.customer}<br>
+            <b>Outstanding:</b> {si.outstanding_amount}<br>
+            <b>Due Date:</b> {si.due_date}<br><br>
+            Please follow up and clear the payment.
+        """
+
+        frappe.sendmail(
+            recipients='pavithra.s@groupteampro.com',
+            subject=f"Overdue SI Payment Alert - {si.name}",
+            message=msg
+        )
+
+
+def pi_paid_notification(doc, method):
+    for ref in doc.references:
+        if ref.reference_doctype != "Purchase Invoice":
+            continue
+
+        pi_name = ref.reference_name
+
+        inv = frappe.db.get_value(
+            "Purchase Invoice",
+            pi_name,
+            ["outstanding_amount", "supplier", "company", "status"],
+            as_dict=True
+        )
+        if not inv:
+            continue
+
+        if inv.outstanding_amount > 0 or inv.status != "Paid":
+            continue
+
+        po_link = frappe.db.get_value(
+            "Purchase Invoice Item",
+            {"parent": pi_name, "purchase_order": ["!=", ""]},
+            "purchase_order"
+        )
+        if not po_link:
+            continue
+
+        so_link = frappe.db.get_value(
+            "Purchase Order Item",
+            {"parent": po_link, "sales_order": ["!=", ""]},
+            "sales_order"
+        )
+        if not so_link:
+            continue
+
+        users = frappe.db.sql("""
+            SELECT DISTINCT u.email
+            FROM `tabUser` u
+            INNER JOIN `tabEmployee` e ON e.user_id = u.name
+            INNER JOIN `tabHas Role` hr ON hr.parent = u.name
+            WHERE e.company = %s
+              AND hr.role = 'Accounts User'
+              AND u.enabled = 1
+              AND u.email IS NOT NULL
+        """, (inv.company,), as_dict=True)
+
+        emails = [u.email for u in users]
+        if not emails:
+            continue
+
+        link = f"{get_url()}/app/purchase-invoice/{pi_name}"
+        msg = f"""
+            <b>Purchase Invoice Payment Completed</b><br><br>
+            <b>Invoice:</b> <a href="{link}" target="_blank">{pi_name}</a><br>
+            <b>Company:</b> {inv.company}<br>
+            <b>Supplier:</b> {inv.supplier}<br>
+            <b>Total Cleared:</b> {doc.paid_amount}<br><br>
+            Payment completed. PO was created from a Sales Order.
+        """
+
+        frappe.sendmail(
+            recipients='pavithra.s@groupteampro.com',
+            subject=f"PI Payment Completed - {pi_name}",
+            message=msg
+        )
+
+@frappe.whitelist()
+def si_paid_notification(doc, method):
+    for ref in doc.references:
+        if ref.reference_doctype != "Sales Invoice":
+            continue
+
+        si_name = ref.reference_name
+
+        si = frappe.db.get_value(
+            "Sales Invoice",
+            si_name,
+            ["outstanding_amount", "customer", "company", "status","grand_total"],
+            as_dict=True
+        )
+        if not si:
+            continue
+
+        if si.outstanding_amount > 0 or si.status != "Paid":
+            continue
+
+        so_link = frappe.db.get_value(
+            "Sales Invoice Item",
+            {"parent": si_name, "sales_order": ["!=", ""]},
+            "sales_order"
+        )
+        if not so_link:
+            continue 
+
+        po_exists = frappe.db.get_value(
+            "Purchase Order Item",
+            {"sales_order": so_link},
+            "parent"
+        )
+        if not po_exists:
+            continue 
+
+        users = frappe.db.sql("""
+            SELECT DISTINCT u.email
+            FROM `tabUser` u
+            INNER JOIN `tabEmployee` e ON e.user_id = u.name
+            INNER JOIN `tabHas Role` hr ON hr.parent = u.name
+            WHERE e.company = %s
+              AND hr.role = 'Accounts User'
+              AND u.enabled = 1
+              AND u.email IS NOT NULL
+        """, (si.company,), as_dict=True)
+
+        emails = [u.email for u in users]
+        if not emails:
+            continue
+
+        link = f"{get_url()}/app/sales-invoice/{si_name}"
+        cleared_amount = ref.allocated_amount  
+
+        msg = f"""
+            <b>Sales Invoice Payment Completed</b><br><br>
+            <b>Invoice:</b> <a href="{link}" target="_blank">{si_name}</a><br>
+            <b>Company:</b> {si.company}<br>
+            <b>Customer:</b> {si.customer}<br>
+            <b>Total Cleared:</b> {si.grand_total}<br><br>
+        """
+
+        frappe.sendmail(
+            recipients='pavithra.s@groupteampro.com',
+            subject=f"SI Payment Completed - {si_name}",
+            message=msg
+        )
+

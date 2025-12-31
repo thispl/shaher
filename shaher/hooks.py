@@ -158,6 +158,7 @@ doc_events = {
 	},
     "Purchase Invoice":{
 		"validate":["shaher.custom.validate_items"],
+        # "on_update_after_submit":["shaher.alerts.pi_paid_notification"],
         "on_submit":["shaher.custom.update_approval_date_pi",
 		# "shaher.custom.create_reversal_entry_for_purchase"
 		],
@@ -192,9 +193,9 @@ doc_events = {
         "on_submit":["shaher.custom.update_approval_date_mr"],
         "before_insert": "shaher.custom.name_mr"
 	},
-	# "Supplier":{
-	# 	"after_insert":"shaher.custom.create_user_permission_on_validate"
-	# },
+	"Payment Entry":{
+		"on_submit":["shaher.alerts.pi_paid_notification","shaher.alerts.si_paid_notification"],
+	},
 	"Leave Application":{
 		'after_insert':"shaher.custom.validate_next_due_date",
         # "before_submit": ["hrms.hr.doctype.leave_application.leave_application.calculate_accumulated_leave"]

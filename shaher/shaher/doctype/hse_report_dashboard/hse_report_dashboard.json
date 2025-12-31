@@ -20,7 +20,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Report",
-   "options": "\nHSE Register",
+   "options": "\nHSE Training Matrix\nFTW Register\nHSE Vehicle Register",
    "reqd": 1
   },
   {
@@ -30,6 +30,7 @@
    "options": "Company"
   },
   {
+   "depends_on": "eval:doc.report != \"HSE Vehicle Register\"",
    "fieldname": "division",
    "fieldtype": "Link",
    "label": "Division",
@@ -40,11 +41,13 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.report != \"HSE Vehicle Register\"",
    "fieldname": "from_date",
    "fieldtype": "Date",
    "label": "From Date"
   },
   {
+   "depends_on": "eval:doc.report != \"HSE Vehicle Register\"",
    "fieldname": "to_date",
    "fieldtype": "Date",
    "label": "To Date"
@@ -65,8 +68,8 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-12-30 09:11:54.526416",
- "modified_by": "Administrator",
+ "modified": "2025-12-31 10:49:15.556340",
+ "modified_by": "bhuvaneswari.a@groupteampro.com",
  "module": "Shaher",
  "name": "HSE Report Dashboard",
  "owner": "pavithra.s@groupteampro.com",
