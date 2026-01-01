@@ -254,7 +254,6 @@ def download_cashflow():
     filters = _dict(filters)
     export_cash_flow(filters)
 
-
 def export_cash_flow(filters):
     columns, data, *_ = cash_flow.execute(filters)
 
@@ -264,20 +263,20 @@ def export_cash_flow(filters):
 
     # Styles
     bold_font = Font(bold=True)
-    align_center = Alignment(horizontal='center')
-    align_left = Alignment(horizontal='left')
-    align_right = Alignment(horizontal='right')
+    align_center = Alignment(horizontal="center")
+    align_left = Alignment(horizontal="left")
+    align_right = Alignment(horizontal="right")
 
     thin_border = Border(
-        left=Side(style='thin'),
-        right=Side(style='thin'),
-        top=Side(style='thin'),
-        bottom=Side(style='thin')
+        left=Side(style="thin"),
+        right=Side(style="thin"),
+        top=Side(style="thin"),
+        bottom=Side(style="thin"),
     )
 
-    CURRENCY_FORMAT = '#,##0.00'
+    CURRENCY_FORMAT = "#,##0.00"
 
-    # ---------- HEADER ----------
+    # ---------------- HEADER ----------------
     ws.cell(row=1, column=1, value="S.No").font = bold_font
     ws.cell(row=1, column=1).alignment = align_center
     ws.cell(row=1, column=1).border = thin_border
@@ -293,40 +292,62 @@ def export_cash_flow(filters):
         cell.alignment = align_center
         cell.border = thin_border
 
-    # ---------- DATA ----------
-	for row_idx, row in enumerate(data, start=2):
-		# S.No in column A
-		sn_cell = ws.cell(row=row_idx, column=1, value=row_idx - 1)
-		sn_cell.alignment = align_right
-		sn_cell.border = thin_border
+    # ---------------- DATA ----------------
+    row_idx = 2
+    sno = 1
 
-		data_index = 1  # Column A used, data starts from B
+    for row in data:
+        # Skip meaningless empty rows
+        if not row.get("account") and not any(
+            isinstance(v, (int, float)) and v != 0 for v in row.values()
+        ):
+            continue
 
-		for col in columns:
-			# ✅ Skip currency column (same as header)
-			if col.get("fieldname") == "currency":
-				continue
+        # S.No
+        ws.cell(row=row_idx, column=1, value=sno).alignment = align_right
+        ws.cell(row=row_idx, column=1).border = thin_border
+        sno += 1
 
-			data_index += 1
-			fieldname = col.get("fieldname")
-			value = row.get(fieldname, "")
+        data_index = 1
+        indent = row.get("indent", 0)
+        is_group = row.get("is_group")
 
-			cell = ws.cell(row=row_idx, column=data_index, value=value)
-			cell.border = thin_border
+        for col in columns:
+            if col.get("fieldname") == "currency":
+                continue
 
-			# Currency formatting
-			if col.get("fieldtype") == "Currency" and isinstance(value, (int, float)):
-				cell.number_format = CURRENCY_FORMAT
-				cell.alignment = align_right
-			else:
-				cell.alignment = align_left
+            data_index += 1
+            fieldname = col.get("fieldname")
+            value = row.get(fieldname, "")
 
-    # ---------- COLUMN WIDTH ----------
+            cell = ws.cell(row=row_idx, column=data_index, value=value)
+            cell.border = thin_border
+
+            # -------- Account column --------
+            if fieldname == "account":
+                cell.alignment = Alignment(
+                    horizontal="left", indent=indent
+                )
+                if is_group:
+                    cell.font = bold_font
+
+            # -------- Currency columns --------
+            elif col.get("fieldtype") == "Currency" and isinstance(value, (int, float)):
+                cell.number_format = CURRENCY_FORMAT
+                cell.alignment = align_right
+                if is_group:
+                    cell.font = bold_font
+            else:
+                cell.alignment = align_left
+
+        row_idx += 1
+
+    # ---------------- COLUMN WIDTH ----------------
     for col in ws.columns:
         max_length = max(len(str(cell.value)) if cell.value else 0 for cell in col)
-        ws.column_dimensions[col[0].column_letter].width = max_length + 3
+        ws.column_dimensions[col[0].column_letter].width = max_length + 4
 
-    # ---------- RESPONSE ----------
+    # ---------------- RESPONSE ----------------
     output = BytesIO()
     wb.save(output)
     output.seek(0)
